@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechZone Configuration — Deep Blue Drive Heist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0d0d12;
+      --bg-layer: #1a1a24;
+      --text: #f0f0f5;
+      --text-muted: #8888aa;
+      --accent: #0F62FE;
+      --accent-bright: #3B82F6;
+      --sidebar-w: 240px;
+    }
+    body {
+      font-family: 'IBM Plex Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      min-height: 100vh;
+    }
+    nav {
+      width: var(--sidebar-w);
+      background: var(--bg-layer);
+      padding: 1.5rem 1rem;
+      position: fixed;
+      top: 0; bottom: 0;
+      overflow-y: auto;
+      border-right: 1px solid #2a2a3a;
+    }
+    nav a.logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--accent-bright);
+      text-decoration: none;
+      margin-bottom: 1.5rem;
+      line-height: 1.3;
+    }
+    nav a.logo img {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+    }
+    nav h3 {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin: 1.2rem 0 0;
+    }
+    nav .section-toggle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 1.2rem 0 0.4rem;
+      cursor: pointer;
+      text-align: left;
+    }
+    nav .section-toggle:hover { color: var(--text); }
+    nav .section-toggle .toggle-arrow { font-size: 0.6rem; transition: transform 0.2s; }
+    nav .section-body { display: none; }
+    nav .section-body.open { display: block; }
+    nav h4.nav-sublabel {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin: 0.8rem 0 0.3rem 0.6rem;
+      opacity: 0.7;
+    }
+    nav ul { list-style: none; }
+    nav li a {
+      display: block;
+      padding: 0.3rem 0.6rem;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.85rem;
+      border-radius: 4px;
+    }
+    nav li a:hover { background: #2a2a3a; }
+    nav li a.active { background: var(--accent); color: #fff; }
+    main {
+      margin-left: var(--sidebar-w);
+      padding: 2rem 3rem;
+      max-width: 52rem;
+      width: 100%;
+      line-height: 1.7;
+    }
+    main h1 { font-size: 1.8rem; margin-bottom: 1rem; }
+    main h2 { font-size: 1.3rem; margin: 2rem 0 0.5rem; border-bottom: 1px solid #2a2a3a; padding-bottom: 0.3rem; }
+    main h3 { font-size: 1.05rem; margin: 1.5rem 0 0.4rem; }
+    main p { margin: 0.6rem 0; }
+    main a { color: var(--accent-bright); }
+    main code {
+      font-family: 'IBM Plex Mono', monospace;
+      background: var(--bg-layer);
+      padding: 0.15em 0.35em;
+      border-radius: 3px;
+      font-size: 0.88em;
+    }
+    .code-block { position: relative; margin: 0.8rem 0; }
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #12121a;
+      border: 1px solid #2a2a3a;
+      border-bottom: none;
+      border-radius: 6px 6px 0 0;
+      padding: 0.3rem 0.7rem;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .code-copy {
+      background: none;
+      border: 1px solid #2a2a3a;
+      color: var(--text-muted);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.72rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .code-copy:hover { color: var(--text); border-color: var(--text-muted); }
+    main pre {
+      background: var(--bg-layer);
+      padding: 1rem;
+      border-radius: 0 0 6px 6px;
+      overflow-x: auto;
+      margin: 0;
+    }
+    .code-block:not(:has(.code-header)) pre { border-radius: 6px; }
+    main pre code { background: none; padding: 0; }
+    main table { border-collapse: collapse; width: 100%; margin: 0.8rem 0; }
+    main th, main td { border: 1px solid #2a2a3a; padding: 0.5rem 0.8rem; text-align: left; }
+    main th { background: var(--bg-layer); font-weight: 600; }
+    main ul, main ol { margin: 0.6rem 0; padding-left: 1.5rem; }
+    main li { margin: 0.3rem 0; }
+    main blockquote { border-left: 3px solid var(--accent); padding-left: 1rem; color: #d0d0e8; margin: 0.8rem 0; }
+    .persona-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1.5rem 0; }
+    .persona-btn {
+      display: inline-block;
+      padding: 0.7rem 1.4rem;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: background 0.15s;
+    }
+    .persona-btn:hover { background: var(--accent-bright); color: #fff; }
+    /* Persona filter: hide nav sections based on role */
+    nav .section-player,
+    nav .section-booth-staff,
+    nav .section-developer { display: block; }
+    body.role-player nav .section-booth-staff { display: none; }
+    body.role-staff nav .section-player { display: none; }
+    body.role-developer nav .section-player,
+    body.role-developer nav .section-booth-staff { display: none; }
+    @media (max-width: 768px) {
+      nav { position: static; width: 100%; border-right: none; border-bottom: 1px solid #2a2a3a; }
+      main { margin-left: 0; padding: 1.5rem; }
+      body { flex-direction: column; }
+    }
+  </style>
+  <link rel="stylesheet" href="/bobgame-docs-external/shared/docs.css">
+</head>
+<body>
+  <nav>
+    <a class="logo" href="/bobgame-docs-external/"><img src="/bobgame-docs-external/assets/bob-head.svg" alt="Bob">Deep Blue<br>Drive Heist</a>
+    
+      
+      
+      
+        
+          
+        
+      
+      
+    
+      
+      
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+      
+      <div class="section-general">
+      
+        <button class="section-toggle" onclick="toggleSection(this)">
+          General<span class="toggle-arrow" style="transform:rotate(90deg)">▶</span>
+        </button>
+        <div class="section-body open">
+          
+            <ul>
+              
+                <li><a href="/bobgame-docs-external/booth/techzone/" class="active">TechZone Configuration</a></li>
+              
+                <li><a href="/bobgame-docs-external/booth/player-guide/">Walk-through Tutorial: Player</a></li>
+              
+            </ul>
+          
+        </div>
+      
+      </div>
+      
+    
+      
+      
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+      
+    
+      
+      
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+      
+    
+      
+      
+      
+        
+          
+        
+      
+      
+    
+  </nav>
+  <main>
+    <h1 style="color:#89CFF0;">TechZone Configuration</h1>
+<p>Instructions for setting up Deep Blue Drive Heist via TechZone for workshops can be found here.</p>
+<h2 style="color:#89CFF0;">Before You Get Started...</h2>
+<ul>
+<li>This process will take at least 20-30 minutes of set up.</li>
+<li>TechZone virtual PCs can sometimes experience lag. This is not an issue with IBM Bob or the Deep Blue Drive Heist game.</li>
+<li>When working with RedHat, be aware that commands to copy and paste differ from general Mac and Window set ups:
+<ul>
+<li><strong>Copy</strong>: Ctrl + Shift + C</li>
+<li><strong>Paste</strong>: Ctrl + Shift + V</li>
+</ul>
+</li>
+<li>You can additionally offer a guide for players found <a href="https://ibm-devrel.github.io/bobgame-docs-external/booth/player-guide/">here</a>.</li>
+<li>You will encounter 4 different login screens:
+<ul>
+<li>Logging into TechZone and IBM Bob: use your <strong>IBM ID</strong></li>
+<li>Logging into the virtual machine: use the <strong>provided TechZone credentials</strong></li>
+<li>Logging into the Deep Blue Drive Heist game: create <strong>your own username</strong></li>
+</ul>
+</li>
+</ul>
+<h2 style="color:#89CFF0;">The Process</h2>
+<details class="phase" id="part-one-opening-techzone-and-the-virtual-machine" open>
+<summary>Part One: Opening TechZone and the Virtual Machine</summary>
+<div class="phase-body"><p>Log into techzone.ibm.com with your <strong>IBM ID</strong>. Navigate to the My TechZone tab on the top left corner, and click <strong>My requests</strong>.</p>
+<p><img src="/bobgame-docs-external/assets/step1.png" alt="Log in and requests" style="max-width:100%;border-radius:6px;margin:0.8rem 0;"></p>
+<p>In the <strong>My requests</strong> page, you will see your assigned IBM Bob instance for running the workshop. Click on <strong>Open this reservation</strong>.</p>
+<p><img src="/bobgame-docs-external/assets/step2.png" alt="Open reservation" style="max-width:100%;border-radius:6px;margin:0.8rem 0;"></p>
+<p>You will now see the <strong>Environments</strong> page. Click on the <strong>OCP-C RHEL Bob IDE Environment</strong>. The tab will collapse to show you more information about the environment.</p>
+<p>Click on the URL on the right hand side of the screen to access the virtual machine.</p>
+<p><img src="/bobgame-docs-external/assets/step3.png" alt="OCP-C" style="max-width:100%;border-radius:6px;margin:0.8rem 0;"></p>
+<p>You will be taken to the <strong>Virtual Machines</strong> page. Click <strong>Console</strong> to open your virtual machine.</p>
+<p><img src="/bobgame-docs-external/assets/step4.png" alt="Console" style="max-width:100%;border-radius:6px;margin:0.8rem 0;"></p>
+<p>You will be prompted to connect with RDP before entering your virtual machine. Click <strong>Connect with RDP</strong> to continue.</p>
+<p><img src="/bobgame-docs-external/assets/step5.png" alt="Connect with RDP" style="max-width:100%;border-radius:6px;margin:0.8rem 0;"></p>
+</div></details>
+<details class="phase" id="part-two-inside-the-virtual-machine" open>
+<summary>Part Two: Inside the Virtual Machine</summary>
+<div class="phase-body"><p>You are now successfully inside your virtual machine.</p>
+<p>You will be prompted to enter a password. Click <strong>Show Credentials</strong> on the top left.</p>
+<p><img src="/bobgame-docs-external/assets/step6.png" alt="Show credentials" style="max-width:100%;border-radius:6px;margin:0.8rem 0;"></p>
+<p>Click on the keyboard icon on the right side of the password credential field. This will automatically copy and paste your password into the login field. Click Enter on your keyboard. This is where you will use the <strong>provided TechZone credentials</strong>.</p>
+<p><img src="/bobgame-docs-external/assets/step7.png" alt="Copy and paste" style="max-width:100%;border-radius:6px;margin:0.8rem 0;"></p>
+<p>If you are taken directly to IBM Bob and the game, and your screen looks similarly to this image below with the game engine open and set up, please proceed to <a href="#part-three-logging-into-bob">Part Three</a>.</p>
+<p><img src="/bobgame-docs-external/assets/step21.png" alt="Game engine" style="max-width:100%;border-radius:6px;margin:0.8rem 0;"></p>
+<p>If your screen looks like the image below, you are in the home screen. Click on <strong>Activities</strong> in the top left corner.</p>
+<p><img src="/bobgame-docs-external/assets/step8.png" alt="Activities" style="max-width:100%;border-radius:6px;margin:0.8rem 0;"></p>
+<p>Click on the <strong>Show Applications</strong> icon.</p>
+<p><img src="/bobgame-docs-external/assets/step9.png" alt="Show applications" style="max-width:100%;border-radius:6px;margin:0.8rem 0;"></p>
+<p>Click on IBM Bob.</p>
+<p><img src="/bobgame-docs-external/assets/step10.png" alt="IBM Bob" style="max-width:100%;border-radius:6px;margin:0.8rem 0;"></p>
+<p>Once IBM Bob application opens, it will ask you for imports. Click <strong>Skip for now</strong>.</p>
+<p><img src="/bobgame-docs-external/assets/step11.png" alt="Imports" style="max-width:100%;border-radius:6px;margin:0.8rem 0;"></p>
+<p>You may be prompted to <em>&quot;Choose a password for new keyring&quot;</em>. Ignore this by pressing enter on your keyboard through both pop ups, then click continue when prompted.</p>
+<p><img src="/bobgame-docs-external/assets/step11-keyring1.png" alt="Keyring1" style="max-width:100%;border-radius:6px;margin:0.8rem 0;">
+<img src="/bobgame-docs-external/assets/step11-keyring2.png" alt="Keyring2" style="max-width:100%;border-radius:6px;margin:0.8rem 0;"></p>
+<p>You may be prompted to continue old Bob chats. Click <strong>Skip migration</strong>.</p>
+<p><img src="/bobgame-docs-external/assets/step12.png" alt="Skip migration" style="max-width:100%;border-radius:6px;margin:0.8rem 0;"></p>
+</div></details>
+<details class="phase" id="part-three-logging-into-bob" open>
+<summary>Part Three: Logging into Bob</summary>
+<div class="phase-body"><p>If you have the IBM Bob application open (with or without the game window) and your Bob window has a blue &quot;Login to Bob&quot; button (as referenced in the image below), you will need to log into Bob with your <strong>IBM ID</strong> or with your Bob account.</p>
+<p><img src="/bobgame-docs-external/assets/step13.png" alt="Bob account" style="max-width:100%;border-radius:6px;margin:0.8rem 0;"></p>
+<p>Once you finish log in, you should be taken back to the IBM Bob application.</p>
+<p><strong>If you see both the set up game and the IBM Bob application ready for use (exactly like this image below)...</strong></p>
+<p><img src="/bobgame-docs-external/assets/step21.png" alt="Game engine" style="max-width:100%;border-radius:6px;margin:0.8rem 0;"></p>
+<ul>
+<li><strong>If you are setting up as a player</strong>: You may skip the rest of these instructions and learn how to play Deep Blue Drive Heist with this <a href="https://ibm-devrel.github.io/bobgame-docs-external/booth/player-guide/">player guide</a>.</li>
+<li><strong>If you are setting up as a staff member</strong>: You may skip the rest of these instructions and use the <a href="https://pages.github.ibm.com/devrel-software/bobgame-docs-internal/booth/staff-guide/">staff references</a> and/or the <a href="https://pages.github.ibm.com/devrel-software/bobgame-docs-internal/booth/staff-script/">staff script</a> to continue to support player experience.</li>
+</ul>
+<p><strong>If you do not have the game open (you do not see the agent login screen and/or the terminal panel is not running the game)...</strong></p>
+<ul>
+<li><strong>If you are setting up as a player</strong>: Please contact staff to finish set up.</li>
+<li><strong>If you are setting up as a staff member</strong>: Please proceed to <a href="#part-four-setting-up-the-game">Part Four</a>.</li>
+</ul>
+</div></details>
+<details class="phase" id="part-four-setting-up-the-game" open>
+<summary>Part Four: Setting Up the Game</summary>
+<div class="phase-body"><p>Open a new terminal.</p>
+<p><img src="/bobgame-docs-external/assets/step14.png" alt="New terminal" style="max-width:100%;border-radius:6px;margin:0.8rem 0;"></p>
+<p>Type in these commands in the terminal.</p>
+<pre><code class="language-bash">curl -fsSL https://ibm.biz/bobgame-setup | sh
+</code></pre>
+<p>You will then be prompted for credentials:</p>
+<pre><code class="language-bash">Tenant: tenant-id          # your tenant id
+Machine number: 25         # any number 0–99, unique per machine
+Booth password: tenant-password
+Pin data prefix to a fixed date? (multi-day single competition; blank = daily) [YYYY-MM-DD]: YYYY-MM-DD # date of the event to set prefix
+</code></pre>
+<p>Within your terminal, navigate into the <code>bobgame-experience-booth</code> folder:</p>
+<pre><code class="language-bash">cd bobgame-experience-booth
+</code></pre>
+<p>Now run the server:</p>
+<pre><code class="language-bash">uv run launch.py
+</code></pre>
+<p>This will start the game engine.</p>
+<p>Within the Bob application, open the <code>bobgame-experience-booth</code> folder from your directory.</p>
+<p><img src="/bobgame-docs-external/assets/step15.png" alt="Open folder" style="max-width:100%;border-radius:6px;margin:0.8rem 0;"></p>
+<p>Navigate to <strong>Home</strong> and click on <code>bobgame-experience-booth</code>.</p>
+<p><img src="/bobgame-docs-external/assets/step16.png" alt="bobgame-experience-booth" style="max-width:100%;border-radius:6px;margin:0.8rem 0;"></p>
+<p>Once the repository is opened, open the <code>player_agent.py</code> file to have on display for players.</p>
+<p><img src="/bobgame-docs-external/assets/step17.png" alt="player_agent.py" style="max-width:100%;border-radius:6px;margin:0.8rem 0;"></p>
+<p>Open <code>PLAYER_README.md</code>, right click on it, and preview it.</p>
+<p><img src="/bobgame-docs-external/assets/step18.png" alt="PLAYER_README.md" style="max-width:100%;border-radius:6px;margin:0.8rem 0;"></p>
+<p>Now, open up a browser window within the virtual machine.</p>
+<p><img src="/bobgame-docs-external/assets/step19.png" alt="Browser window" style="max-width:100%;border-radius:6px;margin:0.8rem 0;"></p>
+<p>Type in <code>localhost:8000</code>, and click Enter on your keyboard.</p>
+<p><img src="/bobgame-docs-external/assets/step20.png" alt="localhost" style="max-width:100%;border-radius:6px;margin:0.8rem 0;"></p>
+<p>The local server should show up, where your game engine will be running. This is where you will <strong>create your own username</strong> to login to the game.</p>
+<p><img src="/bobgame-docs-external/assets/step21.png" alt="Game engine" style="max-width:100%;border-radius:6px;margin:0.8rem 0;"></p>
+<p>Congratulations, you have successfully set up the Deep Blue Drive Heist!</p>
+<p><img src="/bobgame-docs-external/assets/conclusion.png" alt="Conclusion" style="max-width:100%;border-radius:6px;margin:0.8rem 0;"></p>
+</div></details>
+  </main>
+  <script>
+    // Persistent persona filter: URL param sets it, localStorage remembers it
+    const VALID_ROLES = ['player', 'staff', 'developer'];
+    const paramRole = new URLSearchParams(location.search).get('role');
+    if (paramRole && VALID_ROLES.includes(paramRole)) {
+      localStorage.setItem('docs-role', paramRole);
+    }
+    const role = localStorage.getItem('docs-role');
+    if (role && VALID_ROLES.includes(role)) {
+      document.body.classList.add('role-' + role);
+      document.querySelectorAll('nav li[data-hide-from]').forEach(li => {
+        if (li.dataset.hideFrom.split(',').includes(role)) li.style.display = 'none';
+      });
+    }
+    // Nav section collapse/expand
+    function toggleSection(btn) {
+      const body = btn.nextElementSibling;
+      const arrow = btn.querySelector('.toggle-arrow');
+      const isOpen = body.classList.toggle('open');
+      arrow.style.transform = isOpen ? 'rotate(90deg)' : '';
+    }
+    // Auto-expand the section containing the active link
+    document.querySelectorAll('nav .section-body').forEach(body => {
+      if (body.querySelector('a.active')) {
+        body.classList.add('open');
+        const arrow = body.previousElementSibling.querySelector('.toggle-arrow');
+        if (arrow) arrow.style.transform = 'rotate(90deg)';
+      }
+    });
+    // Code block headers: language label + copy button
+    const LANG_LABELS = {bash:'bash',powershell:'powershell',json:'JSON',python:'Python',ini:'.env',text:'',js:'JavaScript'};
+    document.querySelectorAll('main pre').forEach(pre => {
+      const code = pre.querySelector('code');
+      const lang = code ? [...code.classList].find(c => c.startsWith('language-'))?.replace('language-','') : '';
+      const label = LANG_LABELS[lang] ?? lang;
+      const wrapper = document.createElement('div');
+      wrapper.className = 'code-block';
+      const header = document.createElement('div');
+      header.className = 'code-header';
+      header.innerHTML = `<span>${label}</span><button class="code-copy">Copy</button>`;
+      header.querySelector('.code-copy').addEventListener('click', function() {
+        navigator.clipboard.writeText(pre.textContent).then(() => {
+          this.textContent = 'Copied!';
+          setTimeout(() => this.textContent = 'Copy', 1500);
+        });
+      });
+      pre.parentNode.insertBefore(wrapper, pre);
+      wrapper.appendChild(header);
+      wrapper.appendChild(pre);
+    });
+  </script>
+  <script src="/bobgame-docs-external/shared/docs.js"></script>
+</body>
+</html>
