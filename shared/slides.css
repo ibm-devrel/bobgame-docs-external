@@ -1,0 +1,264 @@
+/* ==========================================================
+   Deep Blue Heist Workshop — Reveal.js slide theme
+   Loaded after vendor/reveal/dist/theme/black.css and overrides it with
+   the workshop tokens from shared/workshop.css. Edit slide LOOK here,
+   never per deck, so all four modules stay consistent.
+
+   Slide-level classes authors can use in decks
+   (<!-- .slide: class="…" --> on the line after a ---):
+     wk-title    — module/workshop title slide
+     wk-section  — section divider, big text on the module accent
+     wk-center   — vertically + horizontally centered content
+     wk-bio      — speaker bio: ## name, p.wk-role, bullets, img.wk-portrait
+                   (photo goes in the right-hand column; see slides/overview.md)
+     wk-people   — credits: ## title + div.wk-people of div.wk-person cards,
+                   three per row, centered; see slides/overview.md
+     wk-chart    — heading + text on top, then ONE figure (img, video,
+                   diagram or div.wk-figure) that fills the rest of the
+                   slide, scaled to fit (keynote's "chart" layout)
+     wk-media    — heading + text in the left half, ONE picture (img, video,
+                   diagram or div.wk-figure) filling the right half, full
+                   height, scaled to fit (keynote's "media-half" layout)
+   Media sizing (any slide): images, videos and diagrams keep their aspect
+   ratio, never grow past their natural size, and shrink to fit the space
+   left under the text instead of overflowing the slide. Don't put
+   style="max-height:…" on slide images; use wk-chart / wk-media instead.
+   Inline helpers:
+     <div class="wk-cols">…two or more <div>s…</div>   side-by-side columns
+     <span class="wk-accent">text</span>             accent-colored text
+     <p class="wk-small">…</p>                         de-emphasized text
+     <div class="wk-push-bottom">…</div>               pin to slide bottom
+     <div class="wk-figure">…</div>                    a figure box (e.g. an
+                                                       iframe, or an img you
+                                                       want sized as a block)
+   ========================================================== */
+
+:root {
+  --r-background-color: var(--wk-bg);
+  --r-main-font: var(--wk-font);
+  --r-main-font-size: 30px;
+  --r-main-color: var(--wk-text);
+  --r-heading-font: var(--wk-font);
+  --r-heading-color: var(--wk-text);
+  --r-heading-text-transform: none;
+  --r-heading-font-weight: 600;
+  --r-heading-letter-spacing: normal;
+  --r-heading1-size: 1.9em;
+  --r-heading2-size: 1.4em;
+  --r-heading3-size: 1.1em;
+  --r-code-font: var(--wk-mono);
+  --r-link-color: var(--wk-accent-soft);
+  --r-link-color-hover: #a6c8ff;
+  --r-selection-background-color: var(--wk-accent);
+}
+
+.reveal-viewport,
+.reveal { background: var(--wk-bg); }
+
+/* Default slide: top-left aligned, like the AI Agents workshop decks */
+.reveal .slides { text-align: left; }
+.reveal .slides section {
+  height: 100%;
+  padding: 48px 56px;
+  box-sizing: border-box;
+  /* display: flex comes from Reveal's `display` option (shared/slides.js), so
+     slides Reveal hides keep display:none. Don't force it here. */
+  flex-direction: column;
+}
+.reveal .slides section.stack { padding: 0; }
+.reveal .slides section > :first-child { margin-top: 0; }
+.reveal h1, .reveal h2, .reveal h3 { text-align: left; }
+.reveal h2 { border-bottom: 2px solid var(--wk-module-accent, var(--wk-accent)); padding-bottom: 0.2em; }
+.reveal ul, .reveal ol { display: block; margin-left: 1.2em; }
+.reveal li { margin-bottom: 0.3em; }
+.reveal li li { font-size: 0.85em; }
+.reveal p { line-height: 1.4; }
+.reveal code { font-family: var(--wk-mono); background: var(--wk-bg-layer); padding: 0 0.2em; border-radius: 3px; }
+.reveal pre { width: 100%; box-sizing: border-box; box-shadow: none; font-size: 0.6em; }
+.reveal pre code { background: var(--wk-bg-sunken); border: 1px solid var(--wk-border); border-radius: 6px; padding: 0.8em; max-height: 480px; }
+.reveal blockquote {
+  width: 100%;
+  box-sizing: border-box; /* padding + border stay inside its column */
+  margin: 0.5em 0;
+  background: var(--wk-bg-layer);
+  border-left: 4px solid var(--wk-module-accent, var(--wk-accent));
+  box-shadow: none;
+  font-style: normal;
+  padding: 0.5em 0.9em;
+}
+
+/* ---- Media sizing ---------------------------------------------------------
+   Every slide is a fixed 1280x720 flex column. Text never shrinks; media
+   (img, video, svg.wk-diagram, .wk-figure) and the boxes that hold them may
+   shrink to whatever height is left, and object-fit keeps the aspect ratio
+   (the keynote's `.reveal img, .reveal video { max-width/height: 100% }`
+   plus contain). Media that would fit is never stretched or upscaled. */
+.reveal :where(.slides section) > * { flex-shrink: 0; }
+/* :where() keeps these at the specificity of `.reveal img`, so component
+   rules (wk-bio portrait, wk-person avatars) still win. */
+.reveal :where(.slides section) :is(img, video) {
+  max-width: 100%;
+  max-height: 100%;
+  min-height: 0;
+  margin: 0;
+  border: 0;
+  box-shadow: none;
+  object-fit: contain;
+  object-position: left top;
+}
+.reveal :where(.slides section) svg.wk-diagram { max-width: 100%; max-height: 100%; min-height: 0; }
+/* Media and anything that holds it (a <p> Markdown wrapped round it, a
+   wk-cols row, a column div, a wk-figure) can shrink. */
+.reveal :where(.slides section) :where(img, video, svg.wk-diagram, .wk-figure),
+.reveal :where(.slides section) :where(p, div):where(:has(> :is(img, video, svg.wk-diagram, .wk-figure))),
+.reveal :where(.slides section) :where(.wk-cols):where(:has(img, video, svg.wk-diagram, .wk-figure)) {
+  flex: 0 1 auto;
+  min-height: 0;
+}
+.reveal :where(.slides section) :where(img, video) { align-self: flex-start; }
+.reveal :where(.slides section) :where(p, div):where(:not(.wk-cols, .wk-people, .wk-person)):where(:has(> :is(img, video, svg.wk-diagram, .wk-figure))) {
+  display: flex;
+  flex-direction: column;
+}
+.reveal .wk-figure { display: flex; flex-direction: column; min-height: 0; }
+.reveal .wk-figure > :is(img, video, iframe, svg) { width: 100%; height: 100%; min-height: 0; border: 0; object-fit: contain; }
+
+/* wk-chart: the figure takes ALL the height left under the text */
+.reveal .slides section.wk-chart > :is(img, video, svg.wk-diagram, .wk-figure),
+.reveal .slides section.wk-chart > p:has(> :is(img, video, svg.wk-diagram)) {
+  flex: 1 1 0;
+  width: 100%;
+  margin: 0.4em 0;
+}
+.reveal .slides section.wk-chart :is(img, video) { align-self: stretch; width: 100%; height: 100%; max-height: none; }
+.reveal .slides section.wk-chart svg.wk-diagram { height: 100%; }
+
+/* wk-media: text in the left half, the picture fills the right half */
+.reveal .slides section.wk-media > * { width: calc((100% - 48px) / 2); }
+.reveal .slides section.wk-media > :is(img, video, svg.wk-diagram, .wk-figure),
+.reveal .slides section.wk-media > p:has(> :is(img, video, svg.wk-diagram)) {
+  position: absolute;
+  top: 48px;
+  right: 56px;
+  width: calc((100% - 112px - 48px) / 2);
+  height: calc(100% - 104px); /* 48px top padding, 56px above the accent stripe */
+  max-height: none;
+  margin: 0;
+}
+.reveal .slides section.wk-media > p :is(img, video, svg.wk-diagram) {
+  align-self: stretch; width: 100%; height: 100%; max-height: none;
+}
+.reveal .slides section.wk-media :is(img, video) { object-position: center; }
+
+/* Module accent stripe at the bottom of every slide */
+.reveal .slides section::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 8px;
+  background: var(--wk-module-accent, var(--wk-accent));
+}
+.reveal .slides section.stack::after { display: none; }
+
+/* Title slide */
+.reveal .slides section.wk-title { justify-content: center; }
+.reveal .slides section.wk-title h1 { font-weight: 300; font-size: 2.2em; line-height: 1.1; }
+.reveal .slides section.wk-title .wk-eyebrow,
+.reveal .wk-eyebrow {
+  font-size: 0.55em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--wk-module-accent, var(--wk-accent));
+  font-weight: 600;
+  margin-bottom: 0.4em;
+}
+
+/* Section divider */
+.reveal .slides section.wk-section { justify-content: center; border-left: 24px solid var(--wk-module-accent, var(--wk-accent)); }
+.reveal .slides section.wk-section h1,
+.reveal .slides section.wk-section h2 { font-size: 2em; border: none; }
+
+/* Centered slide */
+.reveal .slides section.wk-center { justify-content: center; align-items: center; text-align: center; }
+.reveal .slides section.wk-center h1,
+.reveal .slides section.wk-center h2,
+.reveal .slides section.wk-center h3 { text-align: center; border: none; }
+
+/* Speaker bio: text left, portrait right. Only on the current slide, so
+   Reveal can still hide it (display:none) when it's off screen. */
+.reveal .slides section.wk-bio.present { display: grid !important; }
+.reveal .slides section.wk-bio {
+  grid-template-columns: 1fr 360px;
+  grid-auto-rows: min-content;
+  column-gap: 64px;
+  align-content: center;
+}
+.reveal .slides section.wk-bio > * { grid-column: 1; }
+.reveal .slides section.wk-bio > h2 { font-size: 1.9em; border: none; margin-bottom: 0.1em; }
+.reveal .slides section.wk-bio .wk-role { color: var(--wk-text-muted); font-size: 0.75em; margin-top: 0; }
+.reveal .slides section.wk-bio ul { list-style: none; margin-left: 0; font-size: 0.85em; }
+.reveal .slides section.wk-bio img.wk-portrait {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  align-self: center;
+  width: 360px;
+  height: 360px;
+  max-height: none;
+  margin: 0;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 6px solid var(--wk-module-accent, var(--wk-accent));
+}
+
+/* Credits: rows of up to three people, centered — [pic] / name / role on project / role at company */
+.reveal .slides section.wk-people-slide > h2 { margin-bottom: 0.5em; }
+.reveal .wk-people {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 32px 40px;
+  width: 100%;
+}
+.reveal .wk-person {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: calc((100% - 80px) / 3);
+}
+.reveal .wk-person > .wk-avatar,
+.reveal .wk-person > img {
+  width: 130px;
+  height: 130px;
+  max-height: none;
+  margin: 0 0 12px;
+  align-self: center;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--wk-module-accent, var(--wk-accent));
+}
+.reveal .wk-person > .wk-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--wk-bg-layer);
+  color: var(--wk-text-muted);
+  font-size: 1.3em;
+  font-weight: 600;
+}
+.reveal .wk-person p { margin: 0; line-height: 1.3; }
+.reveal .wk-person .wk-name { font-weight: 600; font-size: 0.95em; }
+.reveal .wk-person .wk-credit { color: var(--wk-module-accent, var(--wk-accent)); font-size: 0.7em; }
+.reveal .wk-person .wk-role { color: var(--wk-text-soft); font-size: 0.65em; }
+.reveal .wk-person .wk-email { color: var(--wk-text-muted); font-family: var(--wk-mono); font-size: 0.55em; }
+
+/* Helpers */
+.reveal .wk-cols { display: flex; gap: 1.5em; width: 100%; }
+.reveal .wk-cols > * { flex: 1; min-width: 0; }
+.reveal .wk-accent { color: var(--wk-module-accent, var(--wk-accent)); }
+.reveal .wk-small { font-size: 0.65em; color: var(--wk-text-muted); }
+.reveal .wk-push-bottom { margin-top: auto; }
+
+/* Slide number (controls and progress bar are off, like the keynote) */
+.reveal .slide-number { right: auto; left: 16px; bottom: 16px; background: transparent; color: var(--wk-text-muted); font-family: var(--wk-mono); }
+

@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 0: What is the Deep Blue Heist? — Deep Blue Drive Heist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0d0d12;
+      --bg-layer: #1a1a24;
+      --text: #f0f0f5;
+      --text-muted: #8888aa;
+      --accent: #0F62FE;
+      --accent-bright: #3B82F6;
+      --sidebar-w: 240px;
+    }
+    body {
+      font-family: 'IBM Plex Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      min-height: 100vh;
+    }
+    nav {
+      width: var(--sidebar-w);
+      background: var(--bg-layer);
+      padding: 1.5rem 1rem;
+      position: fixed;
+      top: 0; bottom: 0;
+      overflow-y: auto;
+      border-right: 1px solid #2a2a3a;
+    }
+    nav a.logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--accent-bright);
+      text-decoration: none;
+      margin-bottom: 1.5rem;
+      line-height: 1.3;
+    }
+    nav a.logo img {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+    }
+    nav h3 {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin: 1.2rem 0 0;
+    }
+    nav .section-toggle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 1.2rem 0 0.4rem;
+      cursor: pointer;
+      text-align: left;
+    }
+    nav .section-toggle:hover { color: var(--text); }
+    nav .section-toggle .toggle-arrow { font-size: 0.6rem; transition: transform 0.2s; }
+    nav .section-body { display: none; }
+    nav .section-body.open { display: block; }
+    nav h4.nav-sublabel {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin: 0.8rem 0 0.3rem 0.6rem;
+      opacity: 0.7;
+    }
+    nav ul { list-style: none; }
+    nav li a {
+      display: block;
+      padding: 0.3rem 0.6rem;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.85rem;
+      border-radius: 4px;
+    }
+    nav li a:hover { background: #2a2a3a; }
+    nav li a.active { background: var(--accent); color: #fff; }
+    main {
+      margin-left: var(--sidebar-w);
+      padding: 2rem 3rem;
+      max-width: 52rem;
+      width: 100%;
+      line-height: 1.7;
+    }
+    main h1 { font-size: 1.8rem; margin-bottom: 1rem; }
+    main h2 { font-size: 1.3rem; margin: 2rem 0 0.5rem; border-bottom: 1px solid #2a2a3a; padding-bottom: 0.3rem; }
+    main h3 { font-size: 1.05rem; margin: 1.5rem 0 0.4rem; }
+    main p { margin: 0.6rem 0; }
+    main a { color: var(--accent-bright); }
+    main code {
+      font-family: 'IBM Plex Mono', monospace;
+      background: var(--bg-layer);
+      padding: 0.15em 0.35em;
+      border-radius: 3px;
+      font-size: 0.88em;
+    }
+    .code-block { position: relative; margin: 0.8rem 0; }
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #12121a;
+      border: 1px solid #2a2a3a;
+      border-bottom: none;
+      border-radius: 6px 6px 0 0;
+      padding: 0.3rem 0.7rem;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .code-copy {
+      background: none;
+      border: 1px solid #2a2a3a;
+      color: var(--text-muted);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.72rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .code-copy:hover { color: var(--text); border-color: var(--text-muted); }
+    main pre {
+      background: var(--bg-layer);
+      padding: 1rem;
+      border-radius: 0 0 6px 6px;
+      overflow-x: auto;
+      margin: 0;
+    }
+    .code-block:not(:has(.code-header)) pre { border-radius: 6px; }
+    main pre code { background: none; padding: 0; }
+    main table { border-collapse: collapse; width: 100%; margin: 0.8rem 0; }
+    main th, main td { border: 1px solid #2a2a3a; padding: 0.5rem 0.8rem; text-align: left; }
+    main th { background: var(--bg-layer); font-weight: 600; }
+    main ul, main ol { margin: 0.6rem 0; padding-left: 1.5rem; }
+    main li { margin: 0.3rem 0; }
+    main blockquote { border-left: 3px solid var(--accent); padding-left: 1rem; color: #d0d0e8; margin: 0.8rem 0; }
+    .persona-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1.5rem 0; }
+    .persona-btn {
+      display: inline-block;
+      padding: 0.7rem 1.4rem;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: background 0.15s;
+    }
+    .persona-btn:hover { background: var(--accent-bright); color: #fff; }
+    /* Persona filter: hide nav sections based on role */
+    nav .section-player,
+    nav .section-booth-staff,
+    nav .section-developer { display: block; }
+    body.role-player nav .section-booth-staff { display: none; }
+    body.role-staff nav .section-player { display: none; }
+    body.role-developer nav .section-player,
+    body.role-developer nav .section-booth-staff { display: none; }
+    @media (max-width: 768px) {
+      nav { position: static; width: 100%; border-right: none; border-bottom: 1px solid #2a2a3a; }
+      main { margin-left: 0; padding: 1.5rem; }
+      body { flex-direction: column; }
+    }
+  </style>
+  <link rel="stylesheet" href="/bobgame-docs-external/shared/docs.css">
+  
+  <link rel="stylesheet" href="/bobgame-docs-external/vendor/reveal/dist/reveal.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/vendor/reveal/dist/theme/black.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/vendor/reveal/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/shared/workshop.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/shared/slides.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/shared/diagram.css">
+  
+</head>
+<body>
+  <nav>
+    <a class="logo" href="/bobgame-docs-external/"><img src="/bobgame-docs-external/assets/bob-head.svg" alt="Bob">Deep Blue<br>Drive Heist</a>
+    
+      
+      
+      
+        
+          
+        
+      
+      
+    
+      
+      
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+      
+      <div class="section-workshop">
+      
+        <button class="section-toggle" onclick="toggleSection(this)">
+          Workshop<span class="toggle-arrow" style="transform:rotate(90deg)">▶</span>
+        </button>
+        <div class="section-body open">
+          
+            <ul>
+              
+                <li><a href="/bobgame-docs-external/workshop/">Overview</a></li>
+              
+                <li><a href="/bobgame-docs-external/workshop/prework/">Pre-work</a></li>
+              
+                <li><a href="/bobgame-docs-external/workshop/module-0/" class="active">Module 0: The Heist</a></li>
+              
+                <li><a href="/bobgame-docs-external/workshop/module-1/">Module 1: World of Agents</a></li>
+              
+                <li><a href="/bobgame-docs-external/workshop/module-2/">Module 2: Agent Cognition</a></li>
+              
+                <li><a href="/bobgame-docs-external/workshop/module-3/">Module 3: Experimentation</a></li>
+              
+            </ul>
+          
+        </div>
+      
+      </div>
+      
+    
+      
+      
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+      
+      <div class="section-general">
+      
+        <button class="section-toggle" onclick="toggleSection(this)">
+          General<span class="toggle-arrow" style="transform:rotate(90deg)">▶</span>
+        </button>
+        <div class="section-body open">
+          
+            <ul>
+              
+                <li><a href="/bobgame-docs-external/booth/laptop-setup/">Laptop Setup</a></li>
+              
+                <li><a href="/bobgame-docs-external/booth/techzone/">TechZone Configuration</a></li>
+              
+                <li><a href="/bobgame-docs-external/booth/player-guide/">Walk-through Tutorial: Player</a></li>
+              
+            </ul>
+          
+        </div>
+      
+      </div>
+      
+    
+      
+      
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+      
+    
+      
+      
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+      
+    
+      
+      
+      
+        
+          
+        
+      
+      
+    
+  </nav>
+  <main>
+    <div class="wk-page wk-module-0">
+
+  <header class="wk-header">
+    <div class="wk-eyebrow">Module 0 · 15 min</div>
+    <h1>What is the Deep Blue Heist?</h1>
+    <p class="wk-concept">How IBM Bob works, and the real basics of solving problems with an AI coding assistant.</p>
+    
+  </header>
+  <div class="wk-deck"><div class="wk-deck-frame"><div class="reveal" data-deck="module-0" data-mode="embedded"><div class="slides"><section data-markdown data-separator="^\r?\n---\r?\n$" data-separator-vertical="^\r?\n--\r?\n$" data-separator-notes="^Note:"><textarea data-template>&lt;!-- .slide: class="wk-title" --&gt;&#10;&#10;&lt;p class="wk-eyebrow"&gt;Module 0 · 15 min&lt;/p&gt;&#10;&#10;# What is the Deep Blue Heist?&#10;&#10;How IBM Bob works, and the real basics of AI coding assistants&#10;&#10;---&#10;&#10;## In this workshop, you'll learn&#10;&#10;- What agents are, and how to use one&#10;- How to build and improve an agent for simple problem-solving&#10;- How to apply agentic techniques to complicated, real-world problems&#10;- How to build an experimental framework for your agents&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-section" --&gt;&#10;&#10;## The Game&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-media" --&gt;&#10;&#10;## The Heist&#10;&#10;A supervillain called **The Architect** has stolen the **Deep Blue** drive: a crucial piece of IBM history.&#10;&#10;Your agent chases The Architect across cities, talks to NPCs, finds leads in IBM's databases, and recovers the drive as fast as possible.&#10;&#10;**You don't play the game.** You improve the agent that does, with IBM Bob.&#10;&#10;&lt;img src="/bobgame-docs-external/assets/agent-starts.png" alt="The main game page: the map, the agent's progress, and the conversation log"&gt;&#10;&#10;Note:&#10;Deep Blue: the chess supercomputer IBM built, which beat Garry Kasparov in 1997.&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-chart" --&gt;&#10;&#10;## Two agents&#10;&#10;&lt;svg xmlns="http://www.w3.org/2000/svg" class="wk-diagram" viewBox="0 0 1700 857" role="img" aria-labelledby="bva-title"&gt; &lt;title id="bva-title"&gt;Bob writes player_agent.py, which defines the PlayerAgent; the PlayerAgent is the one that plays the game, starting in Armonk.&lt;/title&gt; &lt;defs&gt; &lt;marker id="wk-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" markerUnits="userSpaceOnUse" orient="auto"&gt;&lt;path class="arrowhead" d="M0 0L10 5L0 10z"/&gt;&lt;/marker&gt; &lt;marker id="wk-arrow-agent" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="30" markerHeight="30" markerUnits="userSpaceOnUse" orient="auto"&gt;&lt;path class="arrowhead agent" d="M0 0L10 5L0 10z"/&gt;&lt;/marker&gt; &lt;marker id="wk-arrow-speech" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="18" markerHeight="18" markerUnits="userSpaceOnUse" orient="auto"&gt;&lt;path class="arrowhead agent" d="M0 0L10 5L0 10z"/&gt;&lt;/marker&gt; &lt;clipPath id="bva-map-clip"&gt;&lt;rect x="600" y="150" width="1060" height="513" rx="12"/&gt;&lt;/clipPath&gt; &lt;/defs&gt; &lt;image href="/bobgame-docs-external/assets/bob-head.svg" x="40" y="22" width="64" height="64"/&gt; &lt;text class="title" x="120" y="66"&gt;Bob&lt;/text&gt; &lt;rect class="node" x="40" y="100" width="480" height="96" rx="8"/&gt; &lt;text class="mid" x="280" y="134"&gt;AI coding assistant&lt;/text&gt; &lt;text class="sm muted mid" x="280" y="166"&gt;writes and edits code with you&lt;/text&gt; &lt;line class="edge" x1="280" y1="196" x2="280" y2="262"/&gt; &lt;text class="sm muted" x="296" y="236"&gt;writes&lt;/text&gt; &lt;text class="code" x="40" y="292"&gt;player_agent.py&lt;/text&gt; &lt;rect class="node" x="40" y="304" width="480" height="232" rx="8"/&gt; &lt;text class="code" xml:space="preserve" x="64" y="346"&gt;&lt;tspan class="kw"&gt;class&lt;/tspan&gt; PlayerAgent(BaseAgent):&lt;/text&gt; &lt;text class="code" xml:space="preserve" x="64" y="380"&gt;  &lt;tspan class="kw"&gt;def&lt;/tspan&gt; build_system_prompt(…):&lt;/text&gt; &lt;text class="code" xml:space="preserve" x="64" y="414"&gt;    &lt;tspan class="kw"&gt;return&lt;/tspan&gt; &lt;tspan class="str"&gt;"You are an investigator…"&lt;/tspan&gt;&lt;/text&gt; &lt;text class="code" xml:space="preserve" x="64" y="448"&gt;  &lt;tspan class="kw"&gt;def&lt;/tspan&gt; on_narrator_message(…): …&lt;/text&gt; &lt;text class="code" xml:space="preserve" x="64" y="482"&gt;  &lt;tspan class="kw"&gt;def&lt;/tspan&gt; on_npc_message(…): …&lt;/text&gt; &lt;text class="code" xml:space="preserve" x="64" y="516"&gt;  &lt;tspan class="kw"&gt;def&lt;/tspan&gt; on_tool_result(…): …&lt;/text&gt; &lt;line class="edge" x1="280" y1="536" x2="280" y2="590"/&gt; &lt;text class="sm muted" x="296" y="570"&gt;runs as&lt;/text&gt; &lt;text class="title agent" x="40" y="626"&gt;PlayerAgent&lt;/text&gt; &lt;rect class="node" x="40" y="640" width="480" height="100" rx="8"/&gt; &lt;text class="mid" x="280" y="676"&gt;the investigator in the game&lt;/text&gt; &lt;text class="sm muted mid" x="280" y="708"&gt;sees only what the game tells it&lt;/text&gt; &lt;g clip-path="url(#bva-map-clip)"&gt; &lt;rect class="map-bg" x="600" y="150" width="1060" height="513"/&gt; &lt;circle class="map-land" cx="1527.5" cy="184.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1548.9" cy="184.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1570.2" cy="184.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1591.6" cy="184.2" r="6.8"/&gt; &lt;circle class="map-land" cx="608.5" cy="205.6" r="6.8"/&gt; &lt;circle class="map-land" cx="629.9" cy="205.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1463.4" cy="205.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1484.8" cy="205.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1506.1" cy="205.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1527.5" cy="205.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1548.9" cy="205.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1570.2" cy="205.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1591.6" cy="205.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1613" cy="205.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1634.4" cy="205.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1655.7" cy="205.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1142.8" cy="226.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1164.2" cy="226.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1185.6" cy="226.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1206.9" cy="226.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1442" cy="226.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1463.4" cy="226.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1484.8" cy="226.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1506.1" cy="226.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1570.2" cy="226.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1591.6" cy="226.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1613" cy="226.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1634.4" cy="226.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1655.7" cy="226.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1399.3" cy="248.3" r="6.8"/&gt; &lt;circle class="map-land" cx="1420.6" cy="248.3" r="6.8"/&gt; &lt;circle class="map-land" cx="1442" cy="248.3" r="6.8"/&gt; &lt;circle class="map-land" cx="1463.4" cy="248.3" r="6.8"/&gt; &lt;circle class="map-land" cx="1484.8" cy="248.3" r="6.8"/&gt; &lt;circle class="map-land" cx="1527.5" cy="248.3" r="6.8"/&gt; &lt;circle class="map-land" cx="1548.9" cy="248.3" r="6.8"/&gt; &lt;circle class="map-land" cx="1570.2" cy="248.3" r="6.8"/&gt; &lt;circle class="map-land" cx="1591.6" cy="248.3" r="6.8"/&gt; &lt;circle class="map-land" cx="1613" cy="248.3" r="6.8"/&gt; &lt;circle class="map-land" cx="1634.4" cy="248.3" r="6.8"/&gt; &lt;circle class="map-land" cx="1655.7" cy="248.3" r="6.8"/&gt; &lt;circle class="map-land" cx="694" cy="269.7" r="6.8"/&gt; &lt;circle class="map-land" cx="715.4" cy="269.7" r="6.8"/&gt; &lt;circle class="map-land" cx="736.8" cy="269.7" r="6.8"/&gt; &lt;circle class="map-land" cx="779.5" cy="269.7" r="6.8"/&gt; &lt;circle class="map-land" cx="1399.3" cy="269.7" r="6.8"/&gt; &lt;circle class="map-land" cx="1420.6" cy="269.7" r="6.8"/&gt; &lt;circle class="map-land" cx="1442" cy="269.7" r="6.8"/&gt; &lt;circle class="map-land" cx="1463.4" cy="269.7" r="6.8"/&gt; &lt;circle class="map-land" cx="1484.8" cy="269.7" r="6.8"/&gt; &lt;circle class="map-land" cx="1591.6" cy="269.7" r="6.8"/&gt; &lt;circle class="map-land" cx="1613" cy="269.7" r="6.8"/&gt; &lt;circle class="map-land" cx="1634.4" cy="269.7" r="6.8"/&gt; &lt;circle class="map-land" cx="1655.7" cy="269.7" r="6.8"/&gt; &lt;circle class="map-land" cx="694" cy="291" r="6.8"/&gt; &lt;circle class="map-land" cx="715.4" cy="291" r="6.8"/&gt; &lt;circle class="map-land" cx="736.8" cy="291" r="6.8"/&gt; &lt;circle class="map-land" cx="758.1" cy="291" r="6.8"/&gt; &lt;circle class="map-land" cx="779.5" cy="291" r="6.8"/&gt; &lt;circle class="map-land" cx="1292.4" cy="291" r="6.8"/&gt; &lt;circle class="map-land" cx="1313.8" cy="291" r="6.8"/&gt; &lt;circle class="map-land" cx="1420.6" cy="291" r="6.8"/&gt; &lt;circle class="map-land" cx="1442" cy="291" r="6.8"/&gt; &lt;circle class="map-land" cx="1463.4" cy="291" r="6.8"/&gt; &lt;circle class="map-land" cx="1527.5" cy="291" r="6.8"/&gt; &lt;circle class="map-land" cx="1548.9" cy="291" r="6.8"/&gt; &lt;circle class="map-land" cx="1570.2" cy="291" r="6.8"/&gt; &lt;circle class="map-land" cx="1591.6" cy="291" r="6.8"/&gt; &lt;circle class="map-land" cx="1613" cy="291" r="6.8"/&gt; &lt;circle class="map-land" cx="1634.4" cy="291" r="6.8"/&gt; &lt;circle class="map-land" cx="1655.7" cy="291" r="6.8"/&gt; &lt;circle class="map-land" cx="608.5" cy="312.4" r="6.8"/&gt; &lt;circle class="map-land" cx="629.9" cy="312.4" r="6.8"/&gt; &lt;circle class="map-land" cx="672.7" cy="312.4" r="6.8"/&gt; &lt;circle class="map-land" cx="694" cy="312.4" r="6.8"/&gt; &lt;circle class="map-land" cx="715.4" cy="312.4" r="6.8"/&gt; &lt;circle class="map-land" cx="736.8" cy="312.4" r="6.8"/&gt; &lt;circle class="map-land" cx="758.1" cy="312.4" r="6.8"/&gt; &lt;circle class="map-land" cx="779.5" cy="312.4" r="6.8"/&gt; &lt;circle class="map-land" cx="800.9" cy="312.4" r="6.8"/&gt; &lt;circle class="map-land" cx="822.3" cy="312.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1271" cy="312.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1313.8" cy="312.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1420.6" cy="312.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1527.5" cy="312.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1548.9" cy="312.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1570.2" cy="312.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1591.6" cy="312.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1613" cy="312.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1634.4" cy="312.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1655.7" cy="312.4" r="6.8"/&gt; &lt;circle class="map-land" cx="608.5" cy="333.8" r="6.8"/&gt; &lt;circle class="map-land" cx="629.9" cy="333.8" r="6.8"/&gt; &lt;circle class="map-land" cx="672.7" cy="333.8" r="6.8"/&gt; &lt;circle class="map-land" cx="694" cy="333.8" r="6.8"/&gt; &lt;circle class="map-land" cx="715.4" cy="333.8" r="6.8"/&gt; &lt;circle class="map-land" cx="736.8" cy="333.8" r="6.8"/&gt; &lt;circle class="map-land" cx="758.1" cy="333.8" r="6.8"/&gt; &lt;circle class="map-land" cx="779.5" cy="333.8" r="6.8"/&gt; &lt;circle class="map-land" cx="800.9" cy="333.8" r="6.8"/&gt; &lt;circle class="map-land" cx="822.3" cy="333.8" r="6.8"/&gt; &lt;circle class="map-land" cx="843.6" cy="333.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1271" cy="333.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1313.8" cy="333.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1335.2" cy="333.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1377.9" cy="333.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1399.3" cy="333.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1420.6" cy="333.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1442" cy="333.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1463.4" cy="333.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1484.8" cy="333.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1506.1" cy="333.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1527.5" cy="333.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1548.9" cy="333.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1570.2" cy="333.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1591.6" cy="333.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1613" cy="333.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1634.4" cy="333.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1655.7" cy="333.8" r="6.8"/&gt; &lt;circle class="map-land" cx="608.5" cy="355.2" r="6.8"/&gt; &lt;circle class="map-land" cx="629.9" cy="355.2" r="6.8"/&gt; &lt;circle class="map-land" cx="651.3" cy="355.2" r="6.8"/&gt; &lt;circle class="map-land" cx="672.7" cy="355.2" r="6.8"/&gt; &lt;circle class="map-land" cx="694" cy="355.2" r="6.8"/&gt; &lt;circle class="map-land" cx="715.4" cy="355.2" r="6.8"/&gt; &lt;circle class="map-land" cx="736.8" cy="355.2" r="6.8"/&gt; &lt;circle class="map-land" cx="758.1" cy="355.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1356.5" cy="355.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1377.9" cy="355.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1399.3" cy="355.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1420.6" cy="355.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1442" cy="355.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1463.4" cy="355.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1484.8" cy="355.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1506.1" cy="355.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1527.5" cy="355.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1548.9" cy="355.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1570.2" cy="355.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1591.6" cy="355.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1613" cy="355.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1634.4" cy="355.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1655.7" cy="355.2" r="6.8"/&gt; &lt;circle class="map-land" cx="608.5" cy="376.5" r="6.8"/&gt; &lt;circle class="map-land" cx="629.9" cy="376.5" r="6.8"/&gt; &lt;circle class="map-land" cx="651.3" cy="376.5" r="6.8"/&gt; &lt;circle class="map-land" cx="672.7" cy="376.5" r="6.8"/&gt; &lt;circle class="map-land" cx="694" cy="376.5" r="6.8"/&gt; &lt;circle class="map-land" cx="715.4" cy="376.5" r="6.8"/&gt; &lt;circle class="map-land" cx="758.1" cy="376.5" r="6.8"/&gt; &lt;circle class="map-land" cx="779.5" cy="376.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1313.8" cy="376.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1335.2" cy="376.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1356.5" cy="376.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1377.9" cy="376.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1399.3" cy="376.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1420.6" cy="376.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1442" cy="376.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1463.4" cy="376.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1484.8" cy="376.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1506.1" cy="376.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1527.5" cy="376.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1548.9" cy="376.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1570.2" cy="376.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1591.6" cy="376.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1613" cy="376.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1634.4" cy="376.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1655.7" cy="376.5" r="6.8"/&gt; &lt;circle class="map-land" cx="608.5" cy="397.9" r="6.8"/&gt; &lt;circle class="map-land" cx="629.9" cy="397.9" r="6.8"/&gt; &lt;circle class="map-land" cx="651.3" cy="397.9" r="6.8"/&gt; &lt;circle class="map-land" cx="672.7" cy="397.9" r="6.8"/&gt; &lt;circle class="map-land" cx="694" cy="397.9" r="6.8"/&gt; &lt;circle class="map-land" cx="715.4" cy="397.9" r="6.8"/&gt; &lt;circle class="map-land" cx="736.8" cy="397.9" r="6.8"/&gt; &lt;circle class="map-land" cx="758.1" cy="397.9" r="6.8"/&gt; &lt;circle class="map-land" cx="779.5" cy="397.9" r="6.8"/&gt; &lt;circle class="map-land" cx="800.9" cy="397.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1335.2" cy="397.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1356.5" cy="397.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1377.9" cy="397.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1399.3" cy="397.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1420.6" cy="397.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1463.4" cy="397.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1484.8" cy="397.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1506.1" cy="397.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1527.5" cy="397.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1548.9" cy="397.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1570.2" cy="397.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1591.6" cy="397.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1634.4" cy="397.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1655.7" cy="397.9" r="6.8"/&gt; &lt;circle class="map-land" cx="608.5" cy="419.3" r="6.8"/&gt; &lt;circle class="map-land" cx="629.9" cy="419.3" r="6.8"/&gt; &lt;circle class="map-land" cx="651.3" cy="419.3" r="6.8"/&gt; &lt;circle class="map-land" cx="672.7" cy="419.3" r="6.8"/&gt; &lt;circle class="map-land" cx="694" cy="419.3" r="6.8"/&gt; &lt;circle class="map-land" cx="715.4" cy="419.3" r="6.8"/&gt; &lt;circle class="map-land" cx="1271" cy="419.3" r="6.8"/&gt; &lt;circle class="map-land" cx="1292.4" cy="419.3" r="6.8"/&gt; &lt;circle class="map-land" cx="1313.8" cy="419.3" r="6.8"/&gt; &lt;circle class="map-land" cx="1335.2" cy="419.3" r="6.8"/&gt; &lt;circle class="map-land" cx="1356.5" cy="419.3" r="6.8"/&gt; &lt;circle class="map-land" cx="1442" cy="419.3" r="6.8"/&gt; &lt;circle class="map-land" cx="1463.4" cy="419.3" r="6.8"/&gt; &lt;circle class="map-land" cx="1506.1" cy="419.3" r="6.8"/&gt; &lt;circle class="map-land" cx="1527.5" cy="419.3" r="6.8"/&gt; &lt;circle class="map-land" cx="1548.9" cy="419.3" r="6.8"/&gt; &lt;circle class="map-land" cx="1570.2" cy="419.3" r="6.8"/&gt; &lt;circle class="map-land" cx="608.5" cy="440.6" r="6.8"/&gt; &lt;circle class="map-land" cx="629.9" cy="440.6" r="6.8"/&gt; &lt;circle class="map-land" cx="651.3" cy="440.6" r="6.8"/&gt; &lt;circle class="map-land" cx="672.7" cy="440.6" r="6.8"/&gt; &lt;circle class="map-land" cx="694" cy="440.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1271" cy="440.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1292.4" cy="440.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1313.8" cy="440.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1335.2" cy="440.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1506.1" cy="440.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1527.5" cy="440.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1570.2" cy="440.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1591.6" cy="440.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1613" cy="440.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1634.4" cy="440.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1655.7" cy="440.6" r="6.8"/&gt; &lt;circle class="map-land" cx="608.5" cy="462" r="6.8"/&gt; &lt;circle class="map-land" cx="629.9" cy="462" r="6.8"/&gt; &lt;circle class="map-land" cx="651.3" cy="462" r="6.8"/&gt; &lt;circle class="map-land" cx="672.7" cy="462" r="6.8"/&gt; &lt;circle class="map-land" cx="1271" cy="462" r="6.8"/&gt; &lt;circle class="map-land" cx="1292.4" cy="462" r="6.8"/&gt; &lt;circle class="map-land" cx="1313.8" cy="462" r="6.8"/&gt; &lt;circle class="map-land" cx="1463.4" cy="462" r="6.8"/&gt; &lt;circle class="map-land" cx="1527.5" cy="462" r="6.8"/&gt; &lt;circle class="map-land" cx="1570.2" cy="462" r="6.8"/&gt; &lt;circle class="map-land" cx="1591.6" cy="462" r="6.8"/&gt; &lt;circle class="map-land" cx="1613" cy="462" r="6.8"/&gt; &lt;circle class="map-land" cx="1634.4" cy="462" r="6.8"/&gt; &lt;circle class="map-land" cx="1655.7" cy="462" r="6.8"/&gt; &lt;circle class="map-land" cx="608.5" cy="483.4" r="6.8"/&gt; &lt;circle class="map-land" cx="629.9" cy="483.4" r="6.8"/&gt; &lt;circle class="map-land" cx="651.3" cy="483.4" r="6.8"/&gt; &lt;circle class="map-land" cx="672.7" cy="483.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1292.4" cy="483.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1313.8" cy="483.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1335.2" cy="483.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1356.5" cy="483.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1377.9" cy="483.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1399.3" cy="483.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1420.6" cy="483.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1655.7" cy="483.4" r="6.8"/&gt; &lt;circle class="map-land" cx="608.5" cy="504.8" r="6.8"/&gt; &lt;circle class="map-land" cx="629.9" cy="504.8" r="6.8"/&gt; &lt;circle class="map-land" cx="651.3" cy="504.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1271" cy="504.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1292.4" cy="504.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1313.8" cy="504.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1335.2" cy="504.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1356.5" cy="504.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1377.9" cy="504.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1399.3" cy="504.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1420.6" cy="504.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1442" cy="504.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1527.5" cy="504.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1634.4" cy="504.8" r="6.8"/&gt; &lt;circle class="map-land" cx="1655.7" cy="504.8" r="6.8"/&gt; &lt;circle class="map-land" cx="629.9" cy="526.1" r="6.8"/&gt; &lt;circle class="map-land" cx="1271" cy="526.1" r="6.8"/&gt; &lt;circle class="map-land" cx="1292.4" cy="526.1" r="6.8"/&gt; &lt;circle class="map-land" cx="1313.8" cy="526.1" r="6.8"/&gt; &lt;circle class="map-land" cx="1335.2" cy="526.1" r="6.8"/&gt; &lt;circle class="map-land" cx="1356.5" cy="526.1" r="6.8"/&gt; &lt;circle class="map-land" cx="1377.9" cy="526.1" r="6.8"/&gt; &lt;circle class="map-land" cx="1399.3" cy="526.1" r="6.8"/&gt; &lt;circle class="map-land" cx="1420.6" cy="526.1" r="6.8"/&gt; &lt;circle class="map-land" cx="1442" cy="526.1" r="6.8"/&gt; &lt;circle class="map-land" cx="1463.4" cy="526.1" r="6.8"/&gt; &lt;circle class="map-land" cx="1484.8" cy="526.1" r="6.8"/&gt; &lt;circle class="map-land" cx="1506.1" cy="526.1" r="6.8"/&gt; &lt;circle class="map-land" cx="1527.5" cy="526.1" r="6.8"/&gt; &lt;circle class="map-land" cx="1548.9" cy="526.1" r="6.8"/&gt; &lt;circle class="map-land" cx="1570.2" cy="526.1" r="6.8"/&gt; &lt;circle class="map-land" cx="1591.6" cy="526.1" r="6.8"/&gt; &lt;circle class="map-land" cx="1634.4" cy="526.1" r="6.8"/&gt; &lt;circle class="map-land" cx="1655.7" cy="526.1" r="6.8"/&gt; &lt;circle class="map-land" cx="1228.3" cy="547.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1249.7" cy="547.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1271" cy="547.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1292.4" cy="547.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1313.8" cy="547.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1335.2" cy="547.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1356.5" cy="547.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1377.9" cy="547.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1399.3" cy="547.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1420.6" cy="547.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1442" cy="547.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1463.4" cy="547.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1484.8" cy="547.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1506.1" cy="547.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1527.5" cy="547.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1548.9" cy="547.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1570.2" cy="547.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1591.6" cy="547.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1613" cy="547.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1655.7" cy="547.5" r="6.8"/&gt; &lt;circle class="map-land" cx="1228.3" cy="568.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1249.7" cy="568.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1271" cy="568.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1292.4" cy="568.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1313.8" cy="568.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1335.2" cy="568.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1356.5" cy="568.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1377.9" cy="568.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1399.3" cy="568.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1420.6" cy="568.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1442" cy="568.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1463.4" cy="568.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1484.8" cy="568.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1506.1" cy="568.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1527.5" cy="568.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1548.9" cy="568.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1570.2" cy="568.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1591.6" cy="568.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1613" cy="568.9" r="6.8"/&gt; &lt;circle class="map-land" cx="1655.7" cy="568.9" r="6.8"/&gt; &lt;circle class="map-land" cx="629.9" cy="590.2" r="6.8"/&gt; &lt;circle class="map-land" cx="651.3" cy="590.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1206.9" cy="590.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1228.3" cy="590.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1249.7" cy="590.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1271" cy="590.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1292.4" cy="590.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1313.8" cy="590.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1335.2" cy="590.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1356.5" cy="590.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1377.9" cy="590.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1399.3" cy="590.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1420.6" cy="590.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1442" cy="590.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1463.4" cy="590.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1484.8" cy="590.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1506.1" cy="590.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1527.5" cy="590.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1548.9" cy="590.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1570.2" cy="590.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1591.6" cy="590.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1613" cy="590.2" r="6.8"/&gt; &lt;circle class="map-land" cx="1634.4" cy="590.2" r="6.8"/&gt; &lt;circle class="map-land" cx="672.7" cy="611.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1206.9" cy="611.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1228.3" cy="611.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1249.7" cy="611.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1271" cy="611.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1292.4" cy="611.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1313.8" cy="611.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1335.2" cy="611.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1356.5" cy="611.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1377.9" cy="611.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1399.3" cy="611.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1420.6" cy="611.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1442" cy="611.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1463.4" cy="611.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1484.8" cy="611.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1506.1" cy="611.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1527.5" cy="611.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1548.9" cy="611.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1570.2" cy="611.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1591.6" cy="611.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1613" cy="611.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1634.4" cy="611.6" r="6.8"/&gt; &lt;circle class="map-land" cx="1206.9" cy="633" r="6.8"/&gt; &lt;circle class="map-land" cx="1228.3" cy="633" r="6.8"/&gt; &lt;circle class="map-land" cx="1249.7" cy="633" r="6.8"/&gt; &lt;circle class="map-land" cx="1271" cy="633" r="6.8"/&gt; &lt;circle class="map-land" cx="1292.4" cy="633" r="6.8"/&gt; &lt;circle class="map-land" cx="1313.8" cy="633" r="6.8"/&gt; &lt;circle class="map-land" cx="1335.2" cy="633" r="6.8"/&gt; &lt;circle class="map-land" cx="1356.5" cy="633" r="6.8"/&gt; &lt;circle class="map-land" cx="1377.9" cy="633" r="6.8"/&gt; &lt;circle class="map-land" cx="1399.3" cy="633" r="6.8"/&gt; &lt;circle class="map-land" cx="1420.6" cy="633" r="6.8"/&gt; &lt;circle class="map-land" cx="1442" cy="633" r="6.8"/&gt; &lt;circle class="map-land" cx="1463.4" cy="633" r="6.8"/&gt; &lt;circle class="map-land" cx="1484.8" cy="633" r="6.8"/&gt; &lt;circle class="map-land" cx="1506.1" cy="633" r="6.8"/&gt; &lt;circle class="map-land" cx="1527.5" cy="633" r="6.8"/&gt; &lt;circle class="map-land" cx="1548.9" cy="633" r="6.8"/&gt; &lt;circle class="map-land" cx="1570.2" cy="633" r="6.8"/&gt; &lt;circle class="map-land" cx="1591.6" cy="633" r="6.8"/&gt; &lt;circle class="map-land" cx="1613" cy="633" r="6.8"/&gt; &lt;circle class="map-land" cx="1634.4" cy="633" r="6.8"/&gt; &lt;circle class="map-land" cx="1655.7" cy="633" r="6.8"/&gt; &lt;circle class="map-land" cx="608.5" cy="654.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1206.9" cy="654.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1228.3" cy="654.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1249.7" cy="654.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1271" cy="654.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1292.4" cy="654.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1313.8" cy="654.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1335.2" cy="654.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1356.5" cy="654.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1377.9" cy="654.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1399.3" cy="654.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1420.6" cy="654.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1442" cy="654.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1463.4" cy="654.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1484.8" cy="654.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1506.1" cy="654.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1527.5" cy="654.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1548.9" cy="654.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1570.2" cy="654.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1591.6" cy="654.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1613" cy="654.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1634.4" cy="654.4" r="6.8"/&gt; &lt;circle class="map-land" cx="1655.7" cy="654.4" r="6.8"/&gt; &lt;line class="map-edge" x1="705" y1="431" x2="656.6" y2="409.4"/&gt; &lt;line class="map-edge" x1="705" y1="431" x2="1281.6" y2="326.5"/&gt; &lt;line class="map-edge" x1="656.6" y1="409.4" x2="1281.6" y2="326.5"/&gt; &lt;line class="map-edge" x1="656.6" y1="409.4" x2="1377.1" y2="334.9"/&gt; &lt;line class="map-edge" x1="1281.6" y1="326.5" x2="1377.1" y2="334.9"/&gt; &lt;line class="map-edge" x1="1281.6" y1="326.5" x2="1489.6" y2="275.4"/&gt; &lt;line class="map-edge" x1="1377.1" y1="334.9" x2="1489.6" y2="275.4"/&gt; &lt;line class="map-edge" x1="1377.1" y1="334.9" x2="1602.2" y2="525.7"/&gt; &lt;line class="map-edge" x1="1489.6" y1="275.4" x2="1602.2" y2="525.7"/&gt; &lt;circle class="map-glow" cx="705" cy="431" r="26"/&gt; &lt;circle class="map-ring" cx="705" cy="431" r="19"/&gt; &lt;circle class="map-city current" cx="705" cy="431" r="12"/&gt; &lt;circle class="map-city" cx="656.6" cy="409.4" r="9"/&gt; &lt;circle class="map-city" cx="1281.6" cy="326.5" r="9"/&gt; &lt;circle class="map-city" cx="1377.1" cy="334.9" r="9"/&gt; &lt;circle class="map-city" cx="1489.6" cy="275.4" r="9"/&gt; &lt;circle class="map-city" cx="1602.2" cy="525.7" r="9"/&gt; &lt;rect class="map-pill" x="736" y="418" width="82" height="26" rx="4"/&gt; &lt;text class="map-label" x="777" y="431"&gt;Armonk&lt;/text&gt; &lt;rect class="map-pill" x="610.1" y="364.4" width="93" height="26" rx="4"/&gt; &lt;text class="map-label" x="656.6" y="377.4"&gt;Toronto&lt;/text&gt; &lt;rect class="map-pill" x="1240.6" y="345.5" width="82" height="26" rx="4"/&gt; &lt;text class="map-label" x="1281.6" y="358.5"&gt;Dublin&lt;/text&gt; &lt;rect class="map-pill" x="1319.6" y="353.9" width="115" height="26" rx="4"/&gt; &lt;text class="map-label" x="1377.1" y="366.9"&gt;Amsterdam&lt;/text&gt; &lt;rect class="map-pill" x="1432.1" y="294.4" width="115" height="26" rx="4"/&gt; &lt;text class="map-label" x="1489.6" y="307.4"&gt;Stockholm&lt;/text&gt; &lt;rect class="map-pill" x="1566.7" y="544.7" width="71" height="26" rx="4"/&gt; &lt;text class="map-label" x="1602.2" y="557.7"&gt;Cairo&lt;/text&gt; &lt;/g&gt; &lt;rect class="frame" x="600" y="150" width="1060" height="513" rx="12"/&gt; &lt;text class="sm muted" x="600" y="134"&gt;the game (6-city map)&lt;/text&gt; &lt;line class="edge speech" x1="520" y1="724" x2="980" y2="724"/&gt; &lt;path class="chat-bubble player" d="M1002 697 H1638 Q1650 697 1650 709 V810 L1662 827 H1002 Q990 827 990 815 V709 Q990 697 1002 697 Z"/&gt; &lt;text class="chat-icon" x="1012" y="730"&gt;🕵️&lt;/text&gt; &lt;text class="chat-name" x="1044" y="730"&gt;INVESTIGATOR&lt;/text&gt; &lt;rect class="chat-badge" x="1542" y="717" width="86" height="26" rx="13"/&gt; &lt;text class="chat-badge-text" x="1585" y="730"&gt;Armonk&lt;/text&gt; &lt;text class="chat-text" x="1012" y="773"&gt;I need to get oriented and start investigating. Let me&lt;/text&gt; &lt;text class="chat-text" x="1012" y="801"&gt;check my journal first to see what I know so far.&lt;/text&gt; &lt;line class="edge agent" x1="520" y1="690" x2="687.6" y2="455.4"/&gt; &lt;/svg&gt;&#10;&#10;Note:&#10;* Bob: the **coding agent** we use to change the game code.&#10;* The **player agent** (the Investigator in the game): the agent we develop and change using Bob.&#10;&#10;---&#10;&#10;## Why this game?&#10;&#10;- Agents both struggle with and solve complex problems on the map&#10;- Like real-world problems: layers of information, answers to keep track of, an end goal to stay aware of while focusing on the job at hand&#10;- Built for every level of development experience&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-media" --&gt;&#10;&#10;## How to play&#10;&#10;1. Pick your investigation tools in the MCP shop&#10;2. Watch your agent play&#10;3. Change the agent with Bob&#10;4. **New Game**, and compare&#10;&#10;Instructions: the [player guide](/bobgame-docs-external/booth/player-guide/).&#10;&#10;&lt;img src="/bobgame-docs-external/assets/mcp-shop.png" alt="The MCP shop: choosing investigation tools before the game"&gt;&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-section" --&gt;&#10;&#10;## IBM Bob&#10;&#10;---&#10;&#10;## What is an AI coding agent?&#10;&#10;- A tool that helps developers generate, debug, and analyze code&#10;- IBM Bob, Claude, Cursor&#10;- Analyzes problems and implements solutions in your codebase, without losing track of your progress&#10;&#10;Good prompts give the agent context: what the core problem is, and what information it has to work with.&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-media" --&gt;&#10;&#10;## How IBM Bob works&#10;&#10;- Works directly in your repository: inspects, navigates, and changes files&#10;- Runs commands, tests, and build scripts, and reads the output in the chat&#10;- Asks for your approval before it reads, writes, or runs anything (by default)&#10;- Saves **checkpoints** as it works: review diffs, roll back changes&#10;&#10;&lt;img src="/bobgame-docs-external/assets/bob-window.png" alt="IBM Bob open next to the game code"&gt;&#10;&#10;---&#10;&#10;## Prompting and rules: `AGENTS.md`&#10;&#10;- A Markdown file in the repo root: Bob's persistent instruction manual&#10;- Rules Bob follows before making changes: style, which files to target or ignore, strategies&#10;- Ours keeps Bob focused on `player_agent.py`, explains the goal of the game, and offers strategy ideas&#10;&#10;Take a look at `AGENTS.md` now.&#10;&#10;---&#10;&#10;## Bob's modes&#10;&#10;| Mode | Use it for | Most useful for |&#10;|---|---|---|&#10;| **Ask** | Questions about the docs, the code, anything technical | Understanding the code without changing anything |&#10;| **Plan** | A deliberate plan before changes are applied | Breaking down complex problems, brainstorming solutions |&#10;| **Agent** | Writing and refactoring code | Applying changes to the agent: new code, changes, bug fixes |&#10;&#10;Note:&#10;You'll probably use Agent mode most often. You can also add custom modes in the Modes tab of Bob's settings.&#10;&#10;---&#10;&#10;## Bob permissions&#10;&#10;- Permissions let Bob do more without asking&#10;- For this workshop, the code isn't sensitive: we recommend giving Bob **full permissions**&#10;- Prefer to approve each action yourself? Leave them unchecked.&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-media" --&gt;&#10;&#10;## Exercise: Try the game&#10;&#10;1. Run the game with the default player agent&#10;2. Use Bob to make **one** change to your agent&#10;3. Hit **New Game**, and run it again&#10;&#10;Not sure what changed? Ask Bob to compare the logs.&#10;&#10;&lt;img src="/bobgame-docs-external/assets/re-run.png" alt="Starting a new game after changing the agent"&gt;&#10;&#10;Note:&#10;Example prompt (Agent mode): "Hi Bob, look at the logs that are updating as the agent plays the game. Could you outline what issues the agent may be having with completing the game faster, and make changes to the player agent file based on what you find?"&#10;&#10;Ask Bob to summarize its work as you go: part of spec-driven development, where you keep track of what you're building with AI by writing, and checking against, detailed specs.&#10;</textarea></section></div></div></div><div class="wk-deck-toolbar"><a class="wk-deck-present" href="/bobgame-docs-external/workshop/present/module-0/" target="_blank" rel="noopener">Present full screen ↗</a><span class="wk-deck-hint">Click the slides (or ← →) to advance · <kbd>S</kbd> speaker notes · <kbd>F</kbd> fullscreen</span></div></div>
+
+
+<div class="wk-box wk-objectives"><strong>Learning Objectives</strong><p>By the end of this module you will:</p>&#10;<ul>&#10;<li>Know what Deep Blue Drive Heist is and how a round of the game works</li>&#10;<li>Understand, at a basic level, how IBM Bob works</li>&#10;<li>Have used Bob's modes (Ask, Plan, Agent) to change your agent and seen the result in a new game</li>&#10;</ul>&#10;</div>
+<h2 style="color:#89CFF0;">Introduction</h2>
+<p>Deep Blue Drive Heist is a game made for players to experience the world of agents and learn how to use AI coding assistants, like IBM Bob, to improve an agent. In this workshop, you will be using Deep Blue Drive Heist to understand:</p>
+<ul>
+<li>What agents are and how to use an agent</li>
+<li>How to build and improve an agent for simple problem-solving</li>
+<li>How to apply agentic techniques to complicated, real-world problems</li>
+<li>How to build an experimental framework for your agents</li>
+</ul>
+<h2 style="color:#89CFF0;">The Game World</h2>
+<p>Deep Blue Drive Heist is a text adventure game with a simple premise: a notorious supervillain called “The Architect” has stolen an important drive that holds a crucial piece of IBM history. The drive is called <a href="https://en.wikipedia.org/wiki/Deep_Blue_(chess_computer)">“Deep Blue”</a>, in reference to the chess supercomputer IBM developed that beat Russian chess grandmaster Garry Kasparov in two historic six-game chess matches in 1997.</p>
+<p>Your agent's task is to chase The Architect across multiple cities, talk to NPCs, find leads hidden in IBM's databases, and recover the drive as fast as possible.</p>
+<p>You do not play this game, nor do you control the agent that does. Instead, your task is to improve the agent with the help of IBM Bob, your AI coding assistant.</p>
+<p>One note before we start: we'll use the word &quot;agent&quot; for two different things in this workshop:</p>
+<p>a) Bob, the <strong>coding agent</strong> we'll use to update the game code; and<br/>
+b) the <strong>PlayerAgent</strong>, called the Investigator in the game, which we develop and change using Bob.</p>
+<p><svg xmlns="http://www.w3.org/2000/svg" class="wk-diagram" viewBox="0 0 1700 857" role="img" aria-labelledby="bva-title"> <title id="bva-title">Bob writes player_agent.py, which defines the PlayerAgent; the PlayerAgent is the one that plays the game, starting in Armonk.</title> <defs> <marker id="wk-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" markerUnits="userSpaceOnUse" orient="auto"><path class="arrowhead" d="M0 0L10 5L0 10z"/></marker> <marker id="wk-arrow-agent" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="30" markerHeight="30" markerUnits="userSpaceOnUse" orient="auto"><path class="arrowhead agent" d="M0 0L10 5L0 10z"/></marker> <marker id="wk-arrow-speech" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="18" markerHeight="18" markerUnits="userSpaceOnUse" orient="auto"><path class="arrowhead agent" d="M0 0L10 5L0 10z"/></marker> <clipPath id="bva-map-clip"><rect x="600" y="150" width="1060" height="513" rx="12"/></clipPath> </defs> <image href="/bobgame-docs-external/assets/bob-head.svg" x="40" y="22" width="64" height="64"/> <text class="title" x="120" y="66">Bob</text> <rect class="node" x="40" y="100" width="480" height="96" rx="8"/> <text class="mid" x="280" y="134">AI coding assistant</text> <text class="sm muted mid" x="280" y="166">writes and edits code with you</text> <line class="edge" x1="280" y1="196" x2="280" y2="262"/> <text class="sm muted" x="296" y="236">writes</text> <text class="code" x="40" y="292">player_agent.py</text> <rect class="node" x="40" y="304" width="480" height="232" rx="8"/> <text class="code" xml:space="preserve" x="64" y="346"><tspan class="kw">class</tspan> PlayerAgent(BaseAgent):</text> <text class="code" xml:space="preserve" x="64" y="380">  <tspan class="kw">def</tspan> build_system_prompt(…):</text> <text class="code" xml:space="preserve" x="64" y="414">    <tspan class="kw">return</tspan> <tspan class="str">&quot;You are an investigator…&quot;</tspan></text> <text class="code" xml:space="preserve" x="64" y="448">  <tspan class="kw">def</tspan> on_narrator_message(…): …</text> <text class="code" xml:space="preserve" x="64" y="482">  <tspan class="kw">def</tspan> on_npc_message(…): …</text> <text class="code" xml:space="preserve" x="64" y="516">  <tspan class="kw">def</tspan> on_tool_result(…): …</text> <line class="edge" x1="280" y1="536" x2="280" y2="590"/> <text class="sm muted" x="296" y="570">runs as</text> <text class="title agent" x="40" y="626">PlayerAgent</text> <rect class="node" x="40" y="640" width="480" height="100" rx="8"/> <text class="mid" x="280" y="676">the investigator in the game</text> <text class="sm muted mid" x="280" y="708">sees only what the game tells it</text> <g clip-path="url(#bva-map-clip)"> <rect class="map-bg" x="600" y="150" width="1060" height="513"/> <circle class="map-land" cx="1527.5" cy="184.2" r="6.8"/> <circle class="map-land" cx="1548.9" cy="184.2" r="6.8"/> <circle class="map-land" cx="1570.2" cy="184.2" r="6.8"/> <circle class="map-land" cx="1591.6" cy="184.2" r="6.8"/> <circle class="map-land" cx="608.5" cy="205.6" r="6.8"/> <circle class="map-land" cx="629.9" cy="205.6" r="6.8"/> <circle class="map-land" cx="1463.4" cy="205.6" r="6.8"/> <circle class="map-land" cx="1484.8" cy="205.6" r="6.8"/> <circle class="map-land" cx="1506.1" cy="205.6" r="6.8"/> <circle class="map-land" cx="1527.5" cy="205.6" r="6.8"/> <circle class="map-land" cx="1548.9" cy="205.6" r="6.8"/> <circle class="map-land" cx="1570.2" cy="205.6" r="6.8"/> <circle class="map-land" cx="1591.6" cy="205.6" r="6.8"/> <circle class="map-land" cx="1613" cy="205.6" r="6.8"/> <circle class="map-land" cx="1634.4" cy="205.6" r="6.8"/> <circle class="map-land" cx="1655.7" cy="205.6" r="6.8"/> <circle class="map-land" cx="1142.8" cy="226.9" r="6.8"/> <circle class="map-land" cx="1164.2" cy="226.9" r="6.8"/> <circle class="map-land" cx="1185.6" cy="226.9" r="6.8"/> <circle class="map-land" cx="1206.9" cy="226.9" r="6.8"/> <circle class="map-land" cx="1442" cy="226.9" r="6.8"/> <circle class="map-land" cx="1463.4" cy="226.9" r="6.8"/> <circle class="map-land" cx="1484.8" cy="226.9" r="6.8"/> <circle class="map-land" cx="1506.1" cy="226.9" r="6.8"/> <circle class="map-land" cx="1570.2" cy="226.9" r="6.8"/> <circle class="map-land" cx="1591.6" cy="226.9" r="6.8"/> <circle class="map-land" cx="1613" cy="226.9" r="6.8"/> <circle class="map-land" cx="1634.4" cy="226.9" r="6.8"/> <circle class="map-land" cx="1655.7" cy="226.9" r="6.8"/> <circle class="map-land" cx="1399.3" cy="248.3" r="6.8"/> <circle class="map-land" cx="1420.6" cy="248.3" r="6.8"/> <circle class="map-land" cx="1442" cy="248.3" r="6.8"/> <circle class="map-land" cx="1463.4" cy="248.3" r="6.8"/> <circle class="map-land" cx="1484.8" cy="248.3" r="6.8"/> <circle class="map-land" cx="1527.5" cy="248.3" r="6.8"/> <circle class="map-land" cx="1548.9" cy="248.3" r="6.8"/> <circle class="map-land" cx="1570.2" cy="248.3" r="6.8"/> <circle class="map-land" cx="1591.6" cy="248.3" r="6.8"/> <circle class="map-land" cx="1613" cy="248.3" r="6.8"/> <circle class="map-land" cx="1634.4" cy="248.3" r="6.8"/> <circle class="map-land" cx="1655.7" cy="248.3" r="6.8"/> <circle class="map-land" cx="694" cy="269.7" r="6.8"/> <circle class="map-land" cx="715.4" cy="269.7" r="6.8"/> <circle class="map-land" cx="736.8" cy="269.7" r="6.8"/> <circle class="map-land" cx="779.5" cy="269.7" r="6.8"/> <circle class="map-land" cx="1399.3" cy="269.7" r="6.8"/> <circle class="map-land" cx="1420.6" cy="269.7" r="6.8"/> <circle class="map-land" cx="1442" cy="269.7" r="6.8"/> <circle class="map-land" cx="1463.4" cy="269.7" r="6.8"/> <circle class="map-land" cx="1484.8" cy="269.7" r="6.8"/> <circle class="map-land" cx="1591.6" cy="269.7" r="6.8"/> <circle class="map-land" cx="1613" cy="269.7" r="6.8"/> <circle class="map-land" cx="1634.4" cy="269.7" r="6.8"/> <circle class="map-land" cx="1655.7" cy="269.7" r="6.8"/> <circle class="map-land" cx="694" cy="291" r="6.8"/> <circle class="map-land" cx="715.4" cy="291" r="6.8"/> <circle class="map-land" cx="736.8" cy="291" r="6.8"/> <circle class="map-land" cx="758.1" cy="291" r="6.8"/> <circle class="map-land" cx="779.5" cy="291" r="6.8"/> <circle class="map-land" cx="1292.4" cy="291" r="6.8"/> <circle class="map-land" cx="1313.8" cy="291" r="6.8"/> <circle class="map-land" cx="1420.6" cy="291" r="6.8"/> <circle class="map-land" cx="1442" cy="291" r="6.8"/> <circle class="map-land" cx="1463.4" cy="291" r="6.8"/> <circle class="map-land" cx="1527.5" cy="291" r="6.8"/> <circle class="map-land" cx="1548.9" cy="291" r="6.8"/> <circle class="map-land" cx="1570.2" cy="291" r="6.8"/> <circle class="map-land" cx="1591.6" cy="291" r="6.8"/> <circle class="map-land" cx="1613" cy="291" r="6.8"/> <circle class="map-land" cx="1634.4" cy="291" r="6.8"/> <circle class="map-land" cx="1655.7" cy="291" r="6.8"/> <circle class="map-land" cx="608.5" cy="312.4" r="6.8"/> <circle class="map-land" cx="629.9" cy="312.4" r="6.8"/> <circle class="map-land" cx="672.7" cy="312.4" r="6.8"/> <circle class="map-land" cx="694" cy="312.4" r="6.8"/> <circle class="map-land" cx="715.4" cy="312.4" r="6.8"/> <circle class="map-land" cx="736.8" cy="312.4" r="6.8"/> <circle class="map-land" cx="758.1" cy="312.4" r="6.8"/> <circle class="map-land" cx="779.5" cy="312.4" r="6.8"/> <circle class="map-land" cx="800.9" cy="312.4" r="6.8"/> <circle class="map-land" cx="822.3" cy="312.4" r="6.8"/> <circle class="map-land" cx="1271" cy="312.4" r="6.8"/> <circle class="map-land" cx="1313.8" cy="312.4" r="6.8"/> <circle class="map-land" cx="1420.6" cy="312.4" r="6.8"/> <circle class="map-land" cx="1527.5" cy="312.4" r="6.8"/> <circle class="map-land" cx="1548.9" cy="312.4" r="6.8"/> <circle class="map-land" cx="1570.2" cy="312.4" r="6.8"/> <circle class="map-land" cx="1591.6" cy="312.4" r="6.8"/> <circle class="map-land" cx="1613" cy="312.4" r="6.8"/> <circle class="map-land" cx="1634.4" cy="312.4" r="6.8"/> <circle class="map-land" cx="1655.7" cy="312.4" r="6.8"/> <circle class="map-land" cx="608.5" cy="333.8" r="6.8"/> <circle class="map-land" cx="629.9" cy="333.8" r="6.8"/> <circle class="map-land" cx="672.7" cy="333.8" r="6.8"/> <circle class="map-land" cx="694" cy="333.8" r="6.8"/> <circle class="map-land" cx="715.4" cy="333.8" r="6.8"/> <circle class="map-land" cx="736.8" cy="333.8" r="6.8"/> <circle class="map-land" cx="758.1" cy="333.8" r="6.8"/> <circle class="map-land" cx="779.5" cy="333.8" r="6.8"/> <circle class="map-land" cx="800.9" cy="333.8" r="6.8"/> <circle class="map-land" cx="822.3" cy="333.8" r="6.8"/> <circle class="map-land" cx="843.6" cy="333.8" r="6.8"/> <circle class="map-land" cx="1271" cy="333.8" r="6.8"/> <circle class="map-land" cx="1313.8" cy="333.8" r="6.8"/> <circle class="map-land" cx="1335.2" cy="333.8" r="6.8"/> <circle class="map-land" cx="1377.9" cy="333.8" r="6.8"/> <circle class="map-land" cx="1399.3" cy="333.8" r="6.8"/> <circle class="map-land" cx="1420.6" cy="333.8" r="6.8"/> <circle class="map-land" cx="1442" cy="333.8" r="6.8"/> <circle class="map-land" cx="1463.4" cy="333.8" r="6.8"/> <circle class="map-land" cx="1484.8" cy="333.8" r="6.8"/> <circle class="map-land" cx="1506.1" cy="333.8" r="6.8"/> <circle class="map-land" cx="1527.5" cy="333.8" r="6.8"/> <circle class="map-land" cx="1548.9" cy="333.8" r="6.8"/> <circle class="map-land" cx="1570.2" cy="333.8" r="6.8"/> <circle class="map-land" cx="1591.6" cy="333.8" r="6.8"/> <circle class="map-land" cx="1613" cy="333.8" r="6.8"/> <circle class="map-land" cx="1634.4" cy="333.8" r="6.8"/> <circle class="map-land" cx="1655.7" cy="333.8" r="6.8"/> <circle class="map-land" cx="608.5" cy="355.2" r="6.8"/> <circle class="map-land" cx="629.9" cy="355.2" r="6.8"/> <circle class="map-land" cx="651.3" cy="355.2" r="6.8"/> <circle class="map-land" cx="672.7" cy="355.2" r="6.8"/> <circle class="map-land" cx="694" cy="355.2" r="6.8"/> <circle class="map-land" cx="715.4" cy="355.2" r="6.8"/> <circle class="map-land" cx="736.8" cy="355.2" r="6.8"/> <circle class="map-land" cx="758.1" cy="355.2" r="6.8"/> <circle class="map-land" cx="1356.5" cy="355.2" r="6.8"/> <circle class="map-land" cx="1377.9" cy="355.2" r="6.8"/> <circle class="map-land" cx="1399.3" cy="355.2" r="6.8"/> <circle class="map-land" cx="1420.6" cy="355.2" r="6.8"/> <circle class="map-land" cx="1442" cy="355.2" r="6.8"/> <circle class="map-land" cx="1463.4" cy="355.2" r="6.8"/> <circle class="map-land" cx="1484.8" cy="355.2" r="6.8"/> <circle class="map-land" cx="1506.1" cy="355.2" r="6.8"/> <circle class="map-land" cx="1527.5" cy="355.2" r="6.8"/> <circle class="map-land" cx="1548.9" cy="355.2" r="6.8"/> <circle class="map-land" cx="1570.2" cy="355.2" r="6.8"/> <circle class="map-land" cx="1591.6" cy="355.2" r="6.8"/> <circle class="map-land" cx="1613" cy="355.2" r="6.8"/> <circle class="map-land" cx="1634.4" cy="355.2" r="6.8"/> <circle class="map-land" cx="1655.7" cy="355.2" r="6.8"/> <circle class="map-land" cx="608.5" cy="376.5" r="6.8"/> <circle class="map-land" cx="629.9" cy="376.5" r="6.8"/> <circle class="map-land" cx="651.3" cy="376.5" r="6.8"/> <circle class="map-land" cx="672.7" cy="376.5" r="6.8"/> <circle class="map-land" cx="694" cy="376.5" r="6.8"/> <circle class="map-land" cx="715.4" cy="376.5" r="6.8"/> <circle class="map-land" cx="758.1" cy="376.5" r="6.8"/> <circle class="map-land" cx="779.5" cy="376.5" r="6.8"/> <circle class="map-land" cx="1313.8" cy="376.5" r="6.8"/> <circle class="map-land" cx="1335.2" cy="376.5" r="6.8"/> <circle class="map-land" cx="1356.5" cy="376.5" r="6.8"/> <circle class="map-land" cx="1377.9" cy="376.5" r="6.8"/> <circle class="map-land" cx="1399.3" cy="376.5" r="6.8"/> <circle class="map-land" cx="1420.6" cy="376.5" r="6.8"/> <circle class="map-land" cx="1442" cy="376.5" r="6.8"/> <circle class="map-land" cx="1463.4" cy="376.5" r="6.8"/> <circle class="map-land" cx="1484.8" cy="376.5" r="6.8"/> <circle class="map-land" cx="1506.1" cy="376.5" r="6.8"/> <circle class="map-land" cx="1527.5" cy="376.5" r="6.8"/> <circle class="map-land" cx="1548.9" cy="376.5" r="6.8"/> <circle class="map-land" cx="1570.2" cy="376.5" r="6.8"/> <circle class="map-land" cx="1591.6" cy="376.5" r="6.8"/> <circle class="map-land" cx="1613" cy="376.5" r="6.8"/> <circle class="map-land" cx="1634.4" cy="376.5" r="6.8"/> <circle class="map-land" cx="1655.7" cy="376.5" r="6.8"/> <circle class="map-land" cx="608.5" cy="397.9" r="6.8"/> <circle class="map-land" cx="629.9" cy="397.9" r="6.8"/> <circle class="map-land" cx="651.3" cy="397.9" r="6.8"/> <circle class="map-land" cx="672.7" cy="397.9" r="6.8"/> <circle class="map-land" cx="694" cy="397.9" r="6.8"/> <circle class="map-land" cx="715.4" cy="397.9" r="6.8"/> <circle class="map-land" cx="736.8" cy="397.9" r="6.8"/> <circle class="map-land" cx="758.1" cy="397.9" r="6.8"/> <circle class="map-land" cx="779.5" cy="397.9" r="6.8"/> <circle class="map-land" cx="800.9" cy="397.9" r="6.8"/> <circle class="map-land" cx="1335.2" cy="397.9" r="6.8"/> <circle class="map-land" cx="1356.5" cy="397.9" r="6.8"/> <circle class="map-land" cx="1377.9" cy="397.9" r="6.8"/> <circle class="map-land" cx="1399.3" cy="397.9" r="6.8"/> <circle class="map-land" cx="1420.6" cy="397.9" r="6.8"/> <circle class="map-land" cx="1463.4" cy="397.9" r="6.8"/> <circle class="map-land" cx="1484.8" cy="397.9" r="6.8"/> <circle class="map-land" cx="1506.1" cy="397.9" r="6.8"/> <circle class="map-land" cx="1527.5" cy="397.9" r="6.8"/> <circle class="map-land" cx="1548.9" cy="397.9" r="6.8"/> <circle class="map-land" cx="1570.2" cy="397.9" r="6.8"/> <circle class="map-land" cx="1591.6" cy="397.9" r="6.8"/> <circle class="map-land" cx="1634.4" cy="397.9" r="6.8"/> <circle class="map-land" cx="1655.7" cy="397.9" r="6.8"/> <circle class="map-land" cx="608.5" cy="419.3" r="6.8"/> <circle class="map-land" cx="629.9" cy="419.3" r="6.8"/> <circle class="map-land" cx="651.3" cy="419.3" r="6.8"/> <circle class="map-land" cx="672.7" cy="419.3" r="6.8"/> <circle class="map-land" cx="694" cy="419.3" r="6.8"/> <circle class="map-land" cx="715.4" cy="419.3" r="6.8"/> <circle class="map-land" cx="1271" cy="419.3" r="6.8"/> <circle class="map-land" cx="1292.4" cy="419.3" r="6.8"/> <circle class="map-land" cx="1313.8" cy="419.3" r="6.8"/> <circle class="map-land" cx="1335.2" cy="419.3" r="6.8"/> <circle class="map-land" cx="1356.5" cy="419.3" r="6.8"/> <circle class="map-land" cx="1442" cy="419.3" r="6.8"/> <circle class="map-land" cx="1463.4" cy="419.3" r="6.8"/> <circle class="map-land" cx="1506.1" cy="419.3" r="6.8"/> <circle class="map-land" cx="1527.5" cy="419.3" r="6.8"/> <circle class="map-land" cx="1548.9" cy="419.3" r="6.8"/> <circle class="map-land" cx="1570.2" cy="419.3" r="6.8"/> <circle class="map-land" cx="608.5" cy="440.6" r="6.8"/> <circle class="map-land" cx="629.9" cy="440.6" r="6.8"/> <circle class="map-land" cx="651.3" cy="440.6" r="6.8"/> <circle class="map-land" cx="672.7" cy="440.6" r="6.8"/> <circle class="map-land" cx="694" cy="440.6" r="6.8"/> <circle class="map-land" cx="1271" cy="440.6" r="6.8"/> <circle class="map-land" cx="1292.4" cy="440.6" r="6.8"/> <circle class="map-land" cx="1313.8" cy="440.6" r="6.8"/> <circle class="map-land" cx="1335.2" cy="440.6" r="6.8"/> <circle class="map-land" cx="1506.1" cy="440.6" r="6.8"/> <circle class="map-land" cx="1527.5" cy="440.6" r="6.8"/> <circle class="map-land" cx="1570.2" cy="440.6" r="6.8"/> <circle class="map-land" cx="1591.6" cy="440.6" r="6.8"/> <circle class="map-land" cx="1613" cy="440.6" r="6.8"/> <circle class="map-land" cx="1634.4" cy="440.6" r="6.8"/> <circle class="map-land" cx="1655.7" cy="440.6" r="6.8"/> <circle class="map-land" cx="608.5" cy="462" r="6.8"/> <circle class="map-land" cx="629.9" cy="462" r="6.8"/> <circle class="map-land" cx="651.3" cy="462" r="6.8"/> <circle class="map-land" cx="672.7" cy="462" r="6.8"/> <circle class="map-land" cx="1271" cy="462" r="6.8"/> <circle class="map-land" cx="1292.4" cy="462" r="6.8"/> <circle class="map-land" cx="1313.8" cy="462" r="6.8"/> <circle class="map-land" cx="1463.4" cy="462" r="6.8"/> <circle class="map-land" cx="1527.5" cy="462" r="6.8"/> <circle class="map-land" cx="1570.2" cy="462" r="6.8"/> <circle class="map-land" cx="1591.6" cy="462" r="6.8"/> <circle class="map-land" cx="1613" cy="462" r="6.8"/> <circle class="map-land" cx="1634.4" cy="462" r="6.8"/> <circle class="map-land" cx="1655.7" cy="462" r="6.8"/> <circle class="map-land" cx="608.5" cy="483.4" r="6.8"/> <circle class="map-land" cx="629.9" cy="483.4" r="6.8"/> <circle class="map-land" cx="651.3" cy="483.4" r="6.8"/> <circle class="map-land" cx="672.7" cy="483.4" r="6.8"/> <circle class="map-land" cx="1292.4" cy="483.4" r="6.8"/> <circle class="map-land" cx="1313.8" cy="483.4" r="6.8"/> <circle class="map-land" cx="1335.2" cy="483.4" r="6.8"/> <circle class="map-land" cx="1356.5" cy="483.4" r="6.8"/> <circle class="map-land" cx="1377.9" cy="483.4" r="6.8"/> <circle class="map-land" cx="1399.3" cy="483.4" r="6.8"/> <circle class="map-land" cx="1420.6" cy="483.4" r="6.8"/> <circle class="map-land" cx="1655.7" cy="483.4" r="6.8"/> <circle class="map-land" cx="608.5" cy="504.8" r="6.8"/> <circle class="map-land" cx="629.9" cy="504.8" r="6.8"/> <circle class="map-land" cx="651.3" cy="504.8" r="6.8"/> <circle class="map-land" cx="1271" cy="504.8" r="6.8"/> <circle class="map-land" cx="1292.4" cy="504.8" r="6.8"/> <circle class="map-land" cx="1313.8" cy="504.8" r="6.8"/> <circle class="map-land" cx="1335.2" cy="504.8" r="6.8"/> <circle class="map-land" cx="1356.5" cy="504.8" r="6.8"/> <circle class="map-land" cx="1377.9" cy="504.8" r="6.8"/> <circle class="map-land" cx="1399.3" cy="504.8" r="6.8"/> <circle class="map-land" cx="1420.6" cy="504.8" r="6.8"/> <circle class="map-land" cx="1442" cy="504.8" r="6.8"/> <circle class="map-land" cx="1527.5" cy="504.8" r="6.8"/> <circle class="map-land" cx="1634.4" cy="504.8" r="6.8"/> <circle class="map-land" cx="1655.7" cy="504.8" r="6.8"/> <circle class="map-land" cx="629.9" cy="526.1" r="6.8"/> <circle class="map-land" cx="1271" cy="526.1" r="6.8"/> <circle class="map-land" cx="1292.4" cy="526.1" r="6.8"/> <circle class="map-land" cx="1313.8" cy="526.1" r="6.8"/> <circle class="map-land" cx="1335.2" cy="526.1" r="6.8"/> <circle class="map-land" cx="1356.5" cy="526.1" r="6.8"/> <circle class="map-land" cx="1377.9" cy="526.1" r="6.8"/> <circle class="map-land" cx="1399.3" cy="526.1" r="6.8"/> <circle class="map-land" cx="1420.6" cy="526.1" r="6.8"/> <circle class="map-land" cx="1442" cy="526.1" r="6.8"/> <circle class="map-land" cx="1463.4" cy="526.1" r="6.8"/> <circle class="map-land" cx="1484.8" cy="526.1" r="6.8"/> <circle class="map-land" cx="1506.1" cy="526.1" r="6.8"/> <circle class="map-land" cx="1527.5" cy="526.1" r="6.8"/> <circle class="map-land" cx="1548.9" cy="526.1" r="6.8"/> <circle class="map-land" cx="1570.2" cy="526.1" r="6.8"/> <circle class="map-land" cx="1591.6" cy="526.1" r="6.8"/> <circle class="map-land" cx="1634.4" cy="526.1" r="6.8"/> <circle class="map-land" cx="1655.7" cy="526.1" r="6.8"/> <circle class="map-land" cx="1228.3" cy="547.5" r="6.8"/> <circle class="map-land" cx="1249.7" cy="547.5" r="6.8"/> <circle class="map-land" cx="1271" cy="547.5" r="6.8"/> <circle class="map-land" cx="1292.4" cy="547.5" r="6.8"/> <circle class="map-land" cx="1313.8" cy="547.5" r="6.8"/> <circle class="map-land" cx="1335.2" cy="547.5" r="6.8"/> <circle class="map-land" cx="1356.5" cy="547.5" r="6.8"/> <circle class="map-land" cx="1377.9" cy="547.5" r="6.8"/> <circle class="map-land" cx="1399.3" cy="547.5" r="6.8"/> <circle class="map-land" cx="1420.6" cy="547.5" r="6.8"/> <circle class="map-land" cx="1442" cy="547.5" r="6.8"/> <circle class="map-land" cx="1463.4" cy="547.5" r="6.8"/> <circle class="map-land" cx="1484.8" cy="547.5" r="6.8"/> <circle class="map-land" cx="1506.1" cy="547.5" r="6.8"/> <circle class="map-land" cx="1527.5" cy="547.5" r="6.8"/> <circle class="map-land" cx="1548.9" cy="547.5" r="6.8"/> <circle class="map-land" cx="1570.2" cy="547.5" r="6.8"/> <circle class="map-land" cx="1591.6" cy="547.5" r="6.8"/> <circle class="map-land" cx="1613" cy="547.5" r="6.8"/> <circle class="map-land" cx="1655.7" cy="547.5" r="6.8"/> <circle class="map-land" cx="1228.3" cy="568.9" r="6.8"/> <circle class="map-land" cx="1249.7" cy="568.9" r="6.8"/> <circle class="map-land" cx="1271" cy="568.9" r="6.8"/> <circle class="map-land" cx="1292.4" cy="568.9" r="6.8"/> <circle class="map-land" cx="1313.8" cy="568.9" r="6.8"/> <circle class="map-land" cx="1335.2" cy="568.9" r="6.8"/> <circle class="map-land" cx="1356.5" cy="568.9" r="6.8"/> <circle class="map-land" cx="1377.9" cy="568.9" r="6.8"/> <circle class="map-land" cx="1399.3" cy="568.9" r="6.8"/> <circle class="map-land" cx="1420.6" cy="568.9" r="6.8"/> <circle class="map-land" cx="1442" cy="568.9" r="6.8"/> <circle class="map-land" cx="1463.4" cy="568.9" r="6.8"/> <circle class="map-land" cx="1484.8" cy="568.9" r="6.8"/> <circle class="map-land" cx="1506.1" cy="568.9" r="6.8"/> <circle class="map-land" cx="1527.5" cy="568.9" r="6.8"/> <circle class="map-land" cx="1548.9" cy="568.9" r="6.8"/> <circle class="map-land" cx="1570.2" cy="568.9" r="6.8"/> <circle class="map-land" cx="1591.6" cy="568.9" r="6.8"/> <circle class="map-land" cx="1613" cy="568.9" r="6.8"/> <circle class="map-land" cx="1655.7" cy="568.9" r="6.8"/> <circle class="map-land" cx="629.9" cy="590.2" r="6.8"/> <circle class="map-land" cx="651.3" cy="590.2" r="6.8"/> <circle class="map-land" cx="1206.9" cy="590.2" r="6.8"/> <circle class="map-land" cx="1228.3" cy="590.2" r="6.8"/> <circle class="map-land" cx="1249.7" cy="590.2" r="6.8"/> <circle class="map-land" cx="1271" cy="590.2" r="6.8"/> <circle class="map-land" cx="1292.4" cy="590.2" r="6.8"/> <circle class="map-land" cx="1313.8" cy="590.2" r="6.8"/> <circle class="map-land" cx="1335.2" cy="590.2" r="6.8"/> <circle class="map-land" cx="1356.5" cy="590.2" r="6.8"/> <circle class="map-land" cx="1377.9" cy="590.2" r="6.8"/> <circle class="map-land" cx="1399.3" cy="590.2" r="6.8"/> <circle class="map-land" cx="1420.6" cy="590.2" r="6.8"/> <circle class="map-land" cx="1442" cy="590.2" r="6.8"/> <circle class="map-land" cx="1463.4" cy="590.2" r="6.8"/> <circle class="map-land" cx="1484.8" cy="590.2" r="6.8"/> <circle class="map-land" cx="1506.1" cy="590.2" r="6.8"/> <circle class="map-land" cx="1527.5" cy="590.2" r="6.8"/> <circle class="map-land" cx="1548.9" cy="590.2" r="6.8"/> <circle class="map-land" cx="1570.2" cy="590.2" r="6.8"/> <circle class="map-land" cx="1591.6" cy="590.2" r="6.8"/> <circle class="map-land" cx="1613" cy="590.2" r="6.8"/> <circle class="map-land" cx="1634.4" cy="590.2" r="6.8"/> <circle class="map-land" cx="672.7" cy="611.6" r="6.8"/> <circle class="map-land" cx="1206.9" cy="611.6" r="6.8"/> <circle class="map-land" cx="1228.3" cy="611.6" r="6.8"/> <circle class="map-land" cx="1249.7" cy="611.6" r="6.8"/> <circle class="map-land" cx="1271" cy="611.6" r="6.8"/> <circle class="map-land" cx="1292.4" cy="611.6" r="6.8"/> <circle class="map-land" cx="1313.8" cy="611.6" r="6.8"/> <circle class="map-land" cx="1335.2" cy="611.6" r="6.8"/> <circle class="map-land" cx="1356.5" cy="611.6" r="6.8"/> <circle class="map-land" cx="1377.9" cy="611.6" r="6.8"/> <circle class="map-land" cx="1399.3" cy="611.6" r="6.8"/> <circle class="map-land" cx="1420.6" cy="611.6" r="6.8"/> <circle class="map-land" cx="1442" cy="611.6" r="6.8"/> <circle class="map-land" cx="1463.4" cy="611.6" r="6.8"/> <circle class="map-land" cx="1484.8" cy="611.6" r="6.8"/> <circle class="map-land" cx="1506.1" cy="611.6" r="6.8"/> <circle class="map-land" cx="1527.5" cy="611.6" r="6.8"/> <circle class="map-land" cx="1548.9" cy="611.6" r="6.8"/> <circle class="map-land" cx="1570.2" cy="611.6" r="6.8"/> <circle class="map-land" cx="1591.6" cy="611.6" r="6.8"/> <circle class="map-land" cx="1613" cy="611.6" r="6.8"/> <circle class="map-land" cx="1634.4" cy="611.6" r="6.8"/> <circle class="map-land" cx="1206.9" cy="633" r="6.8"/> <circle class="map-land" cx="1228.3" cy="633" r="6.8"/> <circle class="map-land" cx="1249.7" cy="633" r="6.8"/> <circle class="map-land" cx="1271" cy="633" r="6.8"/> <circle class="map-land" cx="1292.4" cy="633" r="6.8"/> <circle class="map-land" cx="1313.8" cy="633" r="6.8"/> <circle class="map-land" cx="1335.2" cy="633" r="6.8"/> <circle class="map-land" cx="1356.5" cy="633" r="6.8"/> <circle class="map-land" cx="1377.9" cy="633" r="6.8"/> <circle class="map-land" cx="1399.3" cy="633" r="6.8"/> <circle class="map-land" cx="1420.6" cy="633" r="6.8"/> <circle class="map-land" cx="1442" cy="633" r="6.8"/> <circle class="map-land" cx="1463.4" cy="633" r="6.8"/> <circle class="map-land" cx="1484.8" cy="633" r="6.8"/> <circle class="map-land" cx="1506.1" cy="633" r="6.8"/> <circle class="map-land" cx="1527.5" cy="633" r="6.8"/> <circle class="map-land" cx="1548.9" cy="633" r="6.8"/> <circle class="map-land" cx="1570.2" cy="633" r="6.8"/> <circle class="map-land" cx="1591.6" cy="633" r="6.8"/> <circle class="map-land" cx="1613" cy="633" r="6.8"/> <circle class="map-land" cx="1634.4" cy="633" r="6.8"/> <circle class="map-land" cx="1655.7" cy="633" r="6.8"/> <circle class="map-land" cx="608.5" cy="654.4" r="6.8"/> <circle class="map-land" cx="1206.9" cy="654.4" r="6.8"/> <circle class="map-land" cx="1228.3" cy="654.4" r="6.8"/> <circle class="map-land" cx="1249.7" cy="654.4" r="6.8"/> <circle class="map-land" cx="1271" cy="654.4" r="6.8"/> <circle class="map-land" cx="1292.4" cy="654.4" r="6.8"/> <circle class="map-land" cx="1313.8" cy="654.4" r="6.8"/> <circle class="map-land" cx="1335.2" cy="654.4" r="6.8"/> <circle class="map-land" cx="1356.5" cy="654.4" r="6.8"/> <circle class="map-land" cx="1377.9" cy="654.4" r="6.8"/> <circle class="map-land" cx="1399.3" cy="654.4" r="6.8"/> <circle class="map-land" cx="1420.6" cy="654.4" r="6.8"/> <circle class="map-land" cx="1442" cy="654.4" r="6.8"/> <circle class="map-land" cx="1463.4" cy="654.4" r="6.8"/> <circle class="map-land" cx="1484.8" cy="654.4" r="6.8"/> <circle class="map-land" cx="1506.1" cy="654.4" r="6.8"/> <circle class="map-land" cx="1527.5" cy="654.4" r="6.8"/> <circle class="map-land" cx="1548.9" cy="654.4" r="6.8"/> <circle class="map-land" cx="1570.2" cy="654.4" r="6.8"/> <circle class="map-land" cx="1591.6" cy="654.4" r="6.8"/> <circle class="map-land" cx="1613" cy="654.4" r="6.8"/> <circle class="map-land" cx="1634.4" cy="654.4" r="6.8"/> <circle class="map-land" cx="1655.7" cy="654.4" r="6.8"/> <line class="map-edge" x1="705" y1="431" x2="656.6" y2="409.4"/> <line class="map-edge" x1="705" y1="431" x2="1281.6" y2="326.5"/> <line class="map-edge" x1="656.6" y1="409.4" x2="1281.6" y2="326.5"/> <line class="map-edge" x1="656.6" y1="409.4" x2="1377.1" y2="334.9"/> <line class="map-edge" x1="1281.6" y1="326.5" x2="1377.1" y2="334.9"/> <line class="map-edge" x1="1281.6" y1="326.5" x2="1489.6" y2="275.4"/> <line class="map-edge" x1="1377.1" y1="334.9" x2="1489.6" y2="275.4"/> <line class="map-edge" x1="1377.1" y1="334.9" x2="1602.2" y2="525.7"/> <line class="map-edge" x1="1489.6" y1="275.4" x2="1602.2" y2="525.7"/> <circle class="map-glow" cx="705" cy="431" r="26"/> <circle class="map-ring" cx="705" cy="431" r="19"/> <circle class="map-city current" cx="705" cy="431" r="12"/> <circle class="map-city" cx="656.6" cy="409.4" r="9"/> <circle class="map-city" cx="1281.6" cy="326.5" r="9"/> <circle class="map-city" cx="1377.1" cy="334.9" r="9"/> <circle class="map-city" cx="1489.6" cy="275.4" r="9"/> <circle class="map-city" cx="1602.2" cy="525.7" r="9"/> <rect class="map-pill" x="736" y="418" width="82" height="26" rx="4"/> <text class="map-label" x="777" y="431">Armonk</text> <rect class="map-pill" x="610.1" y="364.4" width="93" height="26" rx="4"/> <text class="map-label" x="656.6" y="377.4">Toronto</text> <rect class="map-pill" x="1240.6" y="345.5" width="82" height="26" rx="4"/> <text class="map-label" x="1281.6" y="358.5">Dublin</text> <rect class="map-pill" x="1319.6" y="353.9" width="115" height="26" rx="4"/> <text class="map-label" x="1377.1" y="366.9">Amsterdam</text> <rect class="map-pill" x="1432.1" y="294.4" width="115" height="26" rx="4"/> <text class="map-label" x="1489.6" y="307.4">Stockholm</text> <rect class="map-pill" x="1566.7" y="544.7" width="71" height="26" rx="4"/> <text class="map-label" x="1602.2" y="557.7">Cairo</text> </g> <rect class="frame" x="600" y="150" width="1060" height="513" rx="12"/> <text class="sm muted" x="600" y="134">the game (6-city map)</text> <line class="edge speech" x1="520" y1="724" x2="980" y2="724"/> <path class="chat-bubble player" d="M1002 697 H1638 Q1650 697 1650 709 V810 L1662 827 H1002 Q990 827 990 815 V709 Q990 697 1002 697 Z"/> <text class="chat-icon" x="1012" y="730">🕵️</text> <text class="chat-name" x="1044" y="730">INVESTIGATOR</text> <rect class="chat-badge" x="1542" y="717" width="86" height="26" rx="13"/> <text class="chat-badge-text" x="1585" y="730">Armonk</text> <text class="chat-text" x="1012" y="773">I need to get oriented and start investigating. Let me</text> <text class="chat-text" x="1012" y="801">check my journal first to see what I know so far.</text> <line class="edge agent" x1="520" y1="690" x2="687.6" y2="455.4"/> </svg></p>
+<h3 style="color:#89CFF0;">Why This Game?</h3>
+<p>This game world is designed to help players of all development experience levels understand how to build and improve an agent. The game's map is a place where agents both struggle with and solve complex problems, applying problem-solving strategies as they search for the drive across cities and NPCs.</p>
+<p>This kind of problem-solving mirrors many real-world problems, where an agent must navigate layers of information, find and keep track of answers, and stay aware of its end goal while focusing on the job at hand.</p>
+<h2 style="color:#89CFF0;">How to Play Deep Blue Drive Heist</h2>
+<p>Make sure you've completed <a href="/bobgame-docs-external/workshop/prework/">the pre-work</a> for this workshop, where you set up your machine using the <a href="/bobgame-docs-external/booth/laptop-setup/">laptop setup process</a>.</p>
+<p>Instructions for playing Deep Blue Drive Heist are in the <a href="/bobgame-docs-external/booth/player-guide/">player guide</a>. You'll use it during this module's exercise.</p>
+<h2 style="color:#89CFF0;">What Is an AI Coding Agent and How Do We Use One?</h2>
+<p>AI coding agents are software tools that help developers generate, debug, and analyze code. Examples include IBM Bob, Claude, and Cursor.</p>
+<p>You can use an AI coding agent to analyze problems and implement solutions in your codebase without losing track of your progress. Good prompts give the agent context: what the core problem is, and what information it has to work with.</p>
+<h2 style="color:#89CFF0;">How IBM Bob Works</h2>
+<p>Bob works directly in your repository, where it can inspect, navigate, and modify your files and their history. It can also run commands, test suites, and build scripts, and analyze the output right in the chat.</p>
+<p>By default, Bob asks for your approval before it reads, writes, or executes anything (see <a href="#bob-permissions">Bob Permissions</a> below). Bob also saves checkpoints as it works: a safety net that tracks state automatically, lets you review diffs, and lets you roll back any change you're not happy with.</p>
+<h3 style="color:#89CFF0;">Prompting and Rules</h3>
+<p>When you send Bob a prompt, it gathers the context it needs to decide which tools to use. That includes its mode instructions, any project rules the developer has set, and other relevant context from the workspace.</p>
+<p><code>AGENTS.md</code> is a Markdown file, usually in the repository root, that acts as a persistent instruction manual for Bob. It may include specific rules that Bob must follow before executing any changes, such as style guidelines, files to ignore or target, and specific strategies it should follow.</p>
+<p>For this repository, we've designed the <code>AGENTS.md</code> file specifically to support players of this game. It keeps Bob focused on changing <code>player_agent.py</code>, explains the goal of the game, and offers some ideas about strategy. Take a look at <code>AGENTS.md</code> now to see the text-based guardrails that are in place.</p>
+<h3 style="color:#89CFF0;">Bob Modes</h3>
+<p>By switching between Bob's modes (Ask, Plan, Agent), you can keep Bob focused on the problem at hand and have it break down the problem and solution at your own pace.</p>
+<p>Each mode comes with base instructions that tell Bob which tools to use and what goal to center its responses on.</p>
+<p>There are three predefined modes:</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Use Case</th>
+<th>Most Useful For...</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Ask</strong></td>
+<td>For questions about the project documentation, the codebase, or anything else technical</td>
+<td>Clarifying and understanding concepts and breaking down the code without having to change anything</td>
+</tr>
+<tr>
+<td><strong>Plan</strong></td>
+<td>For creating a deliberate project plan and strategizing changes before they are applied</td>
+<td>Breaking down complex problems and using Bob to develop a strategy, brainstorm solutions, and explore parts that need more explanation</td>
+</tr>
+<tr>
+<td><strong>Agent</strong></td>
+<td>For writing and refactoring code in the codebase</td>
+<td>Supporting your application of changes to the agent, whether that be adding new files and functions, changing parts of the code, or fixing bugs</td>
+</tr>
+</tbody>
+</table>
+<p>You'll probably use Agent mode most often during Deep Blue Drive Heist. You can also add custom modes in the Modes tab of Bob's settings.</p>
+<h3 id="bob-permissions" style="color:#89CFF0;">Bob Permissions</h3>
+<p>Bob's permission settings let you give it more autonomy. For this workshop, since the code isn't sensitive (and especially if you're using a computer set aside for this lab), we recommend giving Bob full permissions so fewer permission prompts slow you down.</p>
+<p>If you'd rather approve each action yourself, leave them unchecked.</p>
+<table>
+<thead>
+<tr>
+<th>Permission</th>
+<th>Allows</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 style="color:#89CFF0;">Your Activity</h2>
+<div class="wk-box wk-exercise"><strong>Exercise · Try the game</strong><p>Try out Deep Blue Drive Heist once, using the player guide and the in-game tutorial mode as your references. Use Bob to improve your agent, and then press the green New Game button to observe your changes.</p>&#10;<p>If you're not sure what changed, ask Bob to compare the logs from your games and point out any improvements. This helps you see what your agent did differently and decide what to change next.</p>&#10;<p>In general, it's good practice to ask Bob to summarize its work, so that you stay aware of the changes as development goes on.</p>&#10;<div class="tip"><strong>Tip</strong>&#10;<p>This is part of a practice called <em>spec-driven development</em>, where developers keep track of what they're building with AI by writing, and checking against, detailed specs for what the AI should build.</p>&#10;</div>&#10;<p>Here's an example prompt to get started:</p>&#10;<div class="callout wk-bob-prompt wk-mode-agent"><button class="copy-btn" onclick="copyCallout(this)">Copy</button><span class="wk-mode-pill">Bob · Agent mode</span><span class="callout-text">Hi Bob, look at the logs that are updating as the agent plays the game. Could you outline what issues the agent may be having with completing the game faster, and make changes to the player agent file based on what you find?</span></div>&#10;<p>You'll find more prompts in the <a href="/bobgame-docs-external/booth/player-guide/#quick-reference-prompts-to-try-with-bob">player guide's quick reference</a>.</p>&#10;<p>At the end of this exercise, you should have:</p>&#10;<ul>&#10;<li>Run the game with the default player agent at least once</li>&#10;<li>Used Bob to make one change to your agent</li>&#10;<li>Run the game a second time with the new player agent</li>&#10;</ul>&#10;</div>
+<h2 style="color:#89CFF0;">Up Next</h2>
+<p>In <a href="/bobgame-docs-external/workshop/module-1/">Module 1</a>, we open up the agent itself: what it's built on, how its hooks work, and how to use Bob to explore and change it deliberately.</p>
+
+
+
+  <div class="wk-pager">
+    <a class="wk-prev" href="/bobgame-docs-external/workshop/prework/"><small>← Previous</small>Pre-work</a>
+    <a class="wk-next" href="/bobgame-docs-external/workshop/module-1/"><small>Next →</small>Module 1: The World of Agents</a>
+  </div>
+
+</div>
+
+  </main>
+  <script>
+    // Persistent persona filter: URL param sets it, localStorage remembers it
+    const VALID_ROLES = ['player', 'staff', 'developer'];
+    const paramRole = new URLSearchParams(location.search).get('role');
+    if (paramRole && VALID_ROLES.includes(paramRole)) {
+      localStorage.setItem('docs-role', paramRole);
+    }
+    const role = localStorage.getItem('docs-role');
+    if (role && VALID_ROLES.includes(role)) {
+      document.body.classList.add('role-' + role);
+      document.querySelectorAll('nav li[data-hide-from]').forEach(li => {
+        if (li.dataset.hideFrom.split(',').includes(role)) li.style.display = 'none';
+      });
+    }
+    // Nav section collapse/expand
+    function toggleSection(btn) {
+      const body = btn.nextElementSibling;
+      const arrow = btn.querySelector('.toggle-arrow');
+      const isOpen = body.classList.toggle('open');
+      arrow.style.transform = isOpen ? 'rotate(90deg)' : '';
+    }
+    // Auto-expand the section containing the active link
+    document.querySelectorAll('nav .section-body').forEach(body => {
+      if (body.querySelector('a.active')) {
+        body.classList.add('open');
+        const arrow = body.previousElementSibling.querySelector('.toggle-arrow');
+        if (arrow) arrow.style.transform = 'rotate(90deg)';
+      }
+    });
+    // Code block headers: language label + copy button
+    const LANG_LABELS = {bash:'bash',powershell:'powershell',json:'JSON',python:'Python',ini:'.env',text:'',js:'JavaScript'};
+    document.querySelectorAll('main pre').forEach(pre => {
+      const code = pre.querySelector('code');
+      const lang = code ? [...code.classList].find(c => c.startsWith('language-'))?.replace('language-','') : '';
+      const label = LANG_LABELS[lang] ?? lang;
+      const wrapper = document.createElement('div');
+      wrapper.className = 'code-block';
+      const header = document.createElement('div');
+      header.className = 'code-header';
+      header.innerHTML = `<span>${label}</span><button class="code-copy">Copy</button>`;
+      header.querySelector('.code-copy').addEventListener('click', function() {
+        navigator.clipboard.writeText(pre.textContent).then(() => {
+          this.textContent = 'Copied!';
+          setTimeout(() => this.textContent = 'Copy', 1500);
+        });
+      });
+      pre.parentNode.insertBefore(wrapper, pre);
+      wrapper.appendChild(header);
+      wrapper.appendChild(pre);
+    });
+  </script>
+  <script src="/bobgame-docs-external/shared/docs.js"></script>
+  <script src="/bobgame-docs-external/vendor/reveal/dist/reveal.js"></script>
+  <script src="/bobgame-docs-external/vendor/reveal/plugin/markdown/markdown.js"></script>
+  <script src="/bobgame-docs-external/vendor/reveal/plugin/highlight/highlight.js"></script>
+  <script src="/bobgame-docs-external/vendor/reveal/plugin/notes/notes.js"></script>
+  <script src="/bobgame-docs-external/shared/slides.js"></script>
+  
+</body>
+</html>
