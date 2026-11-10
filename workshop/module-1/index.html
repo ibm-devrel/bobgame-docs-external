@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 1: The World of Agents — Deep Blue Drive Heist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0d0d12;
+      --bg-layer: #1a1a24;
+      --text: #f0f0f5;
+      --text-muted: #8888aa;
+      --accent: #0F62FE;
+      --accent-bright: #3B82F6;
+      --sidebar-w: 240px;
+    }
+    body {
+      font-family: 'IBM Plex Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      min-height: 100vh;
+    }
+    nav {
+      width: var(--sidebar-w);
+      background: var(--bg-layer);
+      padding: 1.5rem 1rem;
+      position: fixed;
+      top: 0; bottom: 0;
+      overflow-y: auto;
+      border-right: 1px solid #2a2a3a;
+    }
+    nav a.logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--accent-bright);
+      text-decoration: none;
+      margin-bottom: 1.5rem;
+      line-height: 1.3;
+    }
+    nav a.logo img {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+    }
+    nav h3 {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin: 1.2rem 0 0;
+    }
+    nav .section-toggle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 1.2rem 0 0.4rem;
+      cursor: pointer;
+      text-align: left;
+    }
+    nav .section-toggle:hover { color: var(--text); }
+    nav .section-toggle .toggle-arrow { font-size: 0.6rem; transition: transform 0.2s; }
+    nav .section-body { display: none; }
+    nav .section-body.open { display: block; }
+    nav h4.nav-sublabel {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin: 0.8rem 0 0.3rem 0.6rem;
+      opacity: 0.7;
+    }
+    nav ul { list-style: none; }
+    nav li a {
+      display: block;
+      padding: 0.3rem 0.6rem;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.85rem;
+      border-radius: 4px;
+    }
+    nav li a:hover { background: #2a2a3a; }
+    nav li a.active { background: var(--accent); color: #fff; }
+    main {
+      margin-left: var(--sidebar-w);
+      padding: 2rem 3rem;
+      max-width: 52rem;
+      width: 100%;
+      line-height: 1.7;
+    }
+    main h1 { font-size: 1.8rem; margin-bottom: 1rem; }
+    main h2 { font-size: 1.3rem; margin: 2rem 0 0.5rem; border-bottom: 1px solid #2a2a3a; padding-bottom: 0.3rem; }
+    main h3 { font-size: 1.05rem; margin: 1.5rem 0 0.4rem; }
+    main p { margin: 0.6rem 0; }
+    main a { color: var(--accent-bright); }
+    main code {
+      font-family: 'IBM Plex Mono', monospace;
+      background: var(--bg-layer);
+      padding: 0.15em 0.35em;
+      border-radius: 3px;
+      font-size: 0.88em;
+    }
+    .code-block { position: relative; margin: 0.8rem 0; }
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #12121a;
+      border: 1px solid #2a2a3a;
+      border-bottom: none;
+      border-radius: 6px 6px 0 0;
+      padding: 0.3rem 0.7rem;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .code-copy {
+      background: none;
+      border: 1px solid #2a2a3a;
+      color: var(--text-muted);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.72rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .code-copy:hover { color: var(--text); border-color: var(--text-muted); }
+    main pre {
+      background: var(--bg-layer);
+      padding: 1rem;
+      border-radius: 0 0 6px 6px;
+      overflow-x: auto;
+      margin: 0;
+    }
+    .code-block:not(:has(.code-header)) pre { border-radius: 6px; }
+    main pre code { background: none; padding: 0; }
+    main table { border-collapse: collapse; width: 100%; margin: 0.8rem 0; }
+    main th, main td { border: 1px solid #2a2a3a; padding: 0.5rem 0.8rem; text-align: left; }
+    main th { background: var(--bg-layer); font-weight: 600; }
+    main ul, main ol { margin: 0.6rem 0; padding-left: 1.5rem; }
+    main li { margin: 0.3rem 0; }
+    main blockquote { border-left: 3px solid var(--accent); padding-left: 1rem; color: #d0d0e8; margin: 0.8rem 0; }
+    .persona-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1.5rem 0; }
+    .persona-btn {
+      display: inline-block;
+      padding: 0.7rem 1.4rem;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: background 0.15s;
+    }
+    .persona-btn:hover { background: var(--accent-bright); color: #fff; }
+    /* Persona filter: hide nav sections based on role */
+    nav .section-player,
+    nav .section-booth-staff,
+    nav .section-developer { display: block; }
+    body.role-player nav .section-booth-staff { display: none; }
+    body.role-staff nav .section-player { display: none; }
+    body.role-developer nav .section-player,
+    body.role-developer nav .section-booth-staff { display: none; }
+    @media (max-width: 768px) {
+      nav { position: static; width: 100%; border-right: none; border-bottom: 1px solid #2a2a3a; }
+      main { margin-left: 0; padding: 1.5rem; }
+      body { flex-direction: column; }
+    }
+  </style>
+  <link rel="stylesheet" href="/bobgame-docs-external/shared/docs.css">
+  
+  <link rel="stylesheet" href="/bobgame-docs-external/vendor/reveal/dist/reveal.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/vendor/reveal/dist/theme/black.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/vendor/reveal/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/shared/workshop.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/shared/slides.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/shared/diagram.css">
+  
+</head>
+<body>
+  <nav>
+    <a class="logo" href="/bobgame-docs-external/"><img src="/bobgame-docs-external/assets/bob-head.svg" alt="Bob">Deep Blue<br>Drive Heist</a>
+    
+      
+      
+      
+        
+          
+        
+      
+      
+    
+      
+      
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+      
+      <div class="section-workshop">
+      
+        <button class="section-toggle" onclick="toggleSection(this)">
+          Workshop<span class="toggle-arrow" style="transform:rotate(90deg)">▶</span>
+        </button>
+        <div class="section-body open">
+          
+            <ul>
+              
+                <li><a href="/bobgame-docs-external/workshop/">Overview</a></li>
+              
+                <li><a href="/bobgame-docs-external/workshop/prework/">Pre-work</a></li>
+              
+                <li><a href="/bobgame-docs-external/workshop/module-0/">Module 0: The Heist</a></li>
+              
+                <li><a href="/bobgame-docs-external/workshop/module-1/" class="active">Module 1: World of Agents</a></li>
+              
+                <li><a href="/bobgame-docs-external/workshop/module-2/">Module 2: Agent Cognition</a></li>
+              
+                <li><a href="/bobgame-docs-external/workshop/module-3/">Module 3: Experimentation</a></li>
+              
+            </ul>
+          
+        </div>
+      
+      </div>
+      
+    
+      
+      
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+      
+      <div class="section-general">
+      
+        <button class="section-toggle" onclick="toggleSection(this)">
+          General<span class="toggle-arrow" style="transform:rotate(90deg)">▶</span>
+        </button>
+        <div class="section-body open">
+          
+            <ul>
+              
+                <li><a href="/bobgame-docs-external/booth/laptop-setup/">Laptop Setup</a></li>
+              
+                <li><a href="/bobgame-docs-external/booth/techzone/">TechZone Configuration</a></li>
+              
+                <li><a href="/bobgame-docs-external/booth/player-guide/">Walk-through Tutorial: Player</a></li>
+              
+            </ul>
+          
+        </div>
+      
+      </div>
+      
+    
+      
+      
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+      
+    
+      
+      
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+      
+    
+      
+      
+      
+        
+          
+        
+      
+      
+    
+  </nav>
+  <main>
+    <div class="wk-page wk-module-1">
+
+  <header class="wk-header">
+    <div class="wk-eyebrow">Module 1 · 15–20 min</div>
+    <h1>The World of Agents</h1>
+    <p class="wk-concept">What an agent is, how this one is built (LangGraph, hooks, MCP tools, memory), and how to steer it with Bob.</p>
+    
+  </header>
+  <div class="wk-deck"><div class="wk-deck-frame"><div class="reveal" data-deck="module-1" data-mode="embedded"><div class="slides"><section data-markdown data-separator="^\r?\n---\r?\n$" data-separator-vertical="^\r?\n--\r?\n$" data-separator-notes="^Note:"><textarea data-template>&lt;!-- .slide: class="wk-title" --&gt;&#10;&#10;&lt;p class="wk-eyebrow"&gt;Module 1 · 15–20 min&lt;/p&gt;&#10;&#10;# The World of Agents&#10;&#10;What an agent is, and how this one is built&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-center" --&gt;&#10;&#10;## About 1 in 10&#10;&#10;players have built an agent that solves the full 26-city game on its own.&#10;&#10;Note:&#10;* the game is built on and run by agents, which act non-deterministically: you can't count on them to repeat the same behavior on a new run.&#10;&#10;---&#10;&#10;## What is an agent?&#10;&#10;A software system that uses LLMs to pursue goals, break down problems, and perform tasks.&#10;&#10;- Most agents today use some form of the [ReAct loop](https://arxiv.org/abs/2210.03629)&#10;- Our agent uses elements of it, but:&#10;  - it **never** takes feedback from the human player&#10;  - it's limited in **when** and **how** it can respond, and what it can see when it does&#10;&#10;Note:&#10;Refining agents to solve complex problems takes verification loops, specific targets, and an environment where the agent can improve iteratively. True of all AI agents.&#10;&#10;---&#10;&#10;## The two agents&#10;&#10;&lt;div class="wk-cols"&gt;&#10;&lt;div&gt;&#10;&#10;### IBM Bob&#10;&#10;- The coding agent you talk to&#10;- General-purpose, ReAct-based&#10;- In a coding harness built for software development&#10;&#10;&lt;/div&gt;&#10;&lt;div&gt;&#10;&#10;### The player agent&#10;&#10;- Plays the text adventure&#10;- **Not** general-purpose: only reacts to the game&#10;- Built on **LangGraph**: responds only at specific points in a deterministic workflow&#10;&#10;&lt;/div&gt;&#10;&lt;/div&gt;&#10;&#10;---&#10;&#10;## How a general-purpose agent works&#10;&#10;User message → LLM → tool call → result appended → LLM → … → response&#10;&#10;This loop lives inside a **harness**: everything that lets you control the agent's behavior.&#10;&#10;- **System prompt:** your extra instructions on how to behave&#10;- **Skills:** folders of instructions (sometimes with tools) for specific tasks&#10;- **Tools:** functions the agent can call, usually MCP servers&#10;- **Memory:** saved across sessions, retrieved by hooks&#10;- **Filesystem access:** through tools&#10;&#10;Note:&#10;Tool results, memories, and skills all become part of the conversation context. Users control a single session, and compact, clear, or start a new one when it gets too long. In most coding harnesses, messages are append-only.&#10;&#10;---&#10;&#10;## How our player agent differs&#10;&#10;- No skills&#10;- Tools are picked once, in the **MCP Server Shop**&#10;- The **notebook** is its only memory, and leads have a fixed shape: chess piece, finding, where seen, points toward&#10;- Talking to NPCs, notes, travel: all tools&#10;- No filesystem, no internet, nothing outside the game&#10;- The session **resets at every city**. Only the notebook carries over.&#10;&#10;Note:&#10;The human player never speaks. The other messages come from the Narrator and NPC "agents", which only speak when it's their turn. They aren't truly agentic: they can't make arbitrary tool calls and respond to the results.&#10;&#10;Is the player agent in a harness? Maybe: the industry's definition is underspecified. This setup stretches it.&#10;&#10;---&#10;&#10;## Why build agents this way?&#10;&#10;- Controlling **when** the agent responds saves tokens spent deciding whether to respond&#10;- Only seeing the game world means it can't "escape" the game&#10;- Once it's used its tools, it won't keep going for no reason&#10;- Resetting at each city means it can't double down on hallucinated content&#10;&#10;In a real system, this costs far less than a general-purpose agent with a filesystem and the internet.&#10;&#10;---&#10;&#10;## Hooks&#10;&#10;The agent always sees every message as it is. Your Python code can **add** to it.&#10;&#10;- `highlight_narrator_message`, `highlight_npc_message`, `highlight_tool_result`: add a note after a message&#10;- `briefing`: add a note right before each turn&#10;&#10;They all get the **orientation**: where the agent is, where it can go, where it's been, every route it's seen.&#10;&#10;By default they add nothing. Use **deterministic code** to point the LLM at what matters.&#10;&#10;Note:&#10;Examples: pull the connecting cities out of the narrator's scene; count chess pieces in a tool result; total the leads pointing each way; brief the agent on the game state (distance traveled, cities visited); point out connected cities not yet visited.&#10;&#10;Hooks can't hide or change a message. They can read the notebook (`self.notebook`) but not write it. The agent object is new in every city.&#10;&#10;Coding harnesses have hooks too, mostly for guardrails: PII filtering, stripping passwords and confidential information. Those can usually change or hide what the agent sees.&#10;&#10;---&#10;&#10;## The game system&#10;&#10;A LangGraph `StateGraph` for every city visit, with four node types:&#10;&#10;&lt;div class="wk-cols"&gt;&#10;&lt;div&gt;&#10;&#10;- The narrator&#10;- The player&#10;- The tools&#10;- The NPCs&#10;&#10;&lt;/div&gt;&#10;&lt;div&gt;&#10;&#10;- Every node appends to a shared `messages` list&#10;- Hooks run on the player's turn, just before its LLM call&#10;- `travel_to` resets the messages: the narrator speaks, the NPC says hello, the loop repeats&#10;&#10;&lt;/div&gt;&#10;&lt;/div&gt;&#10;&#10;Note:&#10;The other agents don't chime in whenever they want. They only respond to the player agent's behavior.&#10;&#10;---&#10;&#10;## The finale: a verification loop&#10;&#10;- The finale city gives the agent one more tool: `enter_evidence_words`&#10;- The safe tells it how many words were right&#10;- So it can check its notebook, see what's wrong, and make a new plan&#10;&#10;---&#10;&#10;## What's in each message&#10;&#10;Each one looks unstructured. Each one has structure you can pull out in Python.&#10;&#10;| Source | Structure |&#10;|---|---|&#10;| **Narrator** | One structured call, three entries: atmosphere, a bullet per room object, a bullet per exit (city) |&#10;| **NPC** | Hints from the city's story file. Evidence cities: told to reveal the evidence word clearly |&#10;| **Tool results** | `=== Tool Name results ===`, then `--- Finding N [finding_id] ---`, then the content |&#10;&#10;---&#10;&#10;## MCP tools&#10;&#10;Plugins that connect agents to external tools, APIs, and services. Here, they connect the agent to the **game world**.&#10;&#10;```json&#10;{&#10;  "name": "filesystem",&#10;  "description": "Search this resource. Returns ALL available documents at once.",&#10;  "input_schema": {&#10;    "type": "object",&#10;    "properties": { "query": { "type": "string", "default": "search" } }&#10;  }&#10;}&#10;```&#10;&#10;Note:&#10;Every tool result adds atmosphere or conveys a lead. Every lead is a chess piece plus a city, often obscured ("The City of Light" for Paris). LLMs can usually decode these.&#10;&#10;The game is balanced so any combination of MCP servers has enough leads to win.&#10;&#10;---&#10;&#10;## A tool call, and its result&#10;&#10;```json&#10;{ "type": "tool_use", "name": "filesystem", "input": { "query": "search" } }&#10;```&#10;&#10;```text&#10;=== filesystem results ===&#10;&#10;--- Finding 1 [chess_board] (terminal_display) ---&#10;  Black just played b7→b5&#10;  YOUR MOVE&#10;  1. Nf3 — Toronto&#10;  2. d4  — Dublin&#10;=== End of filesystem — 1 finding(s) total. ===&#10;```&#10;&#10;---&#10;&#10;## The notebook&#10;&#10;- The agent's **only** memory between cities&#10;- Written with `record_evidence`, `record_lead`, `take_note`; read back with `check_notebook()`&#10;- Fixable: `revise` an entry (or mark it confirmed), `cross_out` one it no longer trusts&#10;- One freeform note; leads and evidence words have a fixed shape&#10;&#10;That keeps the agent from using its memory as a fun place to put its hallucinations about the storyline.&#10;&#10;---&#10;&#10;## Why can't it just solve the game?&#10;&#10;- The same input can produce different outputs: agents are **non-deterministic**&#10;- After a change, the agent often won't do what you wanted, so it's hard to tell if the change worked&#10;- Be precise with Bob: specific prompts give more consistent results&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-center" --&gt;&#10;&#10;## Exercise&#10;&#10;**Ask** → **Plan** → **Agent** → New Game → **Ask**&#10;&#10;Note:&#10;1. Ask: explore the codebase. "What does the LangGraph flow look like?" "What is in an NPC response?" "What should I look for in a tool call response?"&#10;2. Plan: a verification loop at each city, with hooks surfacing information deterministically.&#10;3. Agent: implement the plan.&#10;4. Ask: compare with previous runs. Is the total time going down?&#10;&#10;---&#10;&#10;## What's still hard&#10;&#10;The agent arrives at each city knowing only what's in its notebook.&#10;&#10;- It can't see the map&#10;- It doesn't know how long it's taking&#10;- It trusts a notebook that may be full of misinformation&#10;&#10;Next: what the agent *can't* see, and how to give it the map.&#10;</textarea></section></div></div></div><div class="wk-deck-toolbar"><a class="wk-deck-present" href="/bobgame-docs-external/workshop/present/module-1/" target="_blank" rel="noopener">Present full screen ↗</a><span class="wk-deck-hint">Click the slides (or ← →) to advance · <kbd>S</kbd> speaker notes · <kbd>F</kbd> fullscreen</span></div></div>
+
+
+<div class="wk-box wk-objectives"><strong>Learning Objectives</strong><p>By the end of this module you will:</p>&#10;<ul>&#10;<li>Know what an agent is, and how the game's agent differs from a coding agent like Bob</li>&#10;<li>Know the two agents you'll deal with in this workshop</li>&#10;<li>Understand MCP tools, agent memory (the notebook), and the hooks in the agent loop</li>&#10;<li>Have used Bob in Ask → Plan → Agent to build a verification loop into your agent</li>&#10;</ul>&#10;<p><em>Goal: be able to build your own agent that can navigate a simple scenario.</em></p>&#10;</div>
+<h2 style="color:#89CFF0;">The Scene</h2>
+<p>Deep Blue Drive Heist is a difficult challenge for AI agents. Of the couple hundred people who've played it this year, only about 1 in 10 have built an agent that can solve the full 26-city game on its own.</p>
+<p>The game is built on and run by agents, which by their nature act non-deterministically: you can't count on them to repeat the same behavior on a new run.</p>
+<p>In this module, we'll use the game's agent to help illustrate basic concepts about agents. (If you're already fairly familiar with what agents are and what they can do, feel free to jump to <a href="/bobgame-docs-external/workshop/module-2/">Module 2</a>.)</p>
+<h2 style="color:#89CFF0;">What is an Agent?</h2>
+<p>An agent is a software system that uses large language models (LLMs) to pursue goals, break down problems, and perform tasks for developers and automation.</p>
+<p>While many possible agent types exist, most AI agents today use some form of the <a href="https://arxiv.org/abs/2210.03629">ReAct loop</a>.</p>
+<p>The agent in this game uses elements of the ReAct loop, but, importantly, it never takes feedback from the human player. It is also limited in <em>when</em> and <em>how</em> it can respond, and what information is available to it when it does.</p>
+<p>Refining agents to solve complex problems requires verification loops, specific targets to reach, and an environment where the agent can improve iteratively. This is true of all AI agents. (We'll talk more about how to think about an AI agent's capabilities in the <a href="/bobgame-docs-external/workshop/module-2/">next module</a>.)</p>
+<h2 style="color:#89CFF0;">Agents in Deep Blue Drive Heist</h2>
+<p>There are two primary types of agents in Deep Blue Drive Heist:</p>
+<ol>
+<li><strong>IBM Bob</strong>, the coding agent you talk to for improving the player agent. Bob is a general-purpose ReAct-based agent in a coding harness designed to help you solve software development tasks.</li>
+<li><strong>The player agent</strong>, which plays the text adventure game and is the agent Bob is helping you change. The player agent is NOT a general-purpose agent, and can only interact with, and react to, elements of the game itself.</li>
+</ol>
+<p>The player agent is built on LangGraph (part of the LangChain ecosystem), which means it will only respond at specific times in a deterministically defined workflow. This sets it apart from the typical general-purpose agent.</p>
+<h3 style="color:#89CFF0;">How a Typical General-Purpose Coding Agent Works</h3>
+<p>Most coding agents and general-purpose agents you may have encountered (Bob, Claude, ChatGPT) follow one pattern: a user sends a message, and the LLM receives it. The LLM calls whatever tools it needs, and the results of each tool call are appended to the thread. Once it has what it needs, the LLM puts together a response for the user.</p>
+<p>This forms the ReAct loop that defines a general-purpose agent:</p>
+<p>This loop exists inside what's known as a <em>harness</em>: the extra features that allow advanced behavior and advanced control of AI coding agent sessions.</p>
+<p>A typical agentic harness will contain the following:</p>
+<p>A user who wants to control how a coding agent behaves usually edits configuration files that change how the harness behaves. Examples might include:</p>
+<ul>
+<li>System prompt: In addition to the system prompt provided by the harness itself, these are extra instructions from the user on how to behave.</li>
+<li>Skills: Folders of instructions on how to perform certain tasks, often written in Markdown, sometimes containing executable tools to make available to the agent.</li>
+<li>Tools: Functions that the agent is allowed to call during its run. These are usually MCP servers, but not always.</li>
+<li>Memory: Often built into the harness, but occasionally provided by the user. This allows the agent to save information that it classifies as relevant to potential future sessions. Memories are retrieved using <em>hooks</em> on the agent's messages, usually based on semantic similarity, to give the user the impression that the agent &quot;remembered&quot; their last conversation.</li>
+<li>Filesystem access: Through tools, typical coding harnesses make the local filesystem available to general-purpose agents.</li>
+</ul>
+<p>Results from tool calls, memories, and skills all become part of the conversational context. Users typically control a single <em>session</em>, and choose to compact, clear, or start a new session when they find that the session is too long. In most coding harnesses, messages are append-only, and form a permanent part of the record.</p>
+<h3 style="color:#89CFF0;">How Does the Deep Blue Drive Heist Player Agent Differ?</h3>
+<p>Our agent is still using a ReAct loop, but it is different from an agent in a coding harness in the following ways:</p>
+<ul>
+<li>There are no skills.</li>
+<li>The set of tools is pre-selected using the MCP Server Shop at the beginning of the game.</li>
+<li>Its &quot;notebook&quot; is its only memory. It gets one free-form note, but most of what it records has to fit a specific shape, which helps it solve the puzzle: a lead, for instance, <em>must</em> be written down as a chess piece, the finding it came from, where it was seen, and the city it points toward.</li>
+<li>The other things the agent can do - speak to NPCs, interact with its notebook, or travel to new cities - are also seen as tools by the agent.</li>
+<li>There is no local filesystem access available to this agent: it can't write anything down outside the game world, access the internet, or do anything else outside the game.</li>
+<li>The session context gets reset at each city. Only the notebook remains as memory available to the agent.</li>
+</ul>
+<p>The human player never speaks. Instead, the other messages in the game come from two other agents: the Narrator agent and the NPC agent, each of which is responsible for speaking only when it's its turn. Neither agent may speak up in reaction to anything else that happens in the game log unless the game specifically calls for it.</p>
+<p>Although the game's code calls the narrator and the NPC &quot;agents&quot;, they aren't truly <em>agentic</em>: they can't make arbitrary tool calls and then respond to the results.</p>
+<div class="callout"><strong>Is the player agent in a harness?</strong>
+<p>Maybe. The definition of &quot;harness&quot; floating around the industry is a little underspecified. Usually, people are referring to a ReAct-style agent that has tool access to a filesystem and the internet and is set up to respond to general-purpose requests, and the &quot;harness&quot; they're referring to is anything else that directs its behavior. For this reason, this particular setup stretches the definition of &quot;harness&quot; beyond its usual intent.</p>
+<p>Further reading: <a href="https://x.com/Vtrivedy10/status/2031408954517971368">The Anatomy of an Agent Harness</a>, and <a href="https://www.oreilly.com/radar/agent-harness-engineering/">Agent Harness Engineering</a>.</p>
+</div>
+<p>This setup establishes a hybrid deterministic / semantic workflow. Each agent's LLM is called only at specific times. None of them can respond to just anything in the record that it considers worth responding to, the way coding agents and chat agents usually can.</p>
+<h2 style="color:#89CFF0;">The Player Agent and Hooks</h2>
+<p>In the game, when the narrator agent, NPC agents, and tools produce messages, the player agent always sees each message as it is. But you get a chance to run your own code on each one, and add a note of your own after it.</p>
+<p>This gives the player / software developer some control over the agent's understanding of the world. These are Python methods called <strong>hooks</strong>:</p>
+<ul>
+<li><code>highlight_narrator_message</code>, <code>highlight_npc_message</code>, and <code>highlight_tool_result</code> run once on each message from that source. Whatever text a hook returns is added to the conversation as <code>[Highlight on &lt;source&gt;]: &lt;your text&gt;</code>. Return <code>None</code> to add nothing.</li>
+<li><code>briefing</code> runs right before each of the agent's turns. Whatever it returns is shown as <code>[Briefing]: &lt;your text&gt;</code>.</li>
+</ul>
+<p>Hooks can't hide or change a message: they can only add to it. By default, every hook returns <code>None</code>, so the agent sees nothing extra. If the player chooses, they have an opportunity here to use deterministic code to assist the agent in making a decision about how to respond next.</p>
+<p>Every hook (and the system prompt) also gets the <strong>orientation</strong>: read-only facts about where the agent is, like the cities it can travel to (<code>connections</code>), the cities it has visited (<code>visited_cities</code>), and every route it has seen so far (<code>known_routes</code>). Hooks can also read the agent's notebook (<code>self.notebook</code>), but they can't write to it.</p>
+<p>For instance, the agent's hooks could:</p>
+<ul>
+<li>Pull the connecting cities out of the narrator's scene into a short list</li>
+<li>Count the number of times a chess piece shows up in a tool result</li>
+<li>Total the number of leads pointing in each direction</li>
+<li>Brief the agent on the state of the game (how far it has traveled, which cities it's visited) before its turn</li>
+<li>Point out which connected cities haven't been visited yet</li>
+</ul>
+<p>The hooks in this game allow players to use deterministic code to highlight information and direct the LLM’s attention to it.</p>
+<div class="callout"><strong>Hooks in Coding Agents</strong>
+<p>Some coding harnesses allow these sorts of hooks as well - running an extra function on a tool result before it reaches the agent. (Unlike the game's hooks, these can usually change or hide what the agent sees.) These can be used for many purposes, but are most commonly used to implement <em>guardrails</em>, like PII (Personally Identifiable Information) filtering, filtering sensitive information like passwords, and suppressing confidential information the LLM shouldn't have in its logs.</p>
+</div>
+<h2 style="color:#89CFF0;">The Game System</h2>
+<p>The game engine itself is based in <a href="https://www.langchain.com/langgraph">LangGraph</a>, a flexible agent orchestration framework that allows you to develop arbitrary agent interactions.</p>
+<p>The game engine builds a LangGraph <code>StateGraph</code> for every city visit. This graph differs from a usual ReAct loop graph. It has four node types:</p>
+<ul>
+<li>The narrator</li>
+<li>The player</li>
+<li>The tools</li>
+<li>The NPCs</li>
+</ul>
+<p>Each node appends messages to a shared <code>messages</code> list. The hooks do not run when the narrator or NPC produces a message. They run when it's the player agent's turn, just before its LLM call, and their highlights come after everything new since its last turn. This means that the agents do not just chime in whenever they want. The narrator does an intro, the NPC says hello, and the actions of the player agent determine the direction of the conversation. The other agents only respond in reaction to the player agent’s behavior.</p>
+<p>The record of messages is reset any time the player agent uses the <code>travel_to</code> function. The player agent itself is created fresh in every city, too, so nothing your code keeps on <code>self</code> carries over. Then, the narrator speaks again, the NPC says hello, and the loop repeats itself.</p>
+<p>In the finale city, the player agent is given an extra tool - <code>enter_evidence_words</code> - and the NPC agent is given extra instructions to help the player agent navigate the final test.</p>
+<p>The <code>enter_evidence_words</code> tool at the end lets the agent engage in a <em>verification / validation loop</em>. When it reaches the safe, it can check the information in its notebook so far, validate how much is correct, and when it discovers that it has the wrong answers, make a new plan.</p>
+<h3 style="color:#89CFF0;">What's In Each Message</h3>
+<p>Take a look at the three message sources that the agent can pick up on:</p>
+<ul>
+<li><strong>Narrator:</strong> Looks unstructured, but there's actually structure to it.</li>
+<li><strong>NPCs:</strong> Largely unstructured, but often give <em>hints</em>. Can you identify those hints deterministically?</li>
+<li><strong>Tool results:</strong> Is there a structured way to extract the right answers?</li>
+</ul>
+<p>The three sources look unstructured or random, but each follows a structure, which means you can extract the facts that matter in Python rather than hoping the model notices them.</p>
+<ul>
+<li><strong>Narrator</strong>: One structured LLM call per city, delivered as three entries - atmosphere, a bulleted list of room objects (one bullet per object your tools can examine), and a bulleted list of exits (one bullet per connected city).</li>
+<li><strong>NPC</strong>: Driven by a hints array inside each city's story file. At an evidence city, the NPC is explicitly instructed to reveal the evidence word clearly and make sure the player knows it's an evidence word to remember. At other cities, it drops destination city names in phrases like &quot;head to Stockholm&quot; or &quot;traces lead to...&quot;</li>
+<li><strong>Tool results</strong>: The most structured. The engine formats every result as <code>=== Tool Name results ===</code>, then <code>--- Finding N [finding_id] ---</code>, then the content block. The finding ID is what the agent passes to <code>show_finding</code> and <code>record_lead</code>.</li>
+</ul>
+<h2 style="color:#89CFF0;">MCP Tools</h2>
+<p>An <strong>MCP server</strong> (<a href="https://modelcontextprotocol.io/">Model Context Protocol</a>) connects AI applications and agents to external tools, APIs, and services. Think of it as a &quot;plugin&quot; for AI models that lets them access external systems and data. MCP servers for standard coding agents can wrap an existing API, or may be provided by a particular service you want to connect your coding agent to.</p>
+<p>When you play Deep Blue Drive Heist, you choose MCP servers to support your player agent before it starts the game. These MCP servers do not enable the agent to interact with the real world, but instead, help the agent reach the game world. (Even in fake worlds, LLMs still can't act on their own without code to help that happen.)</p>
+<p>Tools are exposed to the LLM using JSON:</p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;filesystem&quot;,
+  &quot;description&quot;: &quot;Search this resource. Returns ALL available documents at once — calling again will not yield new results.&quot;,
+  &quot;input_schema&quot;: {
+    &quot;type&quot;: &quot;object&quot;,
+    &quot;properties&quot;: { &quot;query&quot;: { &quot;type&quot;: &quot;string&quot;, &quot;default&quot;: &quot;search&quot; } }
+  }
+}
+</code></pre>
+<p>MCP servers, both in the real world and in the agent world, are surfaced to the LLM as tool calls. Under the hood, that looks a lot like code. A typical call to an MCP server from an LLM will look like:</p>
+<pre><code class="language-json">{
+  &quot;role&quot;: &quot;assistant&quot;,
+  &quot;content&quot;: [
+    { &quot;type&quot;: &quot;text&quot;,
+      &quot;text&quot;: &quot;Marcus is giving me clear leads… Let me search the PS/2 terminal's filesystem first to see what evidence is there.&quot; },
+    { &quot;type&quot;: &quot;tool_use&quot;, &quot;id&quot;: &quot;toolu_01…&quot;, &quot;name&quot;: &quot;filesystem&quot;,
+      &quot;input&quot;: { &quot;query&quot;: &quot;search&quot; } }
+  ]
+}
+</code></pre>
+<p>And then the response comes back, also as a JSON blob:</p>
+<pre><code class="language-json">{
+  &quot;role&quot;: &quot;user&quot;,
+  &quot;content&quot;: [
+    { &quot;type&quot;: &quot;tool_result&quot;, &quot;tool_use_id&quot;: &quot;toolu_01…&quot;,
+      &quot;content&quot;: &quot;=== filesystem results ===\n\n--- Finding 1 [chess_board] (terminal_display) ---\n  ♜♞♝♛♚♝♞♜ …\n  Black just played b7→b5\n\n  YOUR MOVE\n  1. Nf3 — Toronto\n  2. d4  — Dublin\n …\n=== End of filesystem — 1 finding(s) total. This is everything available. ===&quot; }
+  ]
+}
+</code></pre>
+<p>The MCP server &quot;investigation tools&quot; that you pick will enable your agent to be able to access certain databases, files, or findings in the game that may help with its search for the drive.</p>
+<p>Every tool result either adds atmosphere to the investigation or conveys a particular lead. All leads in the game are a combination of a chess piece and a city. The city reference is usually slightly obscured - Paris might be &quot;The City of Light&quot;. Since LLMs are semantic processing engines, they can usually decode these references.</p>
+<p>These references are embedded in normal-looking text, like commit logs, so that it appears that the Architect has hacked into the servers and left leads behind.</p>
+<p>The game is balanced so that any combination of MCP servers provides enough leads to win. So while it's important to understand the role of the MCP servers, it matters less which ones you select for your agent's mission.</p>
+<h2 style="color:#89CFF0;">Agent Memory: The Notebook</h2>
+<p>As your agent finds information that it thinks may be relevant, it will store it in its <strong>Investigator's Notebook</strong>. The agent writes to the notebook with its notebook tools (<code>record_evidence</code>, <code>record_lead</code>, <code>take_note</code>, <code>revise</code>, and <code>cross_out</code>), and can read it back with <code>check_notebook()</code>. Your code can read the notebook through <code>self.notebook</code>, but only the agent's own tool calls can change it.</p>
+<p>Because the agent starts a new LLM conversation at every city that it visits, the notebook is important as the persistent memory that the agent can refer to. It serves as the context it needs to make its next decisions.</p>
+<p>Coding agents can usually store arbitrary Markdown-shaped memories in whatever format they like. The tool calls for the player agent's memory are more restricted. It gets one freeform note, but most of its entries are in the shape of particular leads and evidence words that it will need to solve the puzzle. It can also correct an entry (<code>revise</code>), mark it as confirmed, or strike it out (<code>cross_out</code>). This prevents the agent from using its memory as a fun place to put its hallucinations about the storyline.</p>
+<h2 style="color:#89CFF0;">Limitations of Agents When Problem-Solving</h2>
+<p>If the agent has all these tools and memory at its disposal, why can't it just simply solve the game?</p>
+<p>AI models can produce different outputs for the same input: agent responses are non-deterministic and are rarely the same twice. As a result, the player agent often won't respond the way players want it to after an improvement, which makes it hard to tell whether an intended change is taking effect.</p>
+<p>Specific, intentional prompting of your AI coding agent becomes important for working around non-determinism. Detailed prompts help the coding agent stay on task.</p>
+<p>When prompting Bob, be precise and include as many relevant details about your problem as you can. Answers will still be non-deterministic, but specific prompts make the results more consistent.</p>
+<p>In the next module, we'll discuss in greater detail what makes this puzzle a particular struggle for agents, even with all of this support.</p>
+<h2 style="color:#89CFF0;">Your Activity</h2>
+<p>This exercise has been organized into multiple phases, reflecting the typical stages in a <a href="https://aiwiki.ai/wiki/spec_driven_development">spec-driven development</a> process. You can either follow the prompts, or choose your own adventure and try to make improvements to the agent!</p>
+<h3 style="color:#89CFF0;">Step 1</h3>
+<div class="wk-box wk-exercise"><strong>Exercise · Explore the codebase – Ask mode</strong><p>Use IBM Bob as an oracle: in Ask mode, use these example prompts (or your own) to explore the Deep Blue Drive Heist codebase.</p>&#10;<div class="callout wk-bob-prompt wk-mode-ask"><button class="copy-btn" onclick="copyCallout(this)">Copy</button><span class="wk-mode-pill">Bob · Ask mode</span><span class="callout-text">What does the LangGraph flow look like?</span></div>&#10;<div class="callout wk-bob-prompt wk-mode-ask"><button class="copy-btn" onclick="copyCallout(this)">Copy</button><span class="wk-mode-pill">Bob · Ask mode</span><span class="callout-text">What is in an NPC response? Do they know things about the drive location?</span></div>&#10;<div class="callout wk-bob-prompt wk-mode-ask"><button class="copy-btn" onclick="copyCallout(this)">Copy</button><span class="wk-mode-pill">Bob · Ask mode</span><span class="callout-text">What should I look for in a tool call response?</span></div>&#10;<div class="callout wk-bob-prompt wk-mode-ask"><button class="copy-btn" onclick="copyCallout(this)">Copy</button><span class="wk-mode-pill">Bob · Ask mode</span><span class="callout-text">What is the goal, and how can I construct verification for my agents?</span></div>&#10;</div>
+<h3 style="color:#89CFF0;">Step 2</h3>
+<div class="wk-box wk-exercise"><strong>Exercise · Develop a plan – Plan mode</strong><p>After exploring, develop a plan with your understanding of the codebase using IBM Bob's Plan mode.</p>&#10;<div class="callout wk-bob-prompt wk-mode-plan"><button class="copy-btn" onclick="copyCallout(this)">Copy</button><span class="wk-mode-pill">Bob · Plan mode</span><span class="callout-text">Please write out a workflow for the agent to follow to make sure it is following a verification loop strategy at each city. Ensure that the hooks surface information in the context for the agent deterministically.</span></div>&#10;</div>
+<h3 style="color:#89CFF0;">Step 3</h3>
+<div class="wk-box wk-exercise"><strong>Exercise · Implement the plan – Agent mode</strong><p>Once you have your plan from Step 2, use Agent mode to implement it with IBM Bob.</p>&#10;<div class="callout wk-bob-prompt wk-mode-agent"><button class="copy-btn" onclick="copyCallout(this)">Copy</button><span class="wk-mode-pill">Bob · Agent mode</span><span class="callout-text">Now that you have a plan started, please implement this plan in the player agent so that it can beat the game faster.</span></div>&#10;</div>
+<h3 style="color:#89CFF0;">Step 4</h3>
+<div class="wk-box wk-exercise"><strong>Exercise · Verify your work – Ask mode</strong><p>Hit the green “New Game” button to test your changes. Check whether the total time the agent takes to find the drive is going down on the dashboard. You may also use IBM Bob to analyze your game logs to get a cohesive analysis of your agent’s current performance.</p>&#10;<div class="callout wk-bob-prompt wk-mode-ask"><button class="copy-btn" onclick="copyCallout(this)">Copy</button><span class="wk-mode-pill">Bob · Ask mode</span><span class="callout-text">Compare my current agent’s performance with previous runs of the game. What has improved?</span></div>&#10;</div>
+<h2 style="color:#89CFF0;">What's Working</h2>
+<p>Your player agent should now have a verification loop at each city, where the hooks – <code>highlight_narrator_message</code>, <code>highlight_npc_message</code>, <code>highlight_tool_result</code>, and <code>briefing</code> – extract signals deterministically. They each bring the right details directly to the agent's context window rather than waiting for the model to pick out information itself.</p>
+<h2 style="color:#89CFF0;">What's Still Hard</h2>
+<p>The agent is still operating with blind spots – though it has a verification loop, it arrives at each city with no memory of anything but what exists in the notebook. It cannot see the map, does not know how long it's taking to find the drive, and implicitly trusts a notebook that may be riddled with misinformation.</p>
+<h2 style="color:#89CFF0;">Up Next</h2>
+<p>In <a href="/bobgame-docs-external/workshop/module-2/">Module 2</a>, we look at what the agent <em>can't</em> see, and how to give it the map.</p>
+
+
+
+  <div class="wk-pager">
+    <a class="wk-prev" href="/bobgame-docs-external/workshop/module-0/"><small>← Previous</small>Module 0: What is the Deep Blue Heist?</a>
+    <a class="wk-next" href="/bobgame-docs-external/workshop/module-2/"><small>Next →</small>Module 2: Agents and Non-determinism</a>
+  </div>
+
+</div>
+
+  </main>
+  <script>
+    // Persistent persona filter: URL param sets it, localStorage remembers it
+    const VALID_ROLES = ['player', 'staff', 'developer'];
+    const paramRole = new URLSearchParams(location.search).get('role');
+    if (paramRole && VALID_ROLES.includes(paramRole)) {
+      localStorage.setItem('docs-role', paramRole);
+    }
+    const role = localStorage.getItem('docs-role');
+    if (role && VALID_ROLES.includes(role)) {
+      document.body.classList.add('role-' + role);
+      document.querySelectorAll('nav li[data-hide-from]').forEach(li => {
+        if (li.dataset.hideFrom.split(',').includes(role)) li.style.display = 'none';
+      });
+    }
+    // Nav section collapse/expand
+    function toggleSection(btn) {
+      const body = btn.nextElementSibling;
+      const arrow = btn.querySelector('.toggle-arrow');
+      const isOpen = body.classList.toggle('open');
+      arrow.style.transform = isOpen ? 'rotate(90deg)' : '';
+    }
+    // Auto-expand the section containing the active link
+    document.querySelectorAll('nav .section-body').forEach(body => {
+      if (body.querySelector('a.active')) {
+        body.classList.add('open');
+        const arrow = body.previousElementSibling.querySelector('.toggle-arrow');
+        if (arrow) arrow.style.transform = 'rotate(90deg)';
+      }
+    });
+    // Code block headers: language label + copy button
+    const LANG_LABELS = {bash:'bash',powershell:'powershell',json:'JSON',python:'Python',ini:'.env',text:'',js:'JavaScript'};
+    document.querySelectorAll('main pre').forEach(pre => {
+      const code = pre.querySelector('code');
+      const lang = code ? [...code.classList].find(c => c.startsWith('language-'))?.replace('language-','') : '';
+      const label = LANG_LABELS[lang] ?? lang;
+      const wrapper = document.createElement('div');
+      wrapper.className = 'code-block';
+      const header = document.createElement('div');
+      header.className = 'code-header';
+      header.innerHTML = `<span>${label}</span><button class="code-copy">Copy</button>`;
+      header.querySelector('.code-copy').addEventListener('click', function() {
+        navigator.clipboard.writeText(pre.textContent).then(() => {
+          this.textContent = 'Copied!';
+          setTimeout(() => this.textContent = 'Copy', 1500);
+        });
+      });
+      pre.parentNode.insertBefore(wrapper, pre);
+      wrapper.appendChild(header);
+      wrapper.appendChild(pre);
+    });
+  </script>
+  <script src="/bobgame-docs-external/shared/docs.js"></script>
+  <script src="/bobgame-docs-external/vendor/reveal/dist/reveal.js"></script>
+  <script src="/bobgame-docs-external/vendor/reveal/plugin/markdown/markdown.js"></script>
+  <script src="/bobgame-docs-external/vendor/reveal/plugin/highlight/highlight.js"></script>
+  <script src="/bobgame-docs-external/vendor/reveal/plugin/notes/notes.js"></script>
+  <script src="/bobgame-docs-external/shared/slides.js"></script>
+  
+</body>
+</html>

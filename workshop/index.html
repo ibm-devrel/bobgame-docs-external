@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workshop Overview — Deep Blue Drive Heist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0d0d12;
+      --bg-layer: #1a1a24;
+      --text: #f0f0f5;
+      --text-muted: #8888aa;
+      --accent: #0F62FE;
+      --accent-bright: #3B82F6;
+      --sidebar-w: 240px;
+    }
+    body {
+      font-family: 'IBM Plex Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      min-height: 100vh;
+    }
+    nav {
+      width: var(--sidebar-w);
+      background: var(--bg-layer);
+      padding: 1.5rem 1rem;
+      position: fixed;
+      top: 0; bottom: 0;
+      overflow-y: auto;
+      border-right: 1px solid #2a2a3a;
+    }
+    nav a.logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--accent-bright);
+      text-decoration: none;
+      margin-bottom: 1.5rem;
+      line-height: 1.3;
+    }
+    nav a.logo img {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+    }
+    nav h3 {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin: 1.2rem 0 0;
+    }
+    nav .section-toggle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 1.2rem 0 0.4rem;
+      cursor: pointer;
+      text-align: left;
+    }
+    nav .section-toggle:hover { color: var(--text); }
+    nav .section-toggle .toggle-arrow { font-size: 0.6rem; transition: transform 0.2s; }
+    nav .section-body { display: none; }
+    nav .section-body.open { display: block; }
+    nav h4.nav-sublabel {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin: 0.8rem 0 0.3rem 0.6rem;
+      opacity: 0.7;
+    }
+    nav ul { list-style: none; }
+    nav li a {
+      display: block;
+      padding: 0.3rem 0.6rem;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.85rem;
+      border-radius: 4px;
+    }
+    nav li a:hover { background: #2a2a3a; }
+    nav li a.active { background: var(--accent); color: #fff; }
+    main {
+      margin-left: var(--sidebar-w);
+      padding: 2rem 3rem;
+      max-width: 52rem;
+      width: 100%;
+      line-height: 1.7;
+    }
+    main h1 { font-size: 1.8rem; margin-bottom: 1rem; }
+    main h2 { font-size: 1.3rem; margin: 2rem 0 0.5rem; border-bottom: 1px solid #2a2a3a; padding-bottom: 0.3rem; }
+    main h3 { font-size: 1.05rem; margin: 1.5rem 0 0.4rem; }
+    main p { margin: 0.6rem 0; }
+    main a { color: var(--accent-bright); }
+    main code {
+      font-family: 'IBM Plex Mono', monospace;
+      background: var(--bg-layer);
+      padding: 0.15em 0.35em;
+      border-radius: 3px;
+      font-size: 0.88em;
+    }
+    .code-block { position: relative; margin: 0.8rem 0; }
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #12121a;
+      border: 1px solid #2a2a3a;
+      border-bottom: none;
+      border-radius: 6px 6px 0 0;
+      padding: 0.3rem 0.7rem;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .code-copy {
+      background: none;
+      border: 1px solid #2a2a3a;
+      color: var(--text-muted);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.72rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .code-copy:hover { color: var(--text); border-color: var(--text-muted); }
+    main pre {
+      background: var(--bg-layer);
+      padding: 1rem;
+      border-radius: 0 0 6px 6px;
+      overflow-x: auto;
+      margin: 0;
+    }
+    .code-block:not(:has(.code-header)) pre { border-radius: 6px; }
+    main pre code { background: none; padding: 0; }
+    main table { border-collapse: collapse; width: 100%; margin: 0.8rem 0; }
+    main th, main td { border: 1px solid #2a2a3a; padding: 0.5rem 0.8rem; text-align: left; }
+    main th { background: var(--bg-layer); font-weight: 600; }
+    main ul, main ol { margin: 0.6rem 0; padding-left: 1.5rem; }
+    main li { margin: 0.3rem 0; }
+    main blockquote { border-left: 3px solid var(--accent); padding-left: 1rem; color: #d0d0e8; margin: 0.8rem 0; }
+    .persona-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1.5rem 0; }
+    .persona-btn {
+      display: inline-block;
+      padding: 0.7rem 1.4rem;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: background 0.15s;
+    }
+    .persona-btn:hover { background: var(--accent-bright); color: #fff; }
+    /* Persona filter: hide nav sections based on role */
+    nav .section-player,
+    nav .section-booth-staff,
+    nav .section-developer { display: block; }
+    body.role-player nav .section-booth-staff { display: none; }
+    body.role-staff nav .section-player { display: none; }
+    body.role-developer nav .section-player,
+    body.role-developer nav .section-booth-staff { display: none; }
+    @media (max-width: 768px) {
+      nav { position: static; width: 100%; border-right: none; border-bottom: 1px solid #2a2a3a; }
+      main { margin-left: 0; padding: 1.5rem; }
+      body { flex-direction: column; }
+    }
+  </style>
+  <link rel="stylesheet" href="/bobgame-docs-external/shared/docs.css">
+  
+  <link rel="stylesheet" href="/bobgame-docs-external/vendor/reveal/dist/reveal.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/vendor/reveal/dist/theme/black.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/vendor/reveal/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/shared/workshop.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/shared/slides.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/shared/diagram.css">
+  
+</head>
+<body>
+  <nav>
+    <a class="logo" href="/bobgame-docs-external/"><img src="/bobgame-docs-external/assets/bob-head.svg" alt="Bob">Deep Blue<br>Drive Heist</a>
+    
+      
+      
+      
+        
+          
+        
+      
+      
+    
+      
+      
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+      
+      <div class="section-workshop">
+      
+        <button class="section-toggle" onclick="toggleSection(this)">
+          Workshop<span class="toggle-arrow" style="transform:rotate(90deg)">▶</span>
+        </button>
+        <div class="section-body open">
+          
+            <ul>
+              
+                <li><a href="/bobgame-docs-external/workshop/" class="active">Overview</a></li>
+              
+                <li><a href="/bobgame-docs-external/workshop/prework/">Pre-work</a></li>
+              
+                <li><a href="/bobgame-docs-external/workshop/module-0/">Module 0: The Heist</a></li>
+              
+                <li><a href="/bobgame-docs-external/workshop/module-1/">Module 1: World of Agents</a></li>
+              
+                <li><a href="/bobgame-docs-external/workshop/module-2/">Module 2: Agent Cognition</a></li>
+              
+                <li><a href="/bobgame-docs-external/workshop/module-3/">Module 3: Experimentation</a></li>
+              
+            </ul>
+          
+        </div>
+      
+      </div>
+      
+    
+      
+      
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+      
+      <div class="section-general">
+      
+        <button class="section-toggle" onclick="toggleSection(this)">
+          General<span class="toggle-arrow" style="transform:rotate(90deg)">▶</span>
+        </button>
+        <div class="section-body open">
+          
+            <ul>
+              
+                <li><a href="/bobgame-docs-external/booth/laptop-setup/">Laptop Setup</a></li>
+              
+                <li><a href="/bobgame-docs-external/booth/techzone/">TechZone Configuration</a></li>
+              
+                <li><a href="/bobgame-docs-external/booth/player-guide/">Walk-through Tutorial: Player</a></li>
+              
+            </ul>
+          
+        </div>
+      
+      </div>
+      
+    
+      
+      
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+      
+    
+      
+      
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+      
+    
+      
+      
+      
+        
+          
+        
+      
+      
+    
+  </nav>
+  <main>
+    <div class="wk-page">
+
+
+<h1>Deep Blue Heist Workshop</h1>
+<div class="wk-box wk-objectives"><strong>What You'll Learn</strong><p>In this hands-on workshop you'll play <strong>Deep Blue Drive Heist</strong>, a text adventure where an AI agent chases &quot;The Architect&quot; across a map of cities, and use <strong>IBM Bob</strong> to make that agent smarter. Across four modules you'll build up a set of concepts that help you prompt Bob more strategically: how agents are put together, why they struggle with hidden information, and how to experiment on them the way you would a production system.</p>&#10;</div>
+<div class="wk-deck"><div class="wk-deck-frame"><div class="reveal" data-deck="overview" data-mode="embedded"><div class="slides"><section data-markdown data-separator="^\r?\n---\r?\n$" data-separator-vertical="^\r?\n--\r?\n$" data-separator-notes="^Note:"><textarea data-template>&lt;!-- .slide: class="wk-title" --&gt;&#10;&#10;&lt;p class="wk-eyebrow"&gt;IBM Bob Workshop&lt;/p&gt;&#10;&#10;# The Deep Blue Heist&#10;&#10;Prompting Bob strategically to build a better agent&#10;&#10;&lt;div class="wk-push-bottom wk-small"&gt;90 minutes · 4 modules · bring a laptop&lt;/div&gt;&#10;&#10;Note: Welcome! Speaker notes go after a line starting with "Note:". Press S to open the speaker view.&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-bio" --&gt;&#10;&#10;## Olivia Buzek&#10;&#10;&lt;p class="wk-role"&gt;Senior Staff AI Engineer, Lead Developer Advocate for AI&lt;br&gt;IBM&lt;/p&gt;&#10;&#10;* 🦜 ~18 years working on AI and machine learning&#10;* 🗣️ Computational linguist by training&#10;* ❤️ OSS and inner source dev advocate for 7 years&#10;* 🧱 Builder of AI games and applications&#10;* 🚀 Mission: Make AI accessible for humans&#10;&#10;&lt;img class="wk-portrait" src="/bobgame-docs-external/assets/workshop/people/olivia-buzek.png" alt="Olivia Buzek"&gt;&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-people-slide" --&gt;&#10;&#10;## The team behind the heist&#10;&#10;&lt;div class="wk-people"&gt;&#10;&lt;div class="wk-person"&gt;&lt;img src="/bobgame-docs-external/assets/workshop/people/annie-tran.png" alt="Annie Tran"&gt;&lt;p class="wk-name"&gt;Annie Tran&lt;/p&gt;&lt;p class="wk-credit"&gt;Content Development&lt;/p&gt;&lt;p class="wk-role"&gt;Technical Writer @ IBM&lt;/p&gt;&lt;/div&gt;&#10;&lt;div class="wk-person"&gt;&lt;div class="wk-avatar"&gt;SS&lt;/div&gt;&lt;p class="wk-name"&gt;Sonia Siddiqui&lt;/p&gt;&lt;p class="wk-credit"&gt;Content Development&lt;/p&gt;&lt;p class="wk-role"&gt;Technical Writer @ IBM&lt;/p&gt;&lt;/div&gt;&#10;&lt;div class="wk-person"&gt;&lt;img src="/bobgame-docs-external/assets/workshop/people/jamie-wang.png" alt="Jamie Wang"&gt;&lt;p class="wk-name"&gt;Jamie Wang&lt;/p&gt;&lt;p class="wk-credit"&gt;Game Design and Engineering&lt;/p&gt;&lt;p class="wk-role"&gt;Developer Advocate @ IBM&lt;/p&gt;&lt;/div&gt;&#10;&lt;div class="wk-person"&gt;&lt;img src="/bobgame-docs-external/assets/workshop/people/hemanth-battu.png" alt="Hemanth Battu"&gt;&lt;p class="wk-name"&gt;Hemanth Battu&lt;/p&gt;&lt;p class="wk-credit"&gt;Game Engineering&lt;/p&gt;&lt;p class="wk-role"&gt;Ecosystem Engineer @ IBM&lt;/p&gt;&lt;/div&gt;&#10;&lt;div class="wk-person"&gt;&lt;img src="/bobgame-docs-external/assets/workshop/people/rynne-whitnah.png" alt="Rynne Whitnah"&gt;&lt;p class="wk-name"&gt;Rynne Whitnah&lt;/p&gt;&lt;p class="wk-credit"&gt;Backend Engineering&lt;/p&gt;&lt;p class="wk-role"&gt;Technical Lead, AI Ecosystem @ IBM&lt;/p&gt;&lt;/div&gt;&#10;&lt;/div&gt;&#10;&#10;&#10;---&#10;&#10;## The Heist&#10;&#10;&lt;div class="wk-cols"&gt;&#10;&lt;div&gt;&#10;&#10;- **The Architect** stole the Deep Blue Drive&#10;- Your agent chases them across a map of cities&#10;- You improve the agent with **IBM Bob**&#10;&#10;&lt;/div&gt;&#10;&lt;div&gt;&#10;&#10;&gt; For most of the year, only about **1 in 10** players solved it.&#10;&#10;&lt;/div&gt;&#10;&lt;/div&gt;&#10;&#10;&#10;---&#10;&#10;## Today&#10;&#10;| | Module | Time |&#10;|---|---|---|&#10;| 0 | What is the Deep Blue Heist? | 15 min |&#10;| 1 | The World of Agents | 15–20 min |&#10;| 2 | Agents and Non-determinism | 20 min |&#10;| 3 | An Experimental Framework for Production Agents | 20 min |&#10;&#10;&lt;p class="wk-small wk-push-bottom"&gt;Each module: one concept → prompt Bob → play a round.&lt;/p&gt;&#10;</textarea></section></div></div></div><div class="wk-deck-toolbar"><a class="wk-deck-present" href="/bobgame-docs-external/workshop/present/overview/" target="_blank" rel="noopener">Present full screen ↗</a><span class="wk-deck-hint">Click the slides (or ← →) to advance · <kbd>S</kbd> speaker notes · <kbd>F</kbd> fullscreen</span></div></div>
+<h2 style="color:#89CFF0;">Workshop Flow</h2>
+<ol>
+<li><a href="/bobgame-docs-external/workshop/prework/">Pre-work</a>: get your laptop set up <em>before</em> the session starts.</li>
+<li><a href="/bobgame-docs-external/workshop/module-0/">Module 0: What is the Deep Blue Heist?</a>: How IBM Bob works, and the real basics of solving problems with an AI coding assistant.</li>
+<li><a href="/bobgame-docs-external/workshop/module-1/">Module 1: The World of Agents</a>: What an agent is, how this one is built (LangGraph, hooks, MCP tools, memory), and how to steer it with Bob.</li>
+<li><a href="/bobgame-docs-external/workshop/module-2/">Module 2: Agents and Non-determinism</a>: Agent cognition vs. human cognition: giving the agent the map it can't see, and helping it revise its beliefs.</li>
+<li><a href="/bobgame-docs-external/workshop/module-3/">Module 3: An Experimental Framework for Production Agents</a>: Test vs. prod, verification loops, and comparing agent runs systematically, all the way to loop engineering.</li>
+</ol>
+<div class="tip"><strong>Time Estimate</strong>
+<p>The workshop (the &quot;lab&quot;) runs 90 min. Each module opens with a short scene-setting + concept talk, then you play at least one round of the game after prompting Bob as the module guide describes.</p>
+</div>
+<hr>
+<h2 style="color:#89CFF0;">The Problem</h2>
+<p>Deep Blue Drive Heist was built so players can experience the world of agents first-hand, and learn to use an AI coding assistant like IBM Bob to improve one.</p>
+<p>The catch: the game is deceptively <strong>hard</strong>! For humans, solving this puzzle would be extremely fast and easy. For AI agents, it's much more difficult. The question we explore today is: what makes it so hard? And what does that mean for the agents you build in production?</p>
+<p>Over about a dozen events, only about <strong>1 in 10</strong> players were able to build agents that could solve the 26-city version of the game.</p>
+<p>The agent pops up in a new city with nothing but its notebook and whatever the narrator tells it. It can't see the map, doesn't know how long it's been, and believes everything it has written down, even the parts it hallucinated.</p>
+<p>So how do you, with Bob's help, give an agent what it needs to reason its way to the drive?</p>
+<p><strong>Audience:</strong> Beginner-to-intermediate: experienced developers who know less about AI.</p>
+<hr>
+<h2 style="color:#89CFF0;">Workshop Structure</h2>
+<div class="wk-cards">
+<a class="wk-card wk-module-0" href="/bobgame-docs-external/workshop/module-0/"><span class="wk-card-num">Module 0</span><span class="wk-card-title">What is the Deep Blue Heist?</span><span class="wk-card-concept">How IBM Bob works, and the real basics of solving problems with an AI coding assistant.</span><span class="wk-card-time">15 min</span></a>
+<a class="wk-card wk-module-1" href="/bobgame-docs-external/workshop/module-1/"><span class="wk-card-num">Module 1</span><span class="wk-card-title">The World of Agents</span><span class="wk-card-concept">What an agent is, how this one is built (LangGraph, hooks, MCP tools, memory), and how to steer it with Bob.</span><span class="wk-card-time">15–20 min</span></a>
+<a class="wk-card wk-module-2" href="/bobgame-docs-external/workshop/module-2/"><span class="wk-card-num">Module 2</span><span class="wk-card-title">Agents and Non-determinism</span><span class="wk-card-concept">Agent cognition vs. human cognition: giving the agent the map it can&#39;t see, and helping it revise its beliefs.</span><span class="wk-card-time">20 min</span></a>
+<a class="wk-card wk-module-3" href="/bobgame-docs-external/workshop/module-3/"><span class="wk-card-num">Module 3</span><span class="wk-card-title">An Experimental Framework for Production Agents</span><span class="wk-card-concept">Test vs. prod, verification loops, and comparing agent runs systematically, all the way to loop engineering.</span><span class="wk-card-time">20 min</span></a>
+</div>
+<hr>
+<h2 style="color:#89CFF0;">Additional Resources</h2>
+<ul>
+<li><a href="/bobgame-docs-external/booth/player-guide/">Walk-through Tutorial: Player</a>: A step-by-step tutorial for players to get started on the game.</li>
+</ul>
+<p>Let's get started! Head to <a href="/bobgame-docs-external/workshop/prework/">Pre-work</a> to set up your environment.</p>
+
+
+
+  <div class="wk-pager">
+    
+    <a class="wk-next" href="/bobgame-docs-external/workshop/prework/"><small>Next →</small>Pre-work</a>
+  </div>
+
+</div>
+
+  </main>
+  <script>
+    // Persistent persona filter: URL param sets it, localStorage remembers it
+    const VALID_ROLES = ['player', 'staff', 'developer'];
+    const paramRole = new URLSearchParams(location.search).get('role');
+    if (paramRole && VALID_ROLES.includes(paramRole)) {
+      localStorage.setItem('docs-role', paramRole);
+    }
+    const role = localStorage.getItem('docs-role');
+    if (role && VALID_ROLES.includes(role)) {
+      document.body.classList.add('role-' + role);
+      document.querySelectorAll('nav li[data-hide-from]').forEach(li => {
+        if (li.dataset.hideFrom.split(',').includes(role)) li.style.display = 'none';
+      });
+    }
+    // Nav section collapse/expand
+    function toggleSection(btn) {
+      const body = btn.nextElementSibling;
+      const arrow = btn.querySelector('.toggle-arrow');
+      const isOpen = body.classList.toggle('open');
+      arrow.style.transform = isOpen ? 'rotate(90deg)' : '';
+    }
+    // Auto-expand the section containing the active link
+    document.querySelectorAll('nav .section-body').forEach(body => {
+      if (body.querySelector('a.active')) {
+        body.classList.add('open');
+        const arrow = body.previousElementSibling.querySelector('.toggle-arrow');
+        if (arrow) arrow.style.transform = 'rotate(90deg)';
+      }
+    });
+    // Code block headers: language label + copy button
+    const LANG_LABELS = {bash:'bash',powershell:'powershell',json:'JSON',python:'Python',ini:'.env',text:'',js:'JavaScript'};
+    document.querySelectorAll('main pre').forEach(pre => {
+      const code = pre.querySelector('code');
+      const lang = code ? [...code.classList].find(c => c.startsWith('language-'))?.replace('language-','') : '';
+      const label = LANG_LABELS[lang] ?? lang;
+      const wrapper = document.createElement('div');
+      wrapper.className = 'code-block';
+      const header = document.createElement('div');
+      header.className = 'code-header';
+      header.innerHTML = `<span>${label}</span><button class="code-copy">Copy</button>`;
+      header.querySelector('.code-copy').addEventListener('click', function() {
+        navigator.clipboard.writeText(pre.textContent).then(() => {
+          this.textContent = 'Copied!';
+          setTimeout(() => this.textContent = 'Copy', 1500);
+        });
+      });
+      pre.parentNode.insertBefore(wrapper, pre);
+      wrapper.appendChild(header);
+      wrapper.appendChild(pre);
+    });
+  </script>
+  <script src="/bobgame-docs-external/shared/docs.js"></script>
+  <script src="/bobgame-docs-external/vendor/reveal/dist/reveal.js"></script>
+  <script src="/bobgame-docs-external/vendor/reveal/plugin/markdown/markdown.js"></script>
+  <script src="/bobgame-docs-external/vendor/reveal/plugin/highlight/highlight.js"></script>
+  <script src="/bobgame-docs-external/vendor/reveal/plugin/notes/notes.js"></script>
+  <script src="/bobgame-docs-external/shared/slides.js"></script>
+  
+</body>
+</html>

@@ -1,0 +1,229 @@
+/* ==========================================================
+   Deep Blue Heist Workshop — Theme tokens + components
+   Loaded by _includes/workshop.njk (pages) and _includes/present.njk
+   (full-screen slides). shared/slides.css builds on these tokens.
+
+   RULE FOR AUTHORS: don't hard-code colors in module pages or slides.
+   Use a --wk-* token (or a component class below). If you need a new
+   color, add a token here so every module gets it.
+   ========================================================== */
+
+:root {
+  /* Surfaces + text — mirror the docs layout (_includes/layout.njk) */
+  --wk-bg: #0d0d12;
+  --wk-bg-layer: #1a1a24;
+  --wk-bg-sunken: #12121a;
+  --wk-border: #2a2a3a;
+  --wk-text: #f0f0f5;
+  --wk-text-muted: #8888aa;
+  --wk-text-soft: #d0d0e8;
+
+  /* Brand — IBM Carbon blue scale */
+  --wk-accent: #0f62fe;        /* Blue 60 */
+  --wk-accent-bright: #3b82f6;
+  --wk-accent-soft: #78a9ff;   /* Blue 40 */
+  --wk-accent-deep: #002d9c;   /* Blue 80 */
+
+  /* Module accents — one per module, used for wayfinding only
+     (header stripe, module number, slide section dividers). */
+  --wk-module-0: #4589ff;  /* Blue 50 */
+  --wk-module-1: #33b1ff;  /* Cyan 40 */
+  --wk-module-2: #a56eff;  /* Purple 50 */
+  --wk-module-3: #08bdba;  /* Teal 40 */
+
+  /* Semantic boxes */
+  --wk-exercise: #42be65;  /* Green 40 — hands-on work */
+  --wk-discuss: #f1c21b;   /* Yellow 30 — questions for the room */
+  --wk-todo: #ff832b;      /* Orange 40 — author notes (internal only) */
+  --wk-agent: #f5a623;     /* the player agent — same amber as the game's travel dot */
+
+  /* Bob modes (pill colors on {% bobprompt %}) */
+  --wk-mode-ask: #33b1ff;
+  --wk-mode-plan: #a56eff;
+  --wk-mode-code: #42be65;
+  --wk-mode-agent: #42be65;
+  --wk-mode-advanced: #ff832b;
+  --wk-mode-orchestrator: #ee5396;
+
+  --wk-radius: 8px;
+  --wk-font: "IBM Plex Sans", sans-serif;
+  --wk-mono: "IBM Plex Mono", monospace;
+}
+
+.wk-page { --wk-module-accent: var(--wk-accent-bright); }  /* default; must precede the module rules */
+
+/* Each module page sets one of these on <main>; everything else reads
+   --wk-module-accent so components automatically pick up the right hue. */
+.wk-module-0 { --wk-module-accent: var(--wk-module-0); }
+.wk-module-1 { --wk-module-accent: var(--wk-module-1); }
+.wk-module-2 { --wk-module-accent: var(--wk-module-2); }
+.wk-module-3 { --wk-module-accent: var(--wk-module-3); }
+
+/* ----------------------------------------------------------
+   Module header (rendered by _includes/workshop.njk)
+   ---------------------------------------------------------- */
+
+.wk-header {
+  border-left: 4px solid var(--wk-module-accent);
+  padding: 0.2rem 0 0.2rem 1rem;
+  margin-bottom: 1.5rem;
+}
+.wk-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--wk-module-accent);
+}
+main .wk-header h1 { margin: 0.2rem 0 0.4rem; }
+.wk-concept { color: var(--wk-text-soft); margin: 0 !important; }
+.wk-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.2rem;
+  margin-top: 0.6rem;
+  font-size: 0.8rem;
+  color: var(--wk-text-muted);
+}
+.wk-meta b { color: var(--wk-text); font-weight: 500; }
+
+/* ----------------------------------------------------------
+   Content boxes: {% objectives %} {% exercise %} {% discuss %} {% todo %}
+   ---------------------------------------------------------- */
+
+.wk-box {
+  --wk-box-color: var(--wk-accent);
+  border: 1px solid var(--wk-border);
+  border-left: 3px solid var(--wk-box-color);
+  border-radius: 0 var(--wk-radius) var(--wk-radius) 0;
+  background: var(--wk-bg-sunken);
+  padding: 0.8rem 1.1rem;
+  margin: 1rem 0;
+}
+.wk-box > strong:first-child {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--wk-box-color);
+  margin-bottom: 0.3rem;
+}
+.wk-box > :last-child { margin-bottom: 0; }
+.wk-objectives { --wk-box-color: var(--wk-module-accent); }
+.wk-exercise { --wk-box-color: var(--wk-exercise); }
+.wk-discuss { --wk-box-color: var(--wk-discuss); }
+.wk-todo { --wk-box-color: var(--wk-todo); border-style: dashed; border-left-style: solid; }
+
+/* ----------------------------------------------------------
+   Bob prompt: {% bobprompt "Ask" %} — extends .callout (docs.css)
+   ---------------------------------------------------------- */
+
+.wk-bob-prompt { --wk-mode-color: var(--wk-accent); border-color: var(--wk-mode-color); }
+.wk-bob-prompt .callout-text { display: block; font-family: var(--wk-mono); font-size: 0.85rem; padding-right: 3.5rem; }
+.wk-mode-pill {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--wk-bg);
+  background: var(--wk-mode-color);
+  border-radius: 999px;
+  padding: 0.1rem 0.6rem;
+  margin-bottom: 0.5rem;
+}
+.wk-mode-ask { --wk-mode-color: var(--wk-mode-ask); }
+.wk-mode-plan { --wk-mode-color: var(--wk-mode-plan); }
+.wk-mode-code { --wk-mode-color: var(--wk-mode-code); }
+.wk-mode-agent { --wk-mode-color: var(--wk-mode-agent); }
+.wk-mode-advanced { --wk-mode-color: var(--wk-mode-advanced); }
+.wk-mode-orchestrator { --wk-mode-color: var(--wk-mode-orchestrator); }
+
+/* ----------------------------------------------------------
+   Workshop overview: module cards + flow list
+   ---------------------------------------------------------- */
+
+.wk-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 0.8rem;
+  margin: 1rem 0 1.5rem;
+}
+main a.wk-card {
+  display: block;
+  text-decoration: none;
+  color: var(--wk-text);
+  background: var(--wk-bg-layer);
+  border: 1px solid var(--wk-border);
+  border-top: 3px solid var(--wk-module-accent);
+  border-radius: var(--wk-radius);
+  padding: 0.9rem 1rem;
+  line-height: 1.45;
+  transition: background 0.15s;
+}
+main a.wk-card:hover { background: #22223a; }
+.wk-card-num { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--wk-module-accent); font-weight: 600; }
+.wk-card-title { display: block; font-weight: 600; margin: 0.2rem 0 0.35rem; }
+.wk-card-concept { display: block; font-size: 0.82rem; color: var(--wk-text-muted); }
+.wk-card-time { display: block; font-size: 0.75rem; color: var(--wk-text-muted); margin-top: 0.5rem; }
+
+/* ----------------------------------------------------------
+   Prev / next pager at the bottom of each workshop page
+   ---------------------------------------------------------- */
+
+.wk-pager {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--wk-border);
+}
+main .wk-pager a {
+  text-decoration: none;
+  color: var(--wk-text);
+  font-size: 0.9rem;
+  border: 1px solid var(--wk-border);
+  border-radius: var(--wk-radius);
+  padding: 0.6rem 0.9rem;
+  max-width: 48%;
+}
+main .wk-pager a:hover { border-color: var(--wk-accent); }
+.wk-pager small { display: block; color: var(--wk-text-muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; }
+.wk-pager .wk-next { margin-left: auto; text-align: right; }
+
+/* ----------------------------------------------------------
+   Embedded slide deck: {% slides "deck" %}  (see shared/slides.css
+   for the look of the slides themselves)
+   ---------------------------------------------------------- */
+
+.wk-deck { margin: 0 0 2rem; }
+.wk-deck-frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--wk-border);
+  border-radius: var(--wk-radius);
+  overflow: hidden;
+  background: var(--wk-bg);
+}
+.wk-deck-frame:focus-within { border-color: var(--wk-module-accent); }
+.wk-deck-frame .reveal { position: absolute; inset: 0; }
+.wk-deck-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.4rem 1rem;
+  margin-top: 0.5rem;
+  font-size: 0.78rem;
+  color: var(--wk-text-muted);
+}
+main a.wk-deck-present { color: var(--wk-accent-soft); text-decoration: none; font-weight: 500; }
+main a.wk-deck-present:hover { text-decoration: underline; }
+.wk-deck-toolbar kbd {
+  font-family: var(--wk-mono);
+  font-size: 0.72rem;
+  border: 1px solid var(--wk-border);
+  border-radius: 3px;
+  padding: 0 0.3rem;
+}

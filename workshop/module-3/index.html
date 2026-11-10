@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 3: An Experimental Framework for Production Agents — Deep Blue Drive Heist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0d0d12;
+      --bg-layer: #1a1a24;
+      --text: #f0f0f5;
+      --text-muted: #8888aa;
+      --accent: #0F62FE;
+      --accent-bright: #3B82F6;
+      --sidebar-w: 240px;
+    }
+    body {
+      font-family: 'IBM Plex Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      min-height: 100vh;
+    }
+    nav {
+      width: var(--sidebar-w);
+      background: var(--bg-layer);
+      padding: 1.5rem 1rem;
+      position: fixed;
+      top: 0; bottom: 0;
+      overflow-y: auto;
+      border-right: 1px solid #2a2a3a;
+    }
+    nav a.logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--accent-bright);
+      text-decoration: none;
+      margin-bottom: 1.5rem;
+      line-height: 1.3;
+    }
+    nav a.logo img {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+    }
+    nav h3 {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin: 1.2rem 0 0;
+    }
+    nav .section-toggle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 1.2rem 0 0.4rem;
+      cursor: pointer;
+      text-align: left;
+    }
+    nav .section-toggle:hover { color: var(--text); }
+    nav .section-toggle .toggle-arrow { font-size: 0.6rem; transition: transform 0.2s; }
+    nav .section-body { display: none; }
+    nav .section-body.open { display: block; }
+    nav h4.nav-sublabel {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin: 0.8rem 0 0.3rem 0.6rem;
+      opacity: 0.7;
+    }
+    nav ul { list-style: none; }
+    nav li a {
+      display: block;
+      padding: 0.3rem 0.6rem;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.85rem;
+      border-radius: 4px;
+    }
+    nav li a:hover { background: #2a2a3a; }
+    nav li a.active { background: var(--accent); color: #fff; }
+    main {
+      margin-left: var(--sidebar-w);
+      padding: 2rem 3rem;
+      max-width: 52rem;
+      width: 100%;
+      line-height: 1.7;
+    }
+    main h1 { font-size: 1.8rem; margin-bottom: 1rem; }
+    main h2 { font-size: 1.3rem; margin: 2rem 0 0.5rem; border-bottom: 1px solid #2a2a3a; padding-bottom: 0.3rem; }
+    main h3 { font-size: 1.05rem; margin: 1.5rem 0 0.4rem; }
+    main p { margin: 0.6rem 0; }
+    main a { color: var(--accent-bright); }
+    main code {
+      font-family: 'IBM Plex Mono', monospace;
+      background: var(--bg-layer);
+      padding: 0.15em 0.35em;
+      border-radius: 3px;
+      font-size: 0.88em;
+    }
+    .code-block { position: relative; margin: 0.8rem 0; }
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #12121a;
+      border: 1px solid #2a2a3a;
+      border-bottom: none;
+      border-radius: 6px 6px 0 0;
+      padding: 0.3rem 0.7rem;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .code-copy {
+      background: none;
+      border: 1px solid #2a2a3a;
+      color: var(--text-muted);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.72rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .code-copy:hover { color: var(--text); border-color: var(--text-muted); }
+    main pre {
+      background: var(--bg-layer);
+      padding: 1rem;
+      border-radius: 0 0 6px 6px;
+      overflow-x: auto;
+      margin: 0;
+    }
+    .code-block:not(:has(.code-header)) pre { border-radius: 6px; }
+    main pre code { background: none; padding: 0; }
+    main table { border-collapse: collapse; width: 100%; margin: 0.8rem 0; }
+    main th, main td { border: 1px solid #2a2a3a; padding: 0.5rem 0.8rem; text-align: left; }
+    main th { background: var(--bg-layer); font-weight: 600; }
+    main ul, main ol { margin: 0.6rem 0; padding-left: 1.5rem; }
+    main li { margin: 0.3rem 0; }
+    main blockquote { border-left: 3px solid var(--accent); padding-left: 1rem; color: #d0d0e8; margin: 0.8rem 0; }
+    .persona-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1.5rem 0; }
+    .persona-btn {
+      display: inline-block;
+      padding: 0.7rem 1.4rem;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: background 0.15s;
+    }
+    .persona-btn:hover { background: var(--accent-bright); color: #fff; }
+    /* Persona filter: hide nav sections based on role */
+    nav .section-player,
+    nav .section-booth-staff,
+    nav .section-developer { display: block; }
+    body.role-player nav .section-booth-staff { display: none; }
+    body.role-staff nav .section-player { display: none; }
+    body.role-developer nav .section-player,
+    body.role-developer nav .section-booth-staff { display: none; }
+    @media (max-width: 768px) {
+      nav { position: static; width: 100%; border-right: none; border-bottom: 1px solid #2a2a3a; }
+      main { margin-left: 0; padding: 1.5rem; }
+      body { flex-direction: column; }
+    }
+  </style>
+  <link rel="stylesheet" href="/bobgame-docs-external/shared/docs.css">
+  
+  <link rel="stylesheet" href="/bobgame-docs-external/vendor/reveal/dist/reveal.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/vendor/reveal/dist/theme/black.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/vendor/reveal/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/shared/workshop.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/shared/slides.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/shared/diagram.css">
+  
+</head>
+<body>
+  <nav>
+    <a class="logo" href="/bobgame-docs-external/"><img src="/bobgame-docs-external/assets/bob-head.svg" alt="Bob">Deep Blue<br>Drive Heist</a>
+    
+      
+      
+      
+        
+          
+        
+      
+      
+    
+      
+      
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+      
+      <div class="section-workshop">
+      
+        <button class="section-toggle" onclick="toggleSection(this)">
+          Workshop<span class="toggle-arrow" style="transform:rotate(90deg)">▶</span>
+        </button>
+        <div class="section-body open">
+          
+            <ul>
+              
+                <li><a href="/bobgame-docs-external/workshop/">Overview</a></li>
+              
+                <li><a href="/bobgame-docs-external/workshop/prework/">Pre-work</a></li>
+              
+                <li><a href="/bobgame-docs-external/workshop/module-0/">Module 0: The Heist</a></li>
+              
+                <li><a href="/bobgame-docs-external/workshop/module-1/">Module 1: World of Agents</a></li>
+              
+                <li><a href="/bobgame-docs-external/workshop/module-2/">Module 2: Agent Cognition</a></li>
+              
+                <li><a href="/bobgame-docs-external/workshop/module-3/" class="active">Module 3: Experimentation</a></li>
+              
+            </ul>
+          
+        </div>
+      
+      </div>
+      
+    
+      
+      
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+      
+      <div class="section-general">
+      
+        <button class="section-toggle" onclick="toggleSection(this)">
+          General<span class="toggle-arrow" style="transform:rotate(90deg)">▶</span>
+        </button>
+        <div class="section-body open">
+          
+            <ul>
+              
+                <li><a href="/bobgame-docs-external/booth/laptop-setup/">Laptop Setup</a></li>
+              
+                <li><a href="/bobgame-docs-external/booth/techzone/">TechZone Configuration</a></li>
+              
+                <li><a href="/bobgame-docs-external/booth/player-guide/">Walk-through Tutorial: Player</a></li>
+              
+            </ul>
+          
+        </div>
+      
+      </div>
+      
+    
+      
+      
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+      
+    
+      
+      
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+      
+    
+      
+      
+      
+        
+          
+        
+      
+      
+    
+  </nav>
+  <main>
+    <div class="wk-page wk-module-3">
+
+  <header class="wk-header">
+    <div class="wk-eyebrow">Module 3 · 20 min</div>
+    <h1>An Experimental Framework for Production Agents</h1>
+    <p class="wk-concept">Test vs. prod, verification loops, and comparing agent runs systematically, all the way to loop engineering.</p>
+    
+  </header>
+  <div class="wk-deck"><div class="wk-deck-frame"><div class="reveal" data-deck="module-3" data-mode="embedded"><div class="slides"><section data-markdown data-separator="^\r?\n---\r?\n$" data-separator-vertical="^\r?\n--\r?\n$" data-separator-notes="^Note:"><textarea data-template>&lt;!-- .slide: class="wk-title" --&gt;&#10;&#10;&lt;p class="wk-eyebrow"&gt;Module 3 · 20 min&lt;/p&gt;&#10;&#10;# An Experimental Framework for Production Agents&#10;&#10;Test vs. prod, verification loops, and comparing runs&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-center" --&gt;&#10;&#10;## Is your agent better?&#10;&#10;How do you know?&#10;&#10;Note:&#10;* you've changed it a few times now. the last run was fast, or slow, or... bad luck?&#10;* agents are stochastic (invariant 3). one run tells you very little. a feeling tells you less.&#10;* every team building agents hits this: somebody changes the prompt, the demo looks good, it ships. a week later nobody can say if it helped.&#10;&#10;---&#10;&#10;## Rules: prompt or code?&#10;&#10;&lt;div class="wk-cols"&gt;&#10;&lt;div&gt;&#10;&#10;### Code&#10;&#10;"Don't travel to a city you've already visited"&#10;&#10;No judgment needed. Compute it in code.&#10;&#10;&lt;/div&gt;&#10;&lt;div&gt;&#10;&#10;### Prompt&#10;&#10;"Decide which lead to trust when two disagree"&#10;&#10;Needs judgment. Put it in the prompt.&#10;&#10;&lt;/div&gt;&#10;&lt;/div&gt;&#10;&#10;A rule in a prompt is a suggestion to a stochastic model.&#10;&#10;Note:&#10;* more rules isn't better: each one gets less attention, and they start contradicting each other.&#10;* deterministic where you can, semantic where you have to.&#10;&#10;---&#10;&#10;## A good objective&#10;&#10;&lt;div class="wk-cols"&gt;&#10;&lt;div&gt;&#10;&#10;### Vague&#10;&#10;"Find the drive"&#10;&#10;"Make my agent better"&#10;&#10;&lt;/div&gt;&#10;&lt;div&gt;&#10;&#10;### Good&#10;&#10;1. Record every evidence word correctly&#10;2. Do it fast&#10;3. Open the safe&#10;&#10;&lt;/div&gt;&#10;&lt;/div&gt;&#10;&#10;Specific, in priority order, measurable.&#10;&#10;Our agent needs: the **objective**, a **strategy** for it, and a way to **check its progress**.&#10;&#10;Note:&#10;* that's how the game is actually scored. evidence words count even if the agent never finishes; finishing puts you at the top.&#10;* how might we use what the game already gives us (the notebook, the tools, the NPC) to check progress more effectively?&#10;* same for Bob: prompting a coding agent is giving it an objective. "make my agent faster" gets you *a* change. "my agent revisits cities in most runs; find out why from the logs, and establish a strategy for detecting cycles using the notebook" gets you much better results.&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-chart" --&gt;&#10;&#10;## Creating a verification loop&#10;&#10;&lt;svg xmlns="http://www.w3.org/2000/svg" class="wk-diagram" viewBox="0 0 1060 570"&gt; &lt;defs&gt; &lt;marker id="wk-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" markerUnits="userSpaceOnUse" orient="auto"&gt;&lt;path class="arrowhead" d="M0 0L10 5L0 10z"/&gt;&lt;/marker&gt; &lt;marker id="wk-arrow-agent" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="30" markerHeight="30" markerUnits="userSpaceOnUse" orient="auto"&gt;&lt;path class="arrowhead agent" d="M0 0L10 5L0 10z"/&gt;&lt;/marker&gt; &lt;/defs&gt; &lt;rect class="node" x="80" y="60" width="300" height="130" rx="8"/&gt; &lt;text class="title mid" x="230" y="108"&gt;1. Act&lt;/text&gt; &lt;text class="sm muted mid" x="230" y="152"&gt;record a lead, travel,&lt;/text&gt; &lt;text class="sm muted mid" x="230" y="178"&gt;enter the words&lt;/text&gt; &lt;rect class="node accent-outline" x="680" y="60" width="300" height="130" rx="8"/&gt; &lt;text class="title mid" x="830" y="108"&gt;2. Check&lt;/text&gt; &lt;text class="sm muted mid" x="830" y="152"&gt;code, the world, a second&lt;/text&gt; &lt;text class="sm muted mid" x="830" y="178"&gt;source, a judge, a human&lt;/text&gt; &lt;rect class="node" x="680" y="350" width="300" height="130" rx="8"/&gt; &lt;text class="title mid" x="830" y="398"&gt;3. Signal&lt;/text&gt; &lt;text class="sm muted mid" x="830" y="442"&gt;short, right before&lt;/text&gt; &lt;text class="sm muted mid" x="830" y="468"&gt;the next decision&lt;/text&gt; &lt;rect class="node" x="80" y="350" width="300" height="130" rx="8"/&gt; &lt;text class="title mid" x="230" y="398"&gt;4. Decide&lt;/text&gt; &lt;text class="sm muted mid" x="230" y="442"&gt;confirm, cross out,&lt;/text&gt; &lt;text class="sm muted mid" x="230" y="468"&gt;or go somewhere else&lt;/text&gt; &lt;line class="edge agent" x1="380" y1="125" x2="670" y2="125"/&gt; &lt;line class="edge" x1="830" y1="190" x2="830" y2="340"/&gt; &lt;line class="edge" x1="680" y1="415" x2="390" y2="415"/&gt; &lt;line class="edge agent" x1="230" y1="350" x2="230" y2="200"/&gt; &lt;line class="edge dashed" x1="150" y1="480" x2="150" y2="545"/&gt; &lt;text class="sm muted" x="175" y="535"&gt;a way out: after a few tries, move on&lt;/text&gt; &lt;text class="sm agent mid" x="525" y="105"&gt;the agent&lt;/text&gt; &lt;text class="sm muted mid" x="530" y="395"&gt;back to the agent&lt;/text&gt; &lt;/svg&gt;&#10;&#10;Note:&#10;* the agent knows it's supposed to find the drive. without a way to confirm progress, it can't tell a good lead from a bad one. it finds out at the safe, at the very end, if it gets there at all.&#10;* the agent is already good at acting. most of the work is in the check and the signal.&#10;&#10;---&#10;&#10;## Choosing a check&#10;&#10;Strongest to weakest:&#10;&#10;1. **Deterministic:** tests, a compiler, a schema, Lean&#10;2. **The environment:** "N of M words correct"&#10;3. **Independent confirmation:** two sources agree&#10;4. **Another LLM:** same invariants as the agent it's checking&#10;5. **A human:** best judgment, doesn't scale&#10;&#10;If you can check it in code, check it in code.&#10;&#10;Note:&#10;* the game defines confirmation for leads: another lead on the same chess piece in the city it named, or an evidence word, or the drive. an NPC repeating a lead doesn't count: that's one source, echoed.&#10;* show an LLM judge the same wrong lead three times and it will probably agree (invariant 6).&#10;* Navier–Stokes: the human check was the one part that couldn't be automated.&#10;&#10;---&#10;&#10;## Getting the signal back&#10;&#10;A check the agent never sees isn't a loop. It's a log entry.&#10;&#10;&lt;div class="wk-cols"&gt;&#10;&lt;div&gt;&#10;&#10;### Too much&#10;&#10;The whole notebook, every turn&#10;&#10;&lt;/div&gt;&#10;&lt;div&gt;&#10;&#10;### Actionable&#10;&#10;"L2 points to Dublin, and you're in Dublin. Nothing here mentions the knight yet. L2 is still unconfirmed."&#10;&#10;&lt;/div&gt;&#10;&lt;/div&gt;&#10;&#10;Right before the decision. Short.&#10;&#10;Note:&#10;* an LLM focuses on the most recent thing it read: put the signal right before the decision it's meant to change.&#10;* decide: confirm (revise, confirmed=true), cross out, or travel. and a way out: after a few tries, guess and move on.&#10;* your code can **notice**; only the agent can **act**. hooks read self.notebook and the orientation but can't change the notebook.&#10;&#10;---&#10;&#10;## Loops in the game&#10;&#10;| Loop | Check | Signal |&#10;|---|---|---|&#10;| **Every lead** | Does anything here back it up? | "L2 points here. Confirm it or cross it out." |&#10;| **Every move** | Back and forth? (`visited_cities`) | "You've been to Dublin twice." |&#10;| **The finale** | The safe: how many words were right | The reply, plus what it already tried |&#10;| **Every change** | Behavior tests, New Game, logs | What you and Bob read in the logs |&#10;&#10;Note:&#10;* the safe says how many words were right, not which. that's a partial signal. what should the agent do with it?&#10;* behavior tests run in seconds: uv run pytest tests/test_player_behavior.py -n auto -v -m player&#10;&#10;---&#10;&#10;## How loops go wrong&#10;&#10;- **Checking too late:** only at the safe means a full run per lesson&#10;- **Checking the wrong thing:** a count is only as good as its entries&#10;- **Same blind spots:** an LLM grading an LLM&#10;- **A signal it can't act on:** "something is wrong" vs. "L2 and L4 disagree"&#10;- **No way out:** a whole run spent in two cities&#10;&#10;---&#10;&#10;## Building agents with agents&#10;&#10;Bob has the same invariants as the player agent.&#10;&#10;- It can't see the dashboard either&#10;- It doesn't know the codebase (CodeGraph helps it "see" how symbols connect)&#10;- "It works" means it compiles and runs, not that the strategy improved&#10;- Ask for one fix, get three "improvements"&#10;- Talk plans too long, and it implements everything you mentioned&#10;&#10;**Rules** (`AGENTS.md`) · **Testable changes** (logs, compared run to run) · **Checks** (tests, the game) · **Small changes**&#10;&#10;Note:&#10;* AGENTS.md is Bob's system prompt for this repo.&#10;* how can you design tests for the strategic improvements you actually want to see?&#10;&#10;---&#10;&#10;## Test vs. prod&#10;&#10;&lt;div class="wk-cols"&gt;&#10;&lt;div&gt;&#10;&#10;### 6 cities&#10;&#10;What you play on&#10;&#10;You can see everything&#10;&#10;&lt;/div&gt;&#10;&lt;div&gt;&#10;&#10;### 26 cities&#10;&#10;What you're judged on&#10;&#10;You never see it&#10;&#10;&lt;/div&gt;&#10;&lt;/div&gt;&#10;&#10;**General truths transfer. Specific truths don't.**&#10;&#10;Note:&#10;* train vs. test. tune too closely to the 6-city game and the agent overfits.&#10;* "leads point to other cities" transfers. "the filesystem tool finds the lead in London" doesn't.&#10;* hardcode the 6-city evidence words and you fail fast on the 26-city game.&#10;* elsewhere: a support-ticket agent tuned on last month's tickets and tested on last month's tickets looks great. test it on this month's.&#10;* keep a set of cases that you and Bob never look at while tuning. if Bob reads your test cases, it will very helpfully tune your agent to pass them.&#10;&#10;---&#10;&#10;## Agents are non-deterministic, so experiment&#10;&#10;- Change **one** thing at a time&#10;- Run each version **more than once**&#10;- Write the results down&#10;- Commit, so you can get back to the winner&#10;&#10;Note:&#10;* time, cities visited, evidence words recorded, finished or not.&#10;* you're looking for the typical result, not the best one.&#10;&#10;---&#10;&#10;## Bigger model?&#10;&#10;Can Opus solve it where Sonnet or Haiku can't?&#10;&#10;- Better at reasoning through messy text&#10;- Slower, and costs more (and this game scores speed)&#10;- Can't see information it was never given&#10;&#10;**Bigger model, or better harness?**&#10;&#10;Note:&#10;* the game uses one model for every agent: narrator, NPCs, player.&#10;* at the workshop: claude-haiku-4-5 and claude-sonnet-4-6 are available. pick your best commit, switch the model, change nothing else, run it twice.&#10;* if the agent doesn't have the map, Opus doesn't have the map either.&#10;* most of what you did in Modules 1 and 2 helps a small model more than a big one. in production, the better harness is usually cheaper.&#10;&#10;---&#10;&#10;## Verification loops beyond coding&#10;&#10;The agent acts → something **outside the agent** checks → the agent hears what was wrong&#10;&#10;- **This game:** `enter_evidence_words`: "N of M words correct"&#10;- **Minecraft:** each step happened or it didn't, and the agents could check&#10;- **Math:** Lean checks the proof&#10;- **Support:** did the customer reopen the ticket?&#10;- **Research:** do the cited papers exist, and say that?&#10;&#10;Note:&#10;* in coding we take these for granted: compiler, type checker, tests, CI. big part of why coding agents got good first.&#10;* real-world problems need the same structure for an agent to make progress without a human. why? the invariants. no map, no belief revision, stochastic. the agent can't notice it's wrong by thinking harder about the same information. the signal has to come from outside the model.&#10;&#10;---&#10;&#10;## Two loops&#10;&#10;&lt;div class="wk-cols"&gt;&#10;&lt;div&gt;&#10;&#10;### Inner loop&#10;&#10;The player agent, at the safe&#10;&#10;&lt;/div&gt;&#10;&lt;div&gt;&#10;&#10;### Outer loop&#10;&#10;You and Bob: change → run → read logs → change&#10;&#10;&lt;/div&gt;&#10;&lt;/div&gt;&#10;&#10;This module is about the outer loop.&#10;&#10;---&#10;&#10;## Make experiments traceable&#10;&#10;- Commit after every change (a rule in `AGENTS.md`)&#10;- Match every log to its commit&#10;- Compare runs with Bob&#10;&#10;Note:&#10;* Bob's checkpoints are for undoing what Bob just did, and can roll back the conversation too. commits are your history: messages, they stick around, and you can line them up with logs.&#10;* for this game: merge to main before you submit.&#10;* logs have a start_time. match each one to the most recent commit before it. you can also change the engine locally to log the commit: it won't change how it runs on the server, but it gives you a local loop.&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-center" --&gt;&#10;&#10;## Exercise&#10;&#10;Commit as you go · Run multiple games · Compare runs · (Try a bigger model)&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-section" --&gt;&#10;&#10;## Loop engineering&#10;&#10;"Keep going until my time is 120."&#10;&#10;Note:&#10;* where did Bob's loop help? where did it go off the rails? did it overfit to the 6-city game? how did it decide a change worked?&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-center" --&gt;&#10;&#10;## Submit your agent&#10;&#10;**Submit to Competition** in the game UI. It's judged on the 26-city game: this is where you find out whether it overfit.&#10;&#10;Watch your agent's progress on the [results page](https://ibm-devrel.github.io/bobgame-experience/results/).&#10;&#10;Come chat with us in the Sandbox. Congratulations, and good luck!&#10;</textarea></section></div></div></div><div class="wk-deck-toolbar"><a class="wk-deck-present" href="/bobgame-docs-external/workshop/present/module-3/" target="_blank" rel="noopener">Present full screen ↗</a><span class="wk-deck-hint">Click the slides (or ← →) to advance · <kbd>S</kbd> speaker notes · <kbd>F</kbd> fullscreen</span></div></div>
+
+
+<div class="wk-box wk-objectives"><strong>Learning Objectives</strong><p>By the end of this module you will:</p>&#10;<ul>&#10;<li>Know how to give an agent guardrails and a good objective</li>&#10;<li>Understand why building an agent with an agent has limits</li>&#10;<li>Know how to set up a &quot;test vs. prod&quot; split for agents, and why the game has 6- and 26-city maps</li>&#10;<li>Understand what a verification loop looks like for agents outside of coding, and why it's the only way to solve these puzzles</li>&#10;<li>Be able to run, log, and compare agent experiments systematically with Bob</li>&#10;</ul>&#10;<p><em>Goal: treat your agent like a production system: change one thing, measure it, and keep what works.</em></p>&#10;</div>
+<h2>The Scene</h2>
+<p>By now you've changed your agent a few times. You've given it a verification loop, a map, and a way to fix its own notebook. So: is it better?</p>
+<p>So far, you've been able to tell by looking at how fast it ran, or maybe noticed a few particular entries from the investigator agent that made you concerned about its behavior. If you had a great run, you might think your work is done.</p>
+<p>As we saw in <a href="/bobgame-docs-external/workshop/module-2/">Module 2</a>, agents are <strong>stochastic</strong>: the same agent can have a great run and a terrible one back to back. You can't draw conclusions based on one run.</p>
+<p>This is just as true in real-world agents. A few good runs aren't enough to make a determination. In this module, we'll talk about how to set up an experimental framework around your agents.</p>
+<h2>The Concept: An Experimental Framework for Production Agents</h2>
+<h3>Prompting the agent and giving it rules</h3>
+<p>The most direct way to change how an agent behaves is its prompt. In the game, that's <code>build_system_prompt</code>: it tells the player agent who it is, what it's trying to do, and the rules it should follow at each city (&quot;check your notebook first&quot;, &quot;don't revisit cities&quot;).</p>
+<p>It's worth being clear about what a rule in a prompt actually does. LLMs will treat those rules as <strong>guidelines</strong>. More advanced agents will follow them more often; less advanced agents will not.</p>
+<p>A longer prompt with more rules doesn't fix this. In fact, each rule added gets less of the model's attention, and unless everything is abundantly clear, contradictions will likely emerge.</p>
+<p>Consider the rules in the current prompt. Which ones actually require <em>semantic judgment</em>? Are there any that could be exposed using deterministic algorithms to help the agent stay on task?</p>
+<ul>
+<li>&quot;Don't travel to a city you've already visited&quot; isn't really a semantic question. Your code can compute the unvisited cities from the orientation and focus the agent's attention there.</li>
+<li>&quot;Decide which lead to trust when two of them disagree&quot; does need a semantic judgment.</li>
+</ul>
+<p>This introduces a framework for building our agents: we will restrict the agents themselves to only be making semantic decisions where appropriate.</p>
+<h3>Creating a verification loop</h3>
+<p>The agent already knows it is supposed to find the drive. However, without being able to confirm its progress, the agent won't know whether it's getting closer or further away from its goal.</p>
+<p>The game is actually scored on three things, in order:</p>
+<ol>
+<li>How many evidence words the agent correctly records in its notebook (counted even if it never finishes; crossed-out entries don't count)</li>
+<li>How fast it runs</li>
+<li>Whether it opens the safe at the finale (an agent that does this rises straight to the top)</li>
+</ol>
+<p>In our agent design, we need to do three things:</p>
+<ul>
+<li>Clearly convey that objective</li>
+<li>Articulate a strategy for solving it</li>
+<li>Tell the agent how to check its progress</li>
+</ul>
+<p>How might we use the existing facilities provided in the game - the notebook, the tools, the ability to talk to the NPC - to check progress more effectively?</p>
+<div class="tip"><strong>Using Coding Agents</strong>
+<p>When you prompt coding agents, you are also giving them objectives. &quot;Make my agent faster&quot; will get you <em>a</em> change. &quot;My agent revisits cities in most runs. Find out why from the logs, and establish a strategy for detecting cycles using the notebook&quot; should get you much better results.</p>
+</div>
+<h3>Building agents with agents</h3>
+<p>You've been building an agent with another agent: Bob writes the player agent.</p>
+<p>But since Bob is an LLM too, it has the same issues.</p>
+<ul>
+<li><strong>Bob can't see the dashboard either.</strong> It doesn't know how fast your last run was unless you tell it, or unless it reads the logs.</li>
+<li><strong>Bob doesn't know the codebase.</strong> Installing something like codegraph will let it &quot;see&quot; how the symbols interact.</li>
+<li><strong>Bob will tell you a change worked.</strong> It defines a &quot;working&quot; agent as one that compiles and runs, not one that makes specific types of improvements. How can you design tests for the actual strategic improvements you want to see?</li>
+<li><strong>Bob drifts.</strong> Ask for one fix, and you may get three other &quot;improvements&quot; along with it. When two of those interact, you won't know which one made the difference.</li>
+<li><strong>Bob gets distracted.</strong> If you spend too much time talking about your plans, and then immediately start implementing, Bob may implement some superset of the changes you requested and the changes you talked about that one time.</li>
+</ul>
+<p>The things that keep Bob on track are the same things that keep any agent on track:</p>
+<ul>
+<li><strong>Rules:</strong> <code>AGENTS.md</code> is Bob's system prompt for this repo. Our version tells it to start from the logs, to only change <code>player_agent.py</code>, and not to hardcode anything from the 6-city game. You'll add to it in this module.</li>
+<li><strong>Testable changes:</strong> the logs from your runs. Ask Bob to start from them, every time, and compare with prior runs.</li>
+<li><strong>Checks:</strong> the behavior tests in <code>tests/test_player_behavior.py</code>, and the game itself.</li>
+<li><strong>Small changes:</strong> one change per run, so you can tell what changes helped you make progress.</li>
+</ul>
+<h3>Test vs. prod</h3>
+<p>The game you've been running has 6 cities. Your submission isn't judged on that game. It's judged on a 26-city game that you never see. The city names are different, the NPCs are different, the evidence words are different, and the map is bigger and shaped differently.</p>
+<p>That's on purpose. In machine learning, this is the split between training data and test data. If you tune your agent against the 6-city game too closely, it <strong>overfits</strong>: it gets very good at the game you can see, and falls apart on the one that counts. An agent that hardcodes the evidence words from the 6-city game will fail fast on the 26-city one.</p>
+<p>The rule of thumb: <strong>general truths transfer. Specific truths don't.</strong> &quot;Leads point to other cities&quot; is true in both games. &quot;The filesystem tool finds the lead in London&quot; is not.</p>
+<p>This applies to every agent you'll build, not just this one. Say you're building an agent that triages support tickets. If you write the prompt by looking at last month's tickets, then test it on the same tickets, it will look great. Test it on this month's instead. Keep a set of cases that you (and Bob!) never look at while you're tuning, and only use them to check. <strong>If you let Bob read your test cases, it will very helpfully tune your agent to pass them.</strong></p>
+<div class="callout"><strong>Watch Bob for this</strong>
+<p>Bob can see the 6-city game's data. If it starts writing city names, NPC names, or evidence words into <code>player_agent.py</code>, that's overfitting. Our <code>AGENTS.md</code> tells it not to, but it's a rule in a prompt, so that doesn't guarantee that it won't.</p>
+</div>
+<h3>Agents are non-deterministic, so experiment</h3>
+<p>Since one run tells you very little, you need more than one. The habits that make this work are the ordinary habits of running an experiment:</p>
+<ul>
+<li><strong>Change one thing at a time.</strong> If you change the prompt and a hook and the tools in the same run, you won't know which one mattered.</li>
+<li><strong>Run each version more than once.</strong> Two runs is the bare minimum. Three is better. You're looking for the typical result, not the best one.</li>
+<li><strong>Write the results down.</strong> For each version: what you changed, the time, how many cities it visited, how many evidence words it recorded, and whether it finished.</li>
+<li><strong>Keep the version that wins, and be able to get back to it.</strong> Bob keeps checkpoints, but also consider making git commits as you go along so that you can keep track of its behavior.</li>
+</ul>
+<p>One more thing you can change: the model.</p>
+<p>The game uses one LLM for all of its agents: the narrator, the NPCs, and the player agent. Booths usually run something small and fast. A bigger model (say, Opus instead of Sonnet or Haiku) is better at reasoning through messy text and holding more of the situation in mind at once. It's also slower and costs more, and this game scores speed.</p>
+<p>Can a bigger model solve the problem where a smaller one can't? Sometimes. A bigger model can make up for a weak prompt. But it can't see information it was never given. If the agent doesn't have the map, Opus doesn't have the map either. Most of what you did in Modules 1 and 2 helps a small model <em>more</em> than a big one, and that's the trade worth knowing: a bigger model or a better harness. In production, a better harness is usually cheaper.</p>
+<h3>Verification loops beyond coding</h3>
+<p>In coding, verification loops are everywhere, and we mostly take them for granted: the compiler, the type checker, the test suite, CI. A coding agent writes code, runs the tests, sees what failed, and tries again. That's a big part of why coding agents got good before other kinds of agents did.</p>
+<p>Outside of coding, you usually have to build the loop yourself. It's the same shape every time: the agent does something, something <em>outside the agent</em> checks the result, and the agent gets told what was wrong.</p>
+<ul>
+<li>In this game: <code>enter_evidence_words</code> tells the agent how many of its words were right.</li>
+<li>In Minecraft: each step toward the Ender Dragon either happened or it didn't, and the agents were able to check.</li>
+<li>In math: Lean checks whether a proof is valid.</li>
+<li>For a support agent: did the customer reopen the ticket?</li>
+<li>For a research agent: do the papers it cited exist, and do they say what it claims they say?</li>
+</ul>
+<p>These real-world problems need to be structured the same way in order for an agent to be able to make progress without human intervention.</p>
+<p>The agent has no map of the world, it doesn't revise its beliefs, and it's stochastic. It can't reliably notice that it's wrong by thinking harder about the same information. The signal that it's wrong has to come from outside the model.</p>
+<p>There are two loops in this workshop. The <strong>inner loop</strong> is the player agent checking itself at the safe.</p>
+<p>The <strong>outer loop</strong> is you and Bob: change the agent, run the game, read the logs, change it again. Everything in this module is about making the outer loop work.</p>
+<h2>Step 1: Make every change traceable</h2>
+<p>Before you start running experiments, make sure you can tell your versions apart and get back to any of them.</p>
+<div class="wk-box wk-exercise"><strong>Exercise · Commit as you go</strong><p>Ask Bob to commit after every change, and to add that rule to <code>AGENTS.md</code> so it keeps doing it.</p>&#10;<div class="callout wk-bob-prompt wk-mode-agent"><button class="copy-btn" onclick="copyCallout(this)">Copy</button><span class="wk-mode-pill">Bob · Agent mode</span><span class="callout-text">Add a rule to AGENTS.md: after every change to player_agent.py, make a git commit with a short message that says what changed and why. One change per commit. Then commit the current state of player_agent.py so we have a starting point.</span></div>&#10;<div class="tip"><strong>Commits vs. checkpoints</strong>&#10;<p>Bob also saves checkpoints as it works, and you can roll back to one from the chat. That's useful for undoing a change Bob just made. But checkpoints belong to Bob's session, and might roll back the conversation as well.</p>&#10;<p>Commits are in your repo's history: they have messages, they stick around, and you can line them up with your game logs.</p>&#10;<p>For this game, merge to &quot;main&quot; before you submit please.</p>&#10;</div>&#10;<p>You might also connect each game log to the version of the agent that played it. The game writes a log to <code>logs/</code> for every run, with a <code>start_time</code> in it. If you want, you can change the game engine code to do this: It won't change how it runs on the server, but it lets you set up a local loop.</p>&#10;<div class="callout wk-bob-prompt wk-mode-agent"><button class="copy-btn" onclick="copyCallout(this)">Copy</button><span class="wk-mode-pill">Bob · Agent mode</span><span class="callout-text">Write a small script in scripts/ (analysis only, not part of my submission) that goes through every log in logs/, finds the most recent git commit before the log's start_time, and prints one row per run: the commit hash and message, the run time (last_updated minus start_time), the status, the number of cities visited, whether it revisited any city, and the number of evidence words recorded. Don't change player_agent.py.</span></div>&#10;</div>
+<h2>Step 2: Run multiple games</h2>
+<div class="wk-box wk-exercise"><strong>Exercise · Iterate</strong><p>This is the outer loop. Repeat it as many times as you have time for:</p>&#10;<ol>&#10;<li>Pick <strong>one</strong> thing to change. Start from the logs: ask Bob what's going wrong most often.</li>&#10;<li>Have Bob make the change and commit it.</li>&#10;<li>Hit <strong>New Game</strong>, re-choose your tools, and let it run.</li>&#10;<li>Run the same version again.</li>&#10;</ol>&#10;<div class="callout wk-bob-prompt wk-mode-ask"><button class="copy-btn" onclick="copyCallout(this)">Copy</button><span class="wk-mode-pill">Bob · Ask mode</span><span class="callout-text">Read my most recent logs in logs/. What is the most common problem across these runs (not just the last one)? Suggest one change to player_agent.py that would fix it, and tell me what I should see in the next run if it works.</span></div>&#10;</div>
+<h2>Step 3: Compare runs</h2>
+<div class="wk-box wk-exercise"><strong>Exercise · What changed, and did it help?</strong><p>Run your script from Step 1, then ask Bob to read it with you.</p>&#10;<div class="callout wk-bob-prompt wk-mode-ask"><button class="copy-btn" onclick="copyCallout(this)">Copy</button><span class="wk-mode-pill">Bob · Ask mode</span><span class="callout-text">Run the comparison script in scripts/ and show me the table. Group the runs by commit. For each commit, what was the typical run time, and did it get better or worse than the commit before it? Which change made the biggest difference? Are any of the differences small enough that they could just be run-to-run variation?</span></div>&#10;<p>If a change made things worse, roll it back:</p>&#10;<div class="callout wk-bob-prompt wk-mode-agent"><button class="copy-btn" onclick="copyCallout(this)">Copy</button><span class="wk-mode-pill">Bob · Agent mode</span><span class="callout-text">Revert the commit that made the run time worse, and commit the revert.</span></div>&#10;</div>
+<p>The dashboard only shows you the current run, so the comparison has to come from your logs. That's normal for agents in production, too: the useful view is the one you build across many runs.</p>
+<h2>Step 4 (Optional): Try a different model</h2>
+<div class="wk-box wk-exercise"><strong>Exercise · Bigger model, same agent</strong><p>Pick your best commit. Switch the model (we have <code>claude-haiku-4-5</code> and <code>claude-sonnet-4-6</code> available), change nothing else, and run it twice. Then switch back.</p>&#10;<p>Did the bigger model finish where the smaller one didn't? Was it faster or slower? What did it do differently in the logs?</p>&#10;</div>
+<div class="wk-box wk-discuss"><strong>Think about it</strong><p>If the bigger model did better, what was it doing that the smaller model couldn't? Could you get the smaller model to do the same thing with a hook or a rule?</p>&#10;</div>
+<h2>Step 5 (Advanced): Loop engineering</h2>
+<p>Let's get meta. Give Bob a target and let it run the outer loop on its own.</p>
+<div class="callout wk-bob-prompt wk-mode-orchestrator"><button class="copy-btn" onclick="copyCallout(this)">Copy</button><span class="wk-mode-pill">Bob · Orchestrator mode</span><span class="callout-text">Please keep making modifications until my time is driven down to 120. Use subagents.</span></div>
+<div class="wk-box wk-discuss"><strong>Think about it</strong><p>What happened? Where did Bob's loop help, and where did it go off the rails? Did it overfit to the 6-city game? How did it decide whether a change worked?</p>&#10;</div>
+<h2>What's Working</h2>
+<p>Over the four modules, you've built up a full set of tools for working with agents:</p>
+<ul>
+<li><strong>Module 0:</strong> using Bob's modes to change an agent, and checking the result in a new game</li>
+<li><strong>Module 1:</strong> hooks that pull facts out deterministically, and a verification loop at each city</li>
+<li><strong>Module 2:</strong> a map for an agent that can't see one, and a way to revise what it believes</li>
+<li><strong>Module 3:</strong> an experimental framework: one change at a time, every change committed, every run logged, and versions compared on evidence instead of feelings</li>
+</ul>
+<p>None of these are specific to this game. The player agent is a small version of every agent you'll build: it can't see the whole world, it's stochastic, and it needs something outside itself to tell it when it's wrong.</p>
+<h2>Up Next</h2>
+<p>Submit your agent with <strong>Submit to Competition</strong> in the game UI. It will be judged on the 26-city game, so this is where you find out whether it overfit.</p>
+<p>After this session, watch your agent's progress on the <a href="https://ibm-devrel.github.io/bobgame-experience/results/">results page</a>.</p>
+<p>If you'd like to chat more, come to discuss it with us in the Sandbox.</p>
+<p>Congratulations, and good luck!</p>
+
+
+
+  <div class="wk-pager">
+    <a class="wk-prev" href="/bobgame-docs-external/workshop/module-2/"><small>← Previous</small>Module 2: Agents and Non-determinism</a>
+    
+  </div>
+
+</div>
+
+  </main>
+  <script>
+    // Persistent persona filter: URL param sets it, localStorage remembers it
+    const VALID_ROLES = ['player', 'staff', 'developer'];
+    const paramRole = new URLSearchParams(location.search).get('role');
+    if (paramRole && VALID_ROLES.includes(paramRole)) {
+      localStorage.setItem('docs-role', paramRole);
+    }
+    const role = localStorage.getItem('docs-role');
+    if (role && VALID_ROLES.includes(role)) {
+      document.body.classList.add('role-' + role);
+      document.querySelectorAll('nav li[data-hide-from]').forEach(li => {
+        if (li.dataset.hideFrom.split(',').includes(role)) li.style.display = 'none';
+      });
+    }
+    // Nav section collapse/expand
+    function toggleSection(btn) {
+      const body = btn.nextElementSibling;
+      const arrow = btn.querySelector('.toggle-arrow');
+      const isOpen = body.classList.toggle('open');
+      arrow.style.transform = isOpen ? 'rotate(90deg)' : '';
+    }
+    // Auto-expand the section containing the active link
+    document.querySelectorAll('nav .section-body').forEach(body => {
+      if (body.querySelector('a.active')) {
+        body.classList.add('open');
+        const arrow = body.previousElementSibling.querySelector('.toggle-arrow');
+        if (arrow) arrow.style.transform = 'rotate(90deg)';
+      }
+    });
+    // Code block headers: language label + copy button
+    const LANG_LABELS = {bash:'bash',powershell:'powershell',json:'JSON',python:'Python',ini:'.env',text:'',js:'JavaScript'};
+    document.querySelectorAll('main pre').forEach(pre => {
+      const code = pre.querySelector('code');
+      const lang = code ? [...code.classList].find(c => c.startsWith('language-'))?.replace('language-','') : '';
+      const label = LANG_LABELS[lang] ?? lang;
+      const wrapper = document.createElement('div');
+      wrapper.className = 'code-block';
+      const header = document.createElement('div');
+      header.className = 'code-header';
+      header.innerHTML = `<span>${label}</span><button class="code-copy">Copy</button>`;
+      header.querySelector('.code-copy').addEventListener('click', function() {
+        navigator.clipboard.writeText(pre.textContent).then(() => {
+          this.textContent = 'Copied!';
+          setTimeout(() => this.textContent = 'Copy', 1500);
+        });
+      });
+      pre.parentNode.insertBefore(wrapper, pre);
+      wrapper.appendChild(header);
+      wrapper.appendChild(pre);
+    });
+  </script>
+  <script src="/bobgame-docs-external/shared/docs.js"></script>
+  <script src="/bobgame-docs-external/vendor/reveal/dist/reveal.js"></script>
+  <script src="/bobgame-docs-external/vendor/reveal/plugin/markdown/markdown.js"></script>
+  <script src="/bobgame-docs-external/vendor/reveal/plugin/highlight/highlight.js"></script>
+  <script src="/bobgame-docs-external/vendor/reveal/plugin/notes/notes.js"></script>
+  <script src="/bobgame-docs-external/shared/slides.js"></script>
+  
+</body>
+</html>

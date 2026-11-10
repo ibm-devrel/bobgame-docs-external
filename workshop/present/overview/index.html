@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deep Blue Heist Workshop — Slides</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/bobgame-docs-external/vendor/reveal/dist/reset.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/vendor/reveal/dist/reveal.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/vendor/reveal/dist/theme/black.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/vendor/reveal/plugin/highlight/monokai.css">
+  
+  <link rel="stylesheet" href="/bobgame-docs-external/shared/workshop.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/shared/slides.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/shared/diagram.css">
+</head>
+<body class="wk-page">
+  <div class="reveal" data-deck="overview" data-mode="present"><div class="slides"><section data-markdown data-separator="^\r?\n---\r?\n$" data-separator-vertical="^\r?\n--\r?\n$" data-separator-notes="^Note:"><textarea data-template>&lt;!-- .slide: class="wk-title" --&gt;&#10;&#10;&lt;p class="wk-eyebrow"&gt;IBM Bob Workshop&lt;/p&gt;&#10;&#10;# The Deep Blue Heist&#10;&#10;Prompting Bob strategically to build a better agent&#10;&#10;&lt;div class="wk-push-bottom wk-small"&gt;90 minutes · 4 modules · bring a laptop&lt;/div&gt;&#10;&#10;Note: Welcome! Speaker notes go after a line starting with "Note:". Press S to open the speaker view.&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-bio" --&gt;&#10;&#10;## Olivia Buzek&#10;&#10;&lt;p class="wk-role"&gt;Senior Staff AI Engineer, Lead Developer Advocate for AI&lt;br&gt;IBM&lt;/p&gt;&#10;&#10;* 🦜 ~18 years working on AI and machine learning&#10;* 🗣️ Computational linguist by training&#10;* ❤️ OSS and inner source dev advocate for 7 years&#10;* 🧱 Builder of AI games and applications&#10;* 🚀 Mission: Make AI accessible for humans&#10;&#10;&lt;img class="wk-portrait" src="/bobgame-docs-external/assets/workshop/people/olivia-buzek.png" alt="Olivia Buzek"&gt;&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-people-slide" --&gt;&#10;&#10;## The team behind the heist&#10;&#10;&lt;div class="wk-people"&gt;&#10;&lt;div class="wk-person"&gt;&lt;img src="/bobgame-docs-external/assets/workshop/people/annie-tran.png" alt="Annie Tran"&gt;&lt;p class="wk-name"&gt;Annie Tran&lt;/p&gt;&lt;p class="wk-credit"&gt;Content Development&lt;/p&gt;&lt;p class="wk-role"&gt;Technical Writer @ IBM&lt;/p&gt;&lt;/div&gt;&#10;&lt;div class="wk-person"&gt;&lt;div class="wk-avatar"&gt;SS&lt;/div&gt;&lt;p class="wk-name"&gt;Sonia Siddiqui&lt;/p&gt;&lt;p class="wk-credit"&gt;Content Development&lt;/p&gt;&lt;p class="wk-role"&gt;Technical Writer @ IBM&lt;/p&gt;&lt;/div&gt;&#10;&lt;div class="wk-person"&gt;&lt;img src="/bobgame-docs-external/assets/workshop/people/jamie-wang.png" alt="Jamie Wang"&gt;&lt;p class="wk-name"&gt;Jamie Wang&lt;/p&gt;&lt;p class="wk-credit"&gt;Game Design and Engineering&lt;/p&gt;&lt;p class="wk-role"&gt;Developer Advocate @ IBM&lt;/p&gt;&lt;/div&gt;&#10;&lt;div class="wk-person"&gt;&lt;img src="/bobgame-docs-external/assets/workshop/people/hemanth-battu.png" alt="Hemanth Battu"&gt;&lt;p class="wk-name"&gt;Hemanth Battu&lt;/p&gt;&lt;p class="wk-credit"&gt;Game Engineering&lt;/p&gt;&lt;p class="wk-role"&gt;Ecosystem Engineer @ IBM&lt;/p&gt;&lt;/div&gt;&#10;&lt;div class="wk-person"&gt;&lt;img src="/bobgame-docs-external/assets/workshop/people/rynne-whitnah.png" alt="Rynne Whitnah"&gt;&lt;p class="wk-name"&gt;Rynne Whitnah&lt;/p&gt;&lt;p class="wk-credit"&gt;Backend Engineering&lt;/p&gt;&lt;p class="wk-role"&gt;Technical Lead, AI Ecosystem @ IBM&lt;/p&gt;&lt;/div&gt;&#10;&lt;/div&gt;&#10;&#10;&#10;---&#10;&#10;## The Heist&#10;&#10;&lt;div class="wk-cols"&gt;&#10;&lt;div&gt;&#10;&#10;- **The Architect** stole the Deep Blue Drive&#10;- Your agent chases them across a map of cities&#10;- You improve the agent with **IBM Bob**&#10;&#10;&lt;/div&gt;&#10;&lt;div&gt;&#10;&#10;&gt; For most of the year, only about **1 in 10** players solved it.&#10;&#10;&lt;/div&gt;&#10;&lt;/div&gt;&#10;&#10;&#10;---&#10;&#10;## Today&#10;&#10;| | Module | Time |&#10;|---|---|---|&#10;| 0 | What is the Deep Blue Heist? | 15 min |&#10;| 1 | The World of Agents | 15–20 min |&#10;| 2 | Agents and Non-determinism | 20 min |&#10;| 3 | An Experimental Framework for Production Agents | 20 min |&#10;&#10;&lt;p class="wk-small wk-push-bottom"&gt;Each module: one concept → prompt Bob → play a round.&lt;/p&gt;&#10;</textarea></section></div></div>
+
+  <script src="/bobgame-docs-external/vendor/reveal/dist/reveal.js"></script>
+  <script src="/bobgame-docs-external/vendor/reveal/plugin/markdown/markdown.js"></script>
+  <script src="/bobgame-docs-external/vendor/reveal/plugin/highlight/highlight.js"></script>
+  <script src="/bobgame-docs-external/vendor/reveal/plugin/notes/notes.js"></script>
+  
+  <script src="/bobgame-docs-external/shared/slides.js"></script>
+</body>
+</html>

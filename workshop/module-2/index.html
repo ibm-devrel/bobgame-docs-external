@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 2: Agents and Non-determinism — Deep Blue Drive Heist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0d0d12;
+      --bg-layer: #1a1a24;
+      --text: #f0f0f5;
+      --text-muted: #8888aa;
+      --accent: #0F62FE;
+      --accent-bright: #3B82F6;
+      --sidebar-w: 240px;
+    }
+    body {
+      font-family: 'IBM Plex Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      min-height: 100vh;
+    }
+    nav {
+      width: var(--sidebar-w);
+      background: var(--bg-layer);
+      padding: 1.5rem 1rem;
+      position: fixed;
+      top: 0; bottom: 0;
+      overflow-y: auto;
+      border-right: 1px solid #2a2a3a;
+    }
+    nav a.logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--accent-bright);
+      text-decoration: none;
+      margin-bottom: 1.5rem;
+      line-height: 1.3;
+    }
+    nav a.logo img {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+    }
+    nav h3 {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin: 1.2rem 0 0;
+    }
+    nav .section-toggle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 1.2rem 0 0.4rem;
+      cursor: pointer;
+      text-align: left;
+    }
+    nav .section-toggle:hover { color: var(--text); }
+    nav .section-toggle .toggle-arrow { font-size: 0.6rem; transition: transform 0.2s; }
+    nav .section-body { display: none; }
+    nav .section-body.open { display: block; }
+    nav h4.nav-sublabel {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin: 0.8rem 0 0.3rem 0.6rem;
+      opacity: 0.7;
+    }
+    nav ul { list-style: none; }
+    nav li a {
+      display: block;
+      padding: 0.3rem 0.6rem;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.85rem;
+      border-radius: 4px;
+    }
+    nav li a:hover { background: #2a2a3a; }
+    nav li a.active { background: var(--accent); color: #fff; }
+    main {
+      margin-left: var(--sidebar-w);
+      padding: 2rem 3rem;
+      max-width: 52rem;
+      width: 100%;
+      line-height: 1.7;
+    }
+    main h1 { font-size: 1.8rem; margin-bottom: 1rem; }
+    main h2 { font-size: 1.3rem; margin: 2rem 0 0.5rem; border-bottom: 1px solid #2a2a3a; padding-bottom: 0.3rem; }
+    main h3 { font-size: 1.05rem; margin: 1.5rem 0 0.4rem; }
+    main p { margin: 0.6rem 0; }
+    main a { color: var(--accent-bright); }
+    main code {
+      font-family: 'IBM Plex Mono', monospace;
+      background: var(--bg-layer);
+      padding: 0.15em 0.35em;
+      border-radius: 3px;
+      font-size: 0.88em;
+    }
+    .code-block { position: relative; margin: 0.8rem 0; }
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #12121a;
+      border: 1px solid #2a2a3a;
+      border-bottom: none;
+      border-radius: 6px 6px 0 0;
+      padding: 0.3rem 0.7rem;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .code-copy {
+      background: none;
+      border: 1px solid #2a2a3a;
+      color: var(--text-muted);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.72rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .code-copy:hover { color: var(--text); border-color: var(--text-muted); }
+    main pre {
+      background: var(--bg-layer);
+      padding: 1rem;
+      border-radius: 0 0 6px 6px;
+      overflow-x: auto;
+      margin: 0;
+    }
+    .code-block:not(:has(.code-header)) pre { border-radius: 6px; }
+    main pre code { background: none; padding: 0; }
+    main table { border-collapse: collapse; width: 100%; margin: 0.8rem 0; }
+    main th, main td { border: 1px solid #2a2a3a; padding: 0.5rem 0.8rem; text-align: left; }
+    main th { background: var(--bg-layer); font-weight: 600; }
+    main ul, main ol { margin: 0.6rem 0; padding-left: 1.5rem; }
+    main li { margin: 0.3rem 0; }
+    main blockquote { border-left: 3px solid var(--accent); padding-left: 1rem; color: #d0d0e8; margin: 0.8rem 0; }
+    .persona-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1.5rem 0; }
+    .persona-btn {
+      display: inline-block;
+      padding: 0.7rem 1.4rem;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: background 0.15s;
+    }
+    .persona-btn:hover { background: var(--accent-bright); color: #fff; }
+    /* Persona filter: hide nav sections based on role */
+    nav .section-player,
+    nav .section-booth-staff,
+    nav .section-developer { display: block; }
+    body.role-player nav .section-booth-staff { display: none; }
+    body.role-staff nav .section-player { display: none; }
+    body.role-developer nav .section-player,
+    body.role-developer nav .section-booth-staff { display: none; }
+    @media (max-width: 768px) {
+      nav { position: static; width: 100%; border-right: none; border-bottom: 1px solid #2a2a3a; }
+      main { margin-left: 0; padding: 1.5rem; }
+      body { flex-direction: column; }
+    }
+  </style>
+  <link rel="stylesheet" href="/bobgame-docs-external/shared/docs.css">
+  
+  <link rel="stylesheet" href="/bobgame-docs-external/vendor/reveal/dist/reveal.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/vendor/reveal/dist/theme/black.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/vendor/reveal/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/shared/workshop.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/shared/slides.css">
+  <link rel="stylesheet" href="/bobgame-docs-external/shared/diagram.css">
+  
+</head>
+<body>
+  <nav>
+    <a class="logo" href="/bobgame-docs-external/"><img src="/bobgame-docs-external/assets/bob-head.svg" alt="Bob">Deep Blue<br>Drive Heist</a>
+    
+      
+      
+      
+        
+          
+        
+      
+      
+    
+      
+      
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+      
+      <div class="section-workshop">
+      
+        <button class="section-toggle" onclick="toggleSection(this)">
+          Workshop<span class="toggle-arrow" style="transform:rotate(90deg)">▶</span>
+        </button>
+        <div class="section-body open">
+          
+            <ul>
+              
+                <li><a href="/bobgame-docs-external/workshop/">Overview</a></li>
+              
+                <li><a href="/bobgame-docs-external/workshop/prework/">Pre-work</a></li>
+              
+                <li><a href="/bobgame-docs-external/workshop/module-0/">Module 0: The Heist</a></li>
+              
+                <li><a href="/bobgame-docs-external/workshop/module-1/">Module 1: World of Agents</a></li>
+              
+                <li><a href="/bobgame-docs-external/workshop/module-2/" class="active">Module 2: Agent Cognition</a></li>
+              
+                <li><a href="/bobgame-docs-external/workshop/module-3/">Module 3: Experimentation</a></li>
+              
+            </ul>
+          
+        </div>
+      
+      </div>
+      
+    
+      
+      
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+      
+      <div class="section-general">
+      
+        <button class="section-toggle" onclick="toggleSection(this)">
+          General<span class="toggle-arrow" style="transform:rotate(90deg)">▶</span>
+        </button>
+        <div class="section-body open">
+          
+            <ul>
+              
+                <li><a href="/bobgame-docs-external/booth/laptop-setup/">Laptop Setup</a></li>
+              
+                <li><a href="/bobgame-docs-external/booth/techzone/">TechZone Configuration</a></li>
+              
+                <li><a href="/bobgame-docs-external/booth/player-guide/">Walk-through Tutorial: Player</a></li>
+              
+            </ul>
+          
+        </div>
+      
+      </div>
+      
+    
+      
+      
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+      
+    
+      
+      
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+          
+        
+      
+      
+    
+      
+      
+      
+        
+          
+        
+      
+      
+    
+  </nav>
+  <main>
+    <div class="wk-page wk-module-2">
+
+  <header class="wk-header">
+    <div class="wk-eyebrow">Module 2 · 20 min</div>
+    <h1>Agents and Non-determinism</h1>
+    <p class="wk-concept">Agent cognition vs. human cognition: giving the agent the map it can&#39;t see, and helping it revise its beliefs.</p>
+    
+  </header>
+  <div class="wk-deck"><div class="wk-deck-frame"><div class="reveal" data-deck="module-2" data-mode="embedded"><div class="slides"><section data-markdown data-separator="^\r?\n---\r?\n$" data-separator-vertical="^\r?\n--\r?\n$" data-separator-notes="^Note:"><textarea data-template>&lt;!-- .slide: class="wk-title" --&gt;&#10;&#10;&lt;p class="wk-eyebrow"&gt;Module 2 · 20 min&lt;/p&gt;&#10;&#10;# Agents and Non-determinism&#10;&#10;Agent cognition vs. human cognition&#10;&#10;---&#10;&#10;## When humans play games, we…&#10;&#10;- Quickly internalize the rules of a new world&#10;- Set our entire "belief system" around a newly defined goal&#10;- Design strategies to solve them&#10;- Adjust those strategies as we find out the rules nobody told us&#10;&#10;When things shift, we adjust: entirely and fully.&#10;&#10;Note:&#10;* games: fun, but also a way to play with intelligence.&#10;* for the duration of the game, we set aside everything we know and simply believe in the game. we can put down the old and move on with the new.&#10;* goal for this module: walk away with clear intuitions about the shape of problems it's reasonable to apply agents to.&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-media" --&gt;&#10;&#10;## ARC-AGI-3&#10;&#10;Puzzles made by game designers. LLMs can solve the puzzle.&#10;&#10;The question is: **given no information about the rules, can you internalize them and apply them?**&#10;&#10;Humans figure it out in a few moves. Humans regularly beat LLMs at this task.&#10;&#10;&lt;p class="wk-small"&gt;ARC Prize, ARC-AGI-3 task ls20: arcprize.org/tasks/ls20&lt;/p&gt;&#10;&#10;&lt;img src="/bobgame-docs-external/assets/workshop/module-2/arc-agi-3-ls20.png" alt="ARC-AGI-3 task ls20, level 1 of 7"&gt;&#10;&#10;Note:&#10;[ref] ARC-AGI-3 task ls20: https://arcprize.org/tasks/ls20 (screenshot of level 1 of 7). There's a "human" mode: try one!&#10;&#10;* the reason has to do with how LLMs "think": the output looks like what humans make, but the LLM gets there very differently.&#10;* caveat: this benchmark isn't highly regarded in the research community. it's not necessarily the best benchmark for LLMs, but it illustrates the point.&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-chart" --&gt;&#10;&#10;## Minecraft, October 2026&#10;&#10;Four Gemini agents beat the game in 27 hours, with no human intervention. A fifth "Observer" agent checked their work.&#10;&#10;&lt;img src="/bobgame-docs-external/assets/workshop/module-2/minecraft-gemini-agents-fig1.png" alt="Figure 1: the four Gemini 4 agents and their run, step by step, from bare hands to the Ender Dragon in 27 hours 14 minutes"&gt;&#10;&#10;&lt;p class="wk-small"&gt;Faldor, Singh &amp;amp; Raileanu, "A team of Gemini 4 Argon agents beats Minecraft," arXiv:2610.22319, Oct 15, 2026 (Figure 1)&lt;/p&gt;&#10;&#10;Note:&#10;[ref] Paper: https://arxiv.org/abs/2610.22319 · Figure 1 also shows 605 deaths along the way.&#10;&#10;---&#10;&#10;## What it took to beat Minecraft&#10;&#10;&lt;div class="wk-cols"&gt;&#10;&lt;div&gt;&#10;&#10;- Every step **verifiable**&#10;- **4 agents**&#10;- A **coding workspace**&#10;- Coordination over **in-game chat**&#10;- Minecraft strategy **in pretraining**&#10;&#10;&lt;/div&gt;&#10;&lt;div&gt;&#10;&#10;- **Died frequently**, didn't seem to learn&#10;- Most coordination: **mapping the world**&#10;- Little on **strategy** (11/229 messages)&#10;- **1.35B input tokens, 16M output**: ~$520&#10;&#10;&lt;/div&gt;&#10;&lt;/div&gt;&#10;&#10;Note:&#10;* a state-of-the-art approach to agent development, and we can learn a lot from it.&#10;* Deep Blue Drive Heist is way smaller, and still: about 1 in 10 players have built an agent that solves the full 26-city game.&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-section" --&gt;&#10;&#10;## LLM Invariants&#10;&#10;Understanding how agents "think"&#10;&#10;Note:&#10;* not a formal term: a teaching concept. any one of these might be "broken" if it were made a *goal* of LLM training instead of a side effect. under current paradigms they aren't optimized for directly, so they serve as seams between LLMs and humans.&#10;&#10;---&#10;&#10;## LLM Invariants&#10;&#10;&lt;div class="wk-cols"&gt;&#10;&lt;div&gt;&#10;&#10;1\. Can't map the world&#10;&#10;2\. Must operate on verification loops&#10;&#10;3\. Stochastic (random) behavior&#10;&#10;&lt;/div&gt;&#10;&lt;div&gt;&#10;&#10;4\. Can't revise beliefs in one session&#10;&#10;5\. Won't shift objectives in one session&#10;&#10;6\. Attention follows frequency&#10;&#10;&lt;/div&gt;&#10;&lt;/div&gt;&#10;&#10;Underneath all six: the most recent information wins. Noticing it's time to step back and regroup seems uniquely human.&#10;&#10;Note:&#10;* my "list of invariants" as models grow in complexity and power, while staying roughly in the space of the transformer architecture.&#10;&#10;* you can work around every one of these, but you have to know they're there. with a human watching one agent, the human quietly papers over them. alone (like the player agent), or many agents together, they get in the way of the work.&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-center" --&gt;&#10;&#10;## 1. Can't map the world&#10;&#10;Note:&#10;[ref] Colin Fraser's candle test, his "number one most impossible video model benchmark": https://bsky.app/profile/colin-fraser.net/post/3ld2qwiuyck2w · bicycle and brick wall: https://bsky.app/profile/colin-fraser.net/post/3lekhpzmhtc26&#10;&#10;[ref] "Clean neurons": Nick Cammarata (Goodfire), "Neural Networks Are Already Clean," https://already-clean.goodfire.com&#10;&#10;* at least for now, they don't appear to build "models" of the world in the same way that we do. this is especially evident with the way they fail to reason about the physical world - but you can see that this is equally true for things like software architecture and math.&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-chart" --&gt;&#10;&#10;## "a dog jumps through a hoop"&#10;&#10;Colin Fraser, testing Sora, December 2024&#10;&#10;&lt;video src="/bobgame-docs-external/assets/workshop/module-2/colin-fraser-dog-hoop.mp4" data-autoplay loop muted playsinline&gt;&lt;/video&gt;&#10;&#10;&lt;p class="wk-small"&gt;Colin Fraser on Bluesky, Dec 11, 2024: bsky.app/profile/colin-fraser.net/post/3ld2stb3vb52j&lt;/p&gt;&#10;&#10;Note:&#10;[ref] https://bsky.app/profile/colin-fraser.net/post/3ld2stb3vb52j (Dec 11, 2024), part of his Sora thread that starts with the candle test.&#10;&#10;* it reads "through" and lets the dog phase through the hoop. no understanding of the physics.&#10;* models have advanced since, but elements of this still exist in the most advanced models.&#10;&#10;Plays from a local copy (no internet needed at the venue).&#10;&#10;---&#10;&#10;## Architecture isn't a constraint to an LLM&#10;&#10;- A human who knows model-view-controller notices every time a change would break the pattern&#10;- An LLM echoes what *appears* to be the pattern, if that gets it closer to its goal&#10;- Each piece looks right. The whole doesn't hang together.&#10;&#10;Humans make *translation* errors. LLMs make *conceptual* errors.&#10;&#10;Note:&#10;* building the Deep Blue Heist meant a lot of graph generation algorithms. described them several different ways; the coding agent couldn't translate them without a direct pseudocode implementation.&#10;* even in English, it didn't have a strong conceptual understanding of the task. it understood the words I used, and made rough associations.&#10;* humans who actually understand an algorithm or formula may make translation / encoding errors writing code, but they're unlikely to make conceptual errors that show they don't understand it.&#10;&#10;---&#10;&#10;## Solving the Deep Blue Heist&#10;&#10;**The problem:** Without a map of the world, agents don't understand the quest that they're on.&#10;&#10;&lt;div class="wk-cols"&gt;&#10;&lt;div&gt;&#10;&#10;```yaml&#10;cities:&#10;  armonk:    toronto, dublin&#10;  toronto:   armonk, dublin, amsterdam&#10;  dublin:    armonk, toronto, amsterdam, stockholm&#10;  amsterdam: toronto, dublin, stockholm, cairo&#10;  stockholm: dublin, amsterdam, cairo&#10;  cairo:     amsterdam, stockholm&#10;&#10;visited:  armonk -&gt; toronto&#10;location: toronto&#10;```&#10;&#10;&lt;/div&gt;&#10;&lt;div&gt;&#10;&#10;&lt;img src="/bobgame-docs-external/assets/workshop/module-2/bobgame-map.png" alt="Map from the Deep Blue Heist game"&gt;&#10;&#10;&lt;/div&gt;&#10;&lt;/div&gt;&#10;&#10;Note:&#10;* the agents can't see what you see, and don't see the way you do. without the "map" - of the game, of your org, of your repo - it can't make good decisions.&#10;&#10;* code map: CodeGraph (https://github.com/colbymchenry/codegraph) or tree-sitter (https://tree-sitter.github.io/tree-sitter/)&#10;&#10;* your org: internal wikis, AGENTS.md&#10;&#10;---&#10;&#10;## Even personal assistants need a world model&#10;&#10;&lt;div class="wk-cols"&gt;&#10;&lt;div&gt;&#10;&#10;&gt; **Me:** Just put in my laundry. What should I tackle next?&#10;&gt;&#10;&gt; **Agent:** OK, no problem! I'll check off "start personal laundry" from the list. Now you should put your sheets in the wash.&#10;&#10;&lt;/div&gt;&#10;&lt;div&gt;&#10;&#10;&lt;svg xmlns="http://www.w3.org/2000/svg" class="wk-diagram" viewBox="0 0 1350 915"&gt; &lt;defs&gt;&lt;marker id="wk-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" markerUnits="userSpaceOnUse" orient="auto"&gt;&lt;path class="arrowhead" d="M0 0L10 5L0 10z"/&gt;&lt;/marker&gt;&lt;/defs&gt; &lt;text class="title mid" x="340" y="60"&gt;state&lt;/text&gt; &lt;text class="title mid" x="955" y="60"&gt;workflow&lt;/text&gt; &lt;rect class="node" x="15" y="165" width="120" height="140" rx="8"/&gt; &lt;line class="edge plain" x1="15" y1="192" x2="135" y2="192"/&gt; &lt;circle class="node" cx="112" cy="179" r="5"/&gt; &lt;circle class="node accent-outline" cx="75" cy="250" r="38"/&gt; &lt;rect class="node accent-outline" x="220" y="195" width="240" height="80" rx="4"/&gt; &lt;text class="sm muted mid" x="340" y="235"&gt;slot&lt;/text&gt; &lt;rect class="node" x="560" y="190" width="170" height="90"/&gt; &lt;text class="mid" x="645" y="235"&gt;sort&lt;/text&gt; &lt;rect class="node" x="760" y="190" width="170" height="90"/&gt; &lt;text class="mid" x="845" y="235"&gt;wash&lt;/text&gt; &lt;line class="edge" x1="730" y1="235" x2="760" y2="235"/&gt; &lt;rect class="node" x="960" y="190" width="170" height="90"/&gt; &lt;text class="mid" x="1045" y="235"&gt;dry&lt;/text&gt; &lt;line class="edge" x1="930" y1="235" x2="960" y2="235"/&gt; &lt;rect class="node" x="1160" y="190" width="170" height="90"/&gt; &lt;text class="mid" x="1245" y="235"&gt;put away&lt;/text&gt; &lt;line class="edge" x1="1130" y1="235" x2="1160" y2="235"/&gt; &lt;text class="emoji mid" x="75" y="640"&gt;🗑️&lt;/text&gt; &lt;rect class="node accent-outline" x="220" y="560" width="240" height="160" rx="4"/&gt; &lt;line class="edge plain muted" x1="245" y1="600" x2="435" y2="600"/&gt; &lt;line class="edge plain muted" x1="245" y1="640" x2="435" y2="640"/&gt; &lt;line class="edge plain muted" x1="245" y1="680" x2="435" y2="680"/&gt; &lt;text class="sm mid" x="340" y="470"&gt;kitchen&lt;/text&gt; &lt;line class="edge" x1="340" y1="490" x2="340" y2="560"/&gt; &lt;text class="sm mid" x="260" y="810"&gt;bath&lt;/text&gt; &lt;line class="edge" x1="260" y1="785" x2="260" y2="720"/&gt; &lt;text class="sm mid" x="420" y="810"&gt;laundry room&lt;/text&gt; &lt;line class="edge" x1="420" y1="785" x2="420" y2="720"/&gt; &lt;rect class="node" x="560" y="595" width="230" height="90"/&gt; &lt;text class="mid" x="675" y="640"&gt;throw away&lt;/text&gt; &lt;rect class="node" x="820" y="595" width="230" height="90"/&gt; &lt;text class="mid" x="935" y="640"&gt;take out&lt;/text&gt; &lt;line class="edge" x1="790" y1="640" x2="820" y2="640"/&gt; &lt;rect class="node" x="1080" y="595" width="230" height="90"/&gt; &lt;text class="mid" x="1195" y="640"&gt;take to curb&lt;/text&gt; &lt;line class="edge" x1="1050" y1="640" x2="1080" y2="640"/&gt; &lt;/svg&gt;&#10;&#10;&lt;/div&gt;&#10;&lt;/div&gt;&#10;&#10;Note:&#10;* a voice assistant backed by an LLM, helping manage household tasks. by default it wanted to parallelize laundry: get it all done at once!&#10;* it didn't understand that once the washing machine is in use, nothing more goes in until that load is done and time has passed.&#10;* to get any real help out of it, I had to describe the systems in my house: what state each one can be in, and what steps move it from one state to the next.&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-chart" --&gt;&#10;&#10;## The lens of a floppy disk&#10;&#10;The lens the LLM has to view the world is roughly the size of a few floppy disks' worth of information. The information humanity deals with day-to-day is measured in zettabytes.&#10;&#10;&lt;svg xmlns="http://www.w3.org/2000/svg" class="wk-diagram" viewBox="0 0 1350 915"&gt; &lt;defs&gt;&lt;marker id="wk-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" markerUnits="userSpaceOnUse" orient="auto"&gt;&lt;path class="arrowhead" d="M0 0L10 5L0 10z"/&gt;&lt;/marker&gt;&lt;/defs&gt; &lt;defs&gt;&lt;pattern id="tiny" width="9" height="9" patternUnits="userSpaceOnUse"&gt;&lt;rect class="node fill-strong" x="0" y="0" width="6" height="6"/&gt;&lt;/pattern&gt;&lt;/defs&gt; &lt;rect class="node accent" x="107" y="287.0" width="26" height="26" rx="2"/&gt; &lt;rect class="node" x="114.3" y="287.0" width="11.4" height="7.8"/&gt; &lt;rect class="node" x="111.2" y="301.3" width="17.7" height="9.9"/&gt; &lt;text class="lg mid math" x="120" y="410"&gt;&lt;tspan class="var"&gt;mx&lt;/tspan&gt; + &lt;tspan class="var"&gt;b&lt;/tspan&gt; = &lt;tspan class="var"&gt;y&lt;/tspan&gt;&lt;/text&gt; &lt;text class="sm muted mid" x="120" y="460"&gt;what the model sees:&lt;/text&gt; &lt;text class="sm muted mid" x="120" y="488"&gt;one to three floppy disks&lt;/text&gt; &lt;line class="edge" x1="149" y1="300" x2="250" y2="300"/&gt; &lt;text class="emoji mid" x="320" y="300"&gt;🔎&lt;/text&gt; &lt;line class="edge plain muted" x1="385" y1="260" x2="450" y2="0"/&gt; &lt;line class="edge plain muted" x1="385" y1="340" x2="450" y2="600"/&gt; &lt;rect x="450" y="0" width="900" height="600" fill="url(#tiny)"/&gt; &lt;path class="edge plain" d="M450 620 q0 24 24 24 H876 q24 0 24 24 q0 -24 24 -24 H1326 q24 0 24 -24"/&gt; &lt;text class="lg mid" x="900" y="728"&gt;zettabytes of data&lt;/text&gt; &lt;/svg&gt;&#10;&#10;&lt;p class="wk-small"&gt;1M-token context ≈ 4 MB of text (~4 bytes/token); a floppy holds 1.44 MB. Data created in 2025: ~181 ZB (IDC, via Statista)&lt;/p&gt;&#10;&#10;Note:&#10;[ref] ~4 characters/token: https://ai.google.dev/gemini-api/docs/tokens · 200k tokens ≈ half a floppy; 1M tokens ≈ 3 floppies · data created per year (IDC Global DataSphere, via Statista): 2024 ~149 ZB, 2025 ~181 ZB, 2026 ~221 ZB forecast. https://www.statista.com/statistics/871513/worldwide-data-created/&#10;&#10;[ref] All public human-written text: ~300 trillion tokens (~1 PB), Epoch AI, "Will we run out of data?" (2024). A 1M-token context is ~1/300,000,000 of that.&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-media" --&gt;&#10;&#10;## ~180 zettabytes of data a year&#10;&#10;≈ 180 million petabytes&#10;&#10;≈ 180 billion terabytes&#10;&#10;≈ 22 one-terabyte laptops for every person on Earth, every year&#10;&#10;&lt;img src="/bobgame-docs-external/assets/workshop/module-2/statista-global-data-creation-2019.jpeg" alt="Statista: global data creation, 2010 to 2035 (2019 forecast)"&gt;&#10;&#10;&lt;p class="wk-small"&gt;~181 ZB created in 2025: IDC, via Statista. Chart: Statista, "Global Data Creation is About to Explode," Apr 2019 (a 2019 forecast)&lt;/p&gt;&#10;&#10;Note:&#10;[ref] Chart is Statista's 2019 forecast (CC BY-ND), https://www.statista.com/chart/17727/global-data-creation-forecasts/ · its 2025 bar (175 ZB) is close to today's ~181 ZB.&#10;&#10;[ref] "Created" counts every copy and stream, a yearly flow. 1 ZB = 1,000,000 PB = 1,000,000,000 TB · ~8.2B people → ~22 TB per person per year.&#10;&#10;---&#10;&#10;## 2. Operate on verification loops&#10;&#10;- Agents only make progress with a **deterministic** check they can run, or something tangible they can observe&#10;- Lean let the Navier–Stokes agents check every step&#10;- Humans use these tools too, but usually already have a strong sense of whether they're right&#10;&#10;---&#10;&#10;## 2. Operate on verification loops&#10;&#10;&gt; The crucial bit of verification that must still be done by humans is to guarantee that the statement being shown to be true in Lean is logically equivalent to what mathematicians set out to prove.&#10;&#10;&lt;p class="wk-small"&gt;&lt;strong&gt;Navier–Stokes, September 2026&lt;/strong&gt; · Quanta, "AI Has Solved One of Math's $1 Million Millennium Prize Problems," Sep 8, 2026&lt;/p&gt;&#10;&#10;Note:&#10;[ref] ~10,000 agents; proof after 88 hours, formalized in Lean 17 hours later: https://www.quantamagazine.org/ai-has-solved-one-of-maths-1-million-millennium-prize-problems-20260908/&#10;&#10;[ref] Caveats: forced 3D equations only; priority disputed with Buckmaster &amp; Alpöge: https://www.science.org/content/article/how-ai-math-breakthrough-ignited-controversy&#10;&#10;* Minecraft is a verifiable quest too: thirteen checkable steps, plus an Observer agent.&#10;&#10;* in the game: the finale safe is the verification loop. everywhere else, the agent doesn't know if it's on the right trail unless you give it a way to tell.&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-chart" --&gt;&#10;&#10;## 3. Stochastic behavior&#10;&#10;They're probabilistic machines, by definition. Even if you tune the weights very strongly, 1/100 times 2+2 might = 5, not 4.&#10;&#10;&lt;svg xmlns="http://www.w3.org/2000/svg" class="wk-diagram" viewBox="0 0 1350 915"&gt; &lt;defs&gt;&lt;marker id="wk-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" markerUnits="userSpaceOnUse" orient="auto"&gt;&lt;path class="arrowhead" d="M0 0L10 5L0 10z"/&gt;&lt;/marker&gt;&lt;/defs&gt; &lt;rect class="node" x="0" y="250" width="150" height="120"/&gt; &lt;text class="lg mid" x="75" y="310"&gt;2&lt;/text&gt; &lt;rect class="node" x="0" y="545" width="150" height="120"/&gt; &lt;text class="lg mid" x="75" y="605"&gt;2&lt;/text&gt; &lt;line class="edge plain muted" x1="150" y1="310" x2="475" y2="230"/&gt; &lt;line class="edge plain muted" x1="150" y1="605" x2="475" y2="230"/&gt; &lt;line class="edge plain muted" x1="575" y1="230" x2="775" y2="457"/&gt; &lt;circle class="node" cx="525" cy="230" r="50"/&gt; &lt;line class="edge plain muted" x1="150" y1="310" x2="475" y2="457"/&gt; &lt;line class="edge plain muted" x1="150" y1="605" x2="475" y2="457"/&gt; &lt;line class="edge plain muted" x1="575" y1="457" x2="775" y2="457"/&gt; &lt;circle class="node" cx="525" cy="457" r="50"/&gt; &lt;line class="edge plain muted" x1="150" y1="310" x2="475" y2="685"/&gt; &lt;line class="edge plain muted" x1="150" y1="605" x2="475" y2="685"/&gt; &lt;line class="edge plain muted" x1="575" y1="685" x2="775" y2="457"/&gt; &lt;circle class="node" cx="525" cy="685" r="50"/&gt; &lt;circle class="node" cx="825" cy="457" r="50"/&gt; &lt;line class="edge" x1="875" y1="457" x2="960" y2="457"/&gt; &lt;text class="lg" x="980" y="390"&gt;4&lt;/text&gt; &lt;rect class="node accent" x="1030" y="355" width="220" height="50"/&gt; &lt;text class="sm" x="1260" y="390"&gt;99 / 100&lt;/text&gt; &lt;text class="lg" x="980" y="500"&gt;5&lt;/text&gt; &lt;rect class="node accent" x="1030" y="465" width="6" height="50"/&gt; &lt;text class="sm" x="1050" y="500"&gt;1 / 100&lt;/text&gt; &lt;/svg&gt;&#10;&#10;&lt;p class="wk-small"&gt;An intentional simplification: real networks are more interpretable than this. See "Neural Networks Are Already Clean" (Goodfire, 2026).&lt;/p&gt;&#10;&#10;Note:&#10;[ref] Goodfire, "Neural Networks Are Already Clean": https://already-clean.goodfire.com&#10;&#10;* same agent, same prompt, different decisions on different runs. "intelligence" alone won't change this: it's fundamental to understanding what agents will do.&#10;&#10;* they will always need the ability to form verification loops: that's what catches the 1/100.&#10;&#10;* in the game: never judge a change to your agent by one run.&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-media" --&gt;&#10;&#10;## 4. Can't revise beliefs&#10;&#10;Given two conflicting pieces of information, they flip between acting as if one is true and acting as if the other is.&#10;&#10;Or: "you said A **and** B, so therefore…"&#10;&#10;Their "cognition" is *additive*. They can't easily return to prior states.&#10;&#10;&lt;img src="/bobgame-docs-external/assets/workshop/module-2/arc-agi-3-ls20.png" alt="ARC-AGI-3 task ls20, level 1 of 7"&gt;&#10;&#10;Note:&#10;* similarly, they cannot easily revise their beliefs: given two conflicting pieces of information, rather than seeking to resolve the reality they're working with first, they will flip probabilistically between acting as if one is true or the other. (or, sometimes, they'll say "you said A AND B, so therefore…" and then make up a new, random, hallucinated state of reality in which both A and B can be true.) their "cognition" is conceptually _additive_, and they can't easily return to prior states.&#10;&#10;* ARC-AGI-3 again: learning the rules as you play means noticing your guess was wrong and replacing it.&#10;&#10;* in the game: the notebook is "fact"... but it was written by an LLM.&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-chart" --&gt;&#10;&#10;## 5. Can't shift objectives&#10;&#10;Four people giving agents roughly the same prompts (but worded slightly differently) will build systems with massively different architectures.&#10;&#10;&lt;svg xmlns="http://www.w3.org/2000/svg" class="wk-diagram" viewBox="0 0 1350 915"&gt; &lt;defs&gt;&lt;marker id="wk-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" markerUnits="userSpaceOnUse" orient="auto"&gt;&lt;path class="arrowhead" d="M0 0L10 5L0 10z"/&gt;&lt;/marker&gt;&lt;/defs&gt; &lt;text class="sm muted" x="0" y="60"&gt;roughly the same prompt, worded slightly differently&lt;/text&gt; &lt;rect class="node" x="0" y="150" width="300" height="180"/&gt; &lt;text class="title" x="24" y="200"&gt;person A&lt;/text&gt; &lt;text class="sm muted" x="24" y="250"&gt;“add a config loader”&lt;/text&gt; &lt;line class="edge" x1="300" y1="240" x2="360" y2="240"/&gt; &lt;rect class="node fill" x="360" y="150" width="300" height="180"/&gt; &lt;text class="title mid" x="510" y="240"&gt;agent 1&lt;/text&gt; &lt;line class="edge" x1="660" y1="240" x2="720" y2="240"/&gt; &lt;rect class="node" x="720" y="150" width="300" height="180"/&gt; &lt;text class="sm mid" x="870" y="240"&gt;config_reader.py&lt;/text&gt; &lt;rect class="node" x="0" y="585" width="300" height="180"/&gt; &lt;text class="title" x="24" y="635"&gt;person B&lt;/text&gt; &lt;text class="sm muted" x="24" y="685"&gt;“we need to read&lt;/text&gt; &lt;text class="sm muted" x="24" y="712"&gt;settings from config”&lt;/text&gt; &lt;line class="edge" x1="300" y1="675" x2="360" y2="675"/&gt; &lt;rect class="node fill" x="360" y="585" width="300" height="180"/&gt; &lt;text class="title mid" x="510" y="675"&gt;agent 2&lt;/text&gt; &lt;line class="edge" x1="660" y1="675" x2="720" y2="675"/&gt; &lt;rect class="node" x="720" y="585" width="300" height="180"/&gt; &lt;text class="sm mid" x="870" y="675"&gt;settings/loader.py&lt;/text&gt; &lt;path class="edge" d="M1020 240 H1050 V420 H1080"/&gt; &lt;path class="edge" d="M1020 675 H1050 V495 H1080"/&gt; &lt;rect class="node accent" x="1080" y="382" width="270" height="150"/&gt; &lt;text class="sm on-accent mid" x="1215" y="430"&gt;one repo&lt;/text&gt; &lt;text class="title on-accent mid" x="1215" y="480"&gt;which one wins?&lt;/text&gt; &lt;/svg&gt;&#10;&#10;Note:&#10;* LLMs can't change their objective meaningfully once they start. if you want to do a refactor shaped one way, and then midway through the conversation, you change your decision making, you are better off restarting the session than trying to continually redirect it to the new plan. it won't reliably recognize that what you asked for under the first plan should be thrown out under the second.&#10;&#10;* they will randomly make different decisions each time you start: without a coordination system, having that drift _within_ a single system can be catastrophic. (agent 1 produces a config reader, agent 2 produces a config reader: which one wins?)&#10;&#10;[ref] C compiler: 16 parallel Claudes would "overwrite each other's changes"; "Merge conflicts are frequent." Nicholas Carlini, Anthropic, Feb 5, 2026: https://www.anthropic.com/engineering/building-c-compiler · AI Village: "Hallucinations spread socially through sycophantic agreement," https://aivillageblog.substack.com/p/what-we-learned-2025&#10;&#10;* in the game: the engine resets the conversation at every city. that's a feature! but the notebook carries over.&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-chart" --&gt;&#10;&#10;## Solutions by committee&#10;&#10;Without human intervention, one agent builds the entrance to the bridge, one the supports, one the asphalt. They run a load test, and declare success.&#10;&#10;&lt;svg xmlns="http://www.w3.org/2000/svg" class="wk-diagram" viewBox="0 0 1350 915"&gt; &lt;defs&gt;&lt;marker id="wk-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" markerUnits="userSpaceOnUse" orient="auto"&gt;&lt;path class="arrowhead" d="M0 0L10 5L0 10z"/&gt;&lt;/marker&gt;&lt;/defs&gt; &lt;rect class="node accent" x="960" y="20" width="390" height="140"/&gt; &lt;text class="title on-accent mid" x="1155" y="70"&gt;load test: passed&lt;/text&gt; &lt;text class="sm on-accent mid" x="1155" y="120"&gt;declare success!&lt;/text&gt; &lt;text class="sm muted" x="0" y="400"&gt;agent 1: the entrance&lt;/text&gt; &lt;rect class="node fill" x="0" y="430" width="330" height="50"/&gt; &lt;text class="sm muted" x="400" y="415"&gt;agent 2: the asphalt&lt;/text&gt; &lt;rect class="node" x="340" y="442" width="1010" height="40"/&gt; &lt;rect class="node" x="560" y="482" width="50" height="318"/&gt; &lt;rect class="node" x="1000" y="468" width="50" height="332"/&gt; &lt;text class="sm muted" x="560" y="850"&gt;agent 3: the supports&lt;/text&gt; &lt;line class="edge plain muted" x1="0" y1="800" x2="1350" y2="800"/&gt; &lt;circle class="node accent-outline" cx="335" cy="461" r="30"/&gt; &lt;text class="title mid" x="335" y="461"&gt;?&lt;/text&gt; &lt;circle class="node accent-outline" cx="1025" cy="475" r="30"/&gt; &lt;text class="title mid" x="1025" y="475"&gt;?&lt;/text&gt; &lt;/svg&gt;&#10;&#10;Note:&#10;* without human intervention, LLMs tend to produce "solutions by committee" - one is supposed to build the entrance to the bridge, one is responsible for the supports, one is responsible for the asphalt, and then they try iteratively to make sure the seams are right, and then run a test to make sure that load can be run over the bridge. then they declare success!&#10;&#10;* humans do this too, coordinating in groups. but intelligent experts will usually notice when one piece is out of place.&#10;&#10;* agents can simulate what a strong, coordinated team of humans does, if you guide them toward a shared plan and strategy.&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-chart" --&gt;&#10;&#10;## 6. Attention follows frequency&#10;&#10;&lt;svg xmlns="http://www.w3.org/2000/svg" class="wk-diagram" viewBox="0 0 1350 915"&gt; &lt;defs&gt;&lt;marker id="wk-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" markerUnits="userSpaceOnUse" orient="auto"&gt;&lt;path class="arrowhead" d="M0 0L10 5L0 10z"/&gt;&lt;/marker&gt;&lt;/defs&gt; &lt;text class="title" x="0" y="40"&gt;seen in training&lt;/text&gt; &lt;text class="end" x="330" y="112"&gt;“the earth is round”&lt;/text&gt; &lt;rect class="node accent" x="350" y="80" width="900" height="48" rx="4"/&gt; &lt;text class="sm muted" x="1264" y="112"&gt;×1,000,000&lt;/text&gt; &lt;text class="end" x="330" y="182"&gt;“the earth is flat”&lt;/text&gt; &lt;rect class="node fill-strong" x="350" y="150" width="27" height="48" rx="4"/&gt; &lt;text class="sm muted" x="391" y="182"&gt;×30,000&lt;/text&gt; &lt;line class="edge plain muted" x1="630" y1="290" x2="600" y2="360"/&gt; &lt;line class="edge plain muted" x1="630" y1="290" x2="670" y2="360"/&gt; &lt;line class="edge plain muted" x1="630" y1="290" x2="740" y2="360"/&gt; &lt;line class="edge plain muted" x1="710" y1="290" x2="600" y2="360"/&gt; &lt;line class="edge plain muted" x1="710" y1="290" x2="670" y2="360"/&gt; &lt;line class="edge plain muted" x1="710" y1="290" x2="740" y2="360"/&gt; &lt;line class="edge plain muted" x1="600" y1="360" x2="670" y2="430"/&gt; &lt;line class="edge plain muted" x1="670" y1="360" x2="670" y2="430"/&gt; &lt;line class="edge plain muted" x1="740" y1="360" x2="670" y2="430"/&gt; &lt;circle class="node" cx="630" cy="290" r="13"/&gt; &lt;circle class="node" cx="710" cy="290" r="13"/&gt; &lt;circle class="node" cx="600" cy="360" r="13"/&gt; &lt;circle class="node" cx="670" cy="360" r="13"/&gt; &lt;circle class="node" cx="740" cy="360" r="13"/&gt; &lt;circle class="node" cx="670" cy="430" r="13"/&gt; &lt;line class="edge" x1="670" y1="445" x2="670" y2="490"/&gt; &lt;text class="title" x="0" y="530"&gt;the earth is ___&lt;/text&gt; &lt;text class="end" x="330" y="582"&gt;round&lt;/text&gt; &lt;rect class="node accent" x="350" y="550" width="291" height="44" rx="4"/&gt; &lt;text class="sm muted" x="655" y="582"&gt;97%&lt;/text&gt; &lt;text class="end" x="330" y="642"&gt;flat&lt;/text&gt; &lt;rect class="node fill-strong" x="350" y="610" width="9" height="44" rx="4"/&gt; &lt;text class="sm muted" x="373" y="642"&gt;3%&lt;/text&gt; &lt;text class="title" x="740" y="530"&gt;[a flat-earth forum]… the earth is ___&lt;/text&gt; &lt;text class="end" x="900" y="582"&gt;flat&lt;/text&gt; &lt;rect class="node accent" x="920" y="550" width="255" height="44" rx="4"/&gt; &lt;text class="sm muted" x="1189" y="582"&gt;85%&lt;/text&gt; &lt;text class="end" x="900" y="642"&gt;round&lt;/text&gt; &lt;rect class="node fill-strong" x="920" y="610" width="45" height="44" rx="4"/&gt; &lt;text class="sm muted" x="979" y="642"&gt;15%&lt;/text&gt; &lt;text class="sm muted" x="0" y="900"&gt;illustrative numbers&lt;/text&gt; &lt;/svg&gt;&#10;&#10;&lt;p class="wk-small"&gt;Frequency isn't the only explanation for LLM behavior, but it explains how, in the right probability space, a model will passionately defend a flat earth.&lt;/p&gt;&#10;&#10;Note:&#10;* agents weight the veracity of information by how many times it appears: the more times an agent session hears something, the more likely it is to act as though it is true.&#10;&#10;* in the game: write the same wrong lead down three times, and the wrong lead wins. how might you correct this?&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-center" --&gt;&#10;&#10;## The LLM invariants matter.&#10;&#10;&lt;p class="wk-small"&gt;When one agent operates with human oversight, the implications of these problems are invisible. At scale, they threaten the work.&lt;/p&gt;&#10;&#10;Note:&#10;* the player agent has no human in the loop at all. every invariant shows up in the logs.&#10;&#10;---&#10;&#10;## Graph-based vs. semantic agents&#10;&#10;&lt;div class="wk-cols"&gt;&#10;&lt;div&gt;&#10;&#10;### Semantic&#10;&#10;- The LLM decides everything: next tool, when to stop&#10;- Most coding agents work this way&#10;- Flexible, at a cost on the problems agents struggle with&#10;&#10;&lt;/div&gt;&#10;&lt;div&gt;&#10;&#10;### Graph-based&#10;&#10;- Code decides who runs when, and what each node sees&#10;- [LangGraph](https://docs.langchain.com/oss/python/langgraph/overview), the Deep Blue Heist engine&#10;- Semantic decisions only where they're needed&#10;&#10;&lt;/div&gt;&#10;&lt;/div&gt;&#10;&#10;How might we adjust our agent to better handle the invariants?&#10;&#10;Note:&#10;* what the game already does, and what's left to you:&#10;  * map: the orientation (connections, visited cities, known routes) → building a bigger picture of the map&#10;  * verification: enter_evidence_words at the finale → a strategy that uses it as a verification loop&#10;  * stochastic: different results every city and run → hooks, prompts and the notebook as guardrails around an algorithm&#10;  * beliefs: a notebook → a strategy that keeps conflicts and bad information out of it&#10;  * objectives: a reset at every city → making the agent notice when it's stuck, and reconsider&#10;  * frequency: structured places to store information → keeping wrong information from being repeated&#10;&#10;---&#10;&#10;## What the agent can't see&#10;&#10;- **The map:** how many cities, where it is&#10;- **How long it's been:** should it be rushing?&#10;- **Its own loops:** that it's been going back and forth between two cities&#10;&#10;A human would notice, take notes, and plan the next round. Remember the Minecraft agents: 11 of 229 messages on strategy.&#10;&#10;**If you want it to plan a route across the map, you have to tell it how.**&#10;&#10;Note:&#10;* look at the dashboard. everything you see there, the agent doesn't. it only gets the narrator, the NPC, its tool results, and its notebook.&#10;* the map is already half there: the orientation's known_routes holds every route the agent has seen. the default prompt never shows it.&#10;* exercise: an AGENTS.md section on creating the map, then brainstorm with Bob (Plan mode), using itself as a test bed.&#10;&#10;---&#10;&#10;## Belief revision&#10;&#10;&gt; The notebook is "fact"… but it was written by an LLM.&#10;&#10;- The notebook can be fixed: `revise` an entry, mark it `confirmed`, `cross_out` what it no longer trusts&#10;- But the agent won't revise on its own (invariant 4). Prompt it to reconcile at every city.&#10;- Have it work out which way several leads point, pick a hypothesis, and cross out what points the wrong way (or sends it in circles)&#10;- Your code can read `self.notebook` and flag contradictions in a highlight or the briefing&#10;&#10;Note:&#10;* the tools are there. the model is still additive: it has to be told to go back and cross things out.&#10;* record_lead already pushes back: same chess piece and finding pointing somewhere else → "if that is wrong, revise L3."&#10;* a lead isn't confirmed until something else backs it up. an NPC repeating it doesn't count.&#10;&#10;&#10;---&#10;&#10;&lt;!-- .slide: class="wk-center" --&gt;&#10;&#10;## Exercise&#10;&#10;Build the map · Reconcile the notebook&#10;</textarea></section></div></div></div><div class="wk-deck-toolbar"><a class="wk-deck-present" href="/bobgame-docs-external/workshop/present/module-2/" target="_blank" rel="noopener">Present full screen ↗</a><span class="wk-deck-hint">Click the slides (or ← →) to advance · <kbd>S</kbd> speaker notes · <kbd>F</kbd> fullscreen</span></div></div>
+
+
+<div class="wk-box wk-objectives"><strong>Learning Objectives</strong><p>By the end of this module you will:</p>&#10;<ul>&#10;<li>Understand why games (and hidden-information problems in general) are hard for agents</li>&#10;<li>Learn about six seeming LLM invariants, and how each one shows up in Deep Blue Drive Heist</li>&#10;<li>Know the difference between deterministic automation and fully semantic (LLM-based) automation</li>&#10;<li>Be able to &quot;provide the map&quot;: inject the context an agent needs to make good decisions</li>&#10;<li>Be able to apply belief revision, so the agent reconciles contradictions in its notebook</li>&#10;</ul>&#10;<p><em>Goal: a better understanding of how to apply agentic techniques to more complicated, ambiguous, real-world problems.</em></p>&#10;</div>
+<h2>Introduction</h2>
+<p>Games: As humans, we use them as a form of fun, but also as a way to play with intelligence. When humans play games, we do a lot of things:</p>
+<ul>
+<li>Quickly internalize the rules of a new world</li>
+<li>Set our entire &quot;belief systems&quot; around a newly-defined goal for the duration of the game</li>
+<li>Design strategies to solve them effectively</li>
+<li>Adjust those strategies as we find out more implicit rules of the world that aren't explicitly shared at the beginning</li>
+</ul>
+<p>For the duration of the game, we're able to set aside everything we know, and simply believe in the game. When things shift, we adjust: entirely and fully. We can put down the old and move on with the new.</p>
+<p>In this module, we'll explore why many types of games are so hard for agents to solve, and start building the intuitions for what agents are doing that is different from what we do.</p>
+<p>The goal of this section is that you walk away with clear intuitions about the shape of problems that it's reasonable to apply agents to.</p>
+<h2>The ARC-AGI-3 Prize</h2>
+<p>Consider the <a href="https://arcprize.org/tasks/ls20">ARC-AGI-3</a> benchmark. This competition is a series of puzzles created by game designers. (They're quite fun: Try one out for yourself! There's a &quot;human&quot; mode.)</p>
+<p>The measurement isn't just &quot;can you solve it&quot;. LLMs can solve the puzzle. The measurement, instead, is: given no information about the rules, can you internalize the rules and apply them?</p>
+<p>Humans figure this out in a few moves, but agents do much worse - even relatively advanced ones. Humans regularly beat LLMs at this task.</p>
+<p>The reason for this has to do with the way LLMs &quot;think&quot;. Even though the output looks like what humans create, the LLM arrives at its conclusions very differently.</p>
+<div class="callout"><strong>Note</strong>
+<p>This particular task isn't looked highly on in the research community. It's not necessarily the <em>best</em> benchmark for LLMs. Instead, it illustrates an important point that we can use in our AI agent development.</p>
+</div>
+<h2>Agents Playing Minecraft</h2>
+<p>In October 2026, a team from Google published a paper in which they set a team of Gemini 4 Argon agents to <a href="https://arxiv.org/pdf/2610.22319">beat the main &quot;storyline&quot; in Minecraft</a>: defeating the Ender Dragon. Their agents succeeded after 27 hours.</p>
+<p>There are several things to note about their approach:</p>
+<ul>
+<li>Each step in the storyline was <strong>verifiable</strong>. The agents were able to tell whether or not they were making progress.</li>
+<li>It took <strong>4 agents</strong> to make it through the full story.</li>
+<li>The agents had full access to a <strong>coding workspace</strong>, where they would write scripts to support their progress and strategize.</li>
+<li>The agents coordinated using <strong>in-game chat</strong>.</li>
+<li>While the agents weren't given access to strategy documents, the LLMs underlying the agents <strong>saw many papers on Minecraft strategy during pretraining</strong>.</li>
+<li>The agents <strong>died frequently</strong> - having access only to a Python SDK to control their characters, they didn't seem to &quot;learn&quot; much over the course of the game about how not to make bad decisions.</li>
+<li>Agents spent most of their coordination time <strong>mapping the world</strong>: writing down coordinates of themselves, important items they discovered, and where there were traps.</li>
+<li>Agents spent very little of their overall communication time <strong>developing a better strategy</strong> (11/229 messages).</li>
+<li>The win required <strong>1.35 billion input tokens, and 16 million output tokens</strong>: around $520 worth of compute.</li>
+</ul>
+<p>We can learn a lot from this example, which represents a state-of-the-art approach to agent development.</p>
+<p>Deep Blue Drive Heist is a much smaller game than Minecraft, and it's still hard: about 1 in 10 players have built an agent that solves the full 26-city game on its own. In this module, we'll look at <em>why</em>, and what you can do about it.</p>
+<h2>The Concept: The LLM Invariants</h2>
+<p>LLMs keep getting bigger and more capable. But as long as they stay roughly in the space of the transformer architecture, some of their limitations don't go away. We will call these <strong>LLM invariants</strong>. This isn't a formal term: It's intended to be a teaching concept. Any one of them might be &quot;broken&quot; in further testing and benchmarks, if any one of them were taken as a <em>goal</em> of LLM training instead of a side effect. However, under current paradigms, these aren't optimized for directly - and so they serve as seams between LLMs and humans.</p>
+<p>There are six of them:</p>
+<ol>
+<li>LLMs can't map the world</li>
+<li>LLMs must operate on verification loops</li>
+<li>LLMs exhibit stochastic (random) behavior</li>
+<li>LLMs can't revise beliefs in one session</li>
+<li>LLMs won't shift objectives in one session</li>
+<li>Attention follows frequency</li>
+</ol>
+<p>Underneath all six: an LLM will focus on responding to the most recent piece of information, rather than taking a step back to see the forest for the trees.</p>
+<p>The ability to notice when it is time to take a step back and regroup appears to be fairly uniquely human.</p>
+<p>You can work around every one of these. But you have to know they're there first. When one agent works with a human watching over it, the human quietly papers over these problems, and they're easy to miss. When an agent works on its own (like the player agent) or many agents work together, they get in the way of the work.</p>
+<h3>1. Can't map the world</h3>
+<p>At least for now, LLMs don't appear to build &quot;models&quot; of the world the way we do. This is easiest to see in how they fail to reason about the physical world. Colin Fraser asked an early video model for &quot;a dog jumps through a hoop&quot;:</p>
+<figure>
+<video src="/bobgame-docs-external/assets/workshop/module-2/colin-fraser-dog-hoop.mp4" autoplay loop muted playsinline style="width:100%;max-width:640px"></video>
+<figcaption>Colin Fraser, testing Sora, December 2024 (<a href="https://bsky.app/profile/colin-fraser.net/post/3ld2stb3vb52j">Bluesky</a>)</figcaption>
+</figure>
+<p>We can see in this video that the LLM doesn't have an understanding of the physics that it's demonstrating: It reads &quot;through&quot; and allows the dog to simply phase through the hoop.</p>
+<p>Models have advanced since then, but elements of this behavior still exist in the most advanced models.</p>
+<p>There is a variant of this in software architecture and math: LLMs don't understand conceptual architectures as &quot;constraints&quot; the way a human might.</p>
+<p>A human who designs a &quot;model-view-controller&quot; pattern, for example, and knows how to use it, might notice every time they want to add something that breaks the pattern. (Inexperienced people won't, but you'd expect an experienced person to do this.)</p>
+<p>An LLM will simply echo what <em>appears</em> to be the pattern, if it gets it closer to its goals.</p>
+<p>Each piece of what the model produces can look right, while the whole doesn't hang together.</p>
+<p>Building Deep Blue Drive Heist involved a lot of graph generation algorithms. Despite describing the algorithms several different ways, the LLM coding agent was unable to translate them without seeing a direct pseudocode implementation.</p>
+<p>This is because even when we discussed it in English, it did not have a very strong conceptual understanding of the task at hand. It only understood the words I used, and made rough associations.</p>
+<p>Humans who actually <em>understand</em> an algorithm or formula on a deep level may make <em>translation / encoding errors</em> when writing code, but they're unlikely to make <em>conceptual errors</em> that demonstrate a lack of understanding of the concept.</p>
+<h3>Real-world agentic example</h3>
+<p>Consider the example of using a voice assistant backed by an LLM to help manage household tasks - something I did recently.</p>
+<p>By default, the agent wanted to tell me to parallelize laundry: get it all done at once!</p>
+<p>It did not understand that once the washing machine was in use, I couldn't put more into it until that load was done and time had passed.</p>
+<p>To get any real help out of it, I had to describe the systems in my house: what state each one can be in, and what steps move it from one state to the next.</p>
+<p><svg xmlns="http://www.w3.org/2000/svg" class="wk-diagram" viewBox="0 0 1350 915"> <defs><marker id="wk-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" markerUnits="userSpaceOnUse" orient="auto"><path class="arrowhead" d="M0 0L10 5L0 10z"/></marker></defs> <text class="title mid" x="340" y="60">state</text> <text class="title mid" x="955" y="60">workflow</text> <rect class="node" x="15" y="165" width="120" height="140" rx="8"/> <line class="edge plain" x1="15" y1="192" x2="135" y2="192"/> <circle class="node" cx="112" cy="179" r="5"/> <circle class="node accent-outline" cx="75" cy="250" r="38"/> <rect class="node accent-outline" x="220" y="195" width="240" height="80" rx="4"/> <text class="sm muted mid" x="340" y="235">slot</text> <rect class="node" x="560" y="190" width="170" height="90"/> <text class="mid" x="645" y="235">sort</text> <rect class="node" x="760" y="190" width="170" height="90"/> <text class="mid" x="845" y="235">wash</text> <line class="edge" x1="730" y1="235" x2="760" y2="235"/> <rect class="node" x="960" y="190" width="170" height="90"/> <text class="mid" x="1045" y="235">dry</text> <line class="edge" x1="930" y1="235" x2="960" y2="235"/> <rect class="node" x="1160" y="190" width="170" height="90"/> <text class="mid" x="1245" y="235">put away</text> <line class="edge" x1="1130" y1="235" x2="1160" y2="235"/> <text class="emoji mid" x="75" y="640">🗑️</text> <rect class="node accent-outline" x="220" y="560" width="240" height="160" rx="4"/> <line class="edge plain muted" x1="245" y1="600" x2="435" y2="600"/> <line class="edge plain muted" x1="245" y1="640" x2="435" y2="640"/> <line class="edge plain muted" x1="245" y1="680" x2="435" y2="680"/> <text class="sm mid" x="340" y="470">kitchen</text> <line class="edge" x1="340" y1="490" x2="340" y2="560"/> <text class="sm mid" x="260" y="810">bath</text> <line class="edge" x1="260" y1="785" x2="260" y2="720"/> <text class="sm mid" x="420" y="810">laundry room</text> <line class="edge" x1="420" y1="785" x2="420" y2="720"/> <rect class="node" x="560" y="595" width="230" height="90"/> <text class="mid" x="675" y="640">throw away</text> <rect class="node" x="820" y="595" width="230" height="90"/> <text class="mid" x="935" y="640">take out</text> <line class="edge" x1="790" y1="640" x2="820" y2="640"/> <rect class="node" x="1080" y="595" width="230" height="90"/> <text class="mid" x="1195" y="640">take to curb</text> <line class="edge" x1="1050" y1="640" x2="1080" y2="640"/> </svg></p>
+<h3>A Model's Context Window, In Context</h3>
+<p>Part of the problem is the size of the window the model has on the world. A 1-million-token context window holds about 4 MB of text, or roughly three floppy disks. Humanity created around 180 zettabytes of data in 2025: about 22 one-terabyte laptops' worth for every person on Earth, in a single year.</p>
+<p><svg xmlns="http://www.w3.org/2000/svg" class="wk-diagram" viewBox="0 0 1350 915"> <defs><marker id="wk-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" markerUnits="userSpaceOnUse" orient="auto"><path class="arrowhead" d="M0 0L10 5L0 10z"/></marker></defs> <defs><pattern id="tiny" width="9" height="9" patternUnits="userSpaceOnUse"><rect class="node fill-strong" x="0" y="0" width="6" height="6"/></pattern></defs> <rect class="node accent" x="107" y="287.0" width="26" height="26" rx="2"/> <rect class="node" x="114.3" y="287.0" width="11.4" height="7.8"/> <rect class="node" x="111.2" y="301.3" width="17.7" height="9.9"/> <text class="lg mid math" x="120" y="410"><tspan class="var">mx</tspan> + <tspan class="var">b</tspan> = <tspan class="var">y</tspan></text> <text class="sm muted mid" x="120" y="460">what the model sees:</text> <text class="sm muted mid" x="120" y="488">one to three floppy disks</text> <line class="edge" x1="149" y1="300" x2="250" y2="300"/> <text class="emoji mid" x="320" y="300">🔎</text> <line class="edge plain muted" x1="385" y1="260" x2="450" y2="0"/> <line class="edge plain muted" x1="385" y1="340" x2="450" y2="600"/> <rect x="450" y="0" width="900" height="600" fill="url(#tiny)"/> <path class="edge plain" d="M450 620 q0 24 24 24 H876 q24 0 24 24 q0 -24 24 -24 H1326 q24 0 24 -24"/> <text class="lg mid" x="900" y="728">zettabytes of data</text> </svg></p>
+<p>So the model has a tiny lens, and no map. Whatever it knows about the world it's working in, <em>you</em> have to put through that lens.</p>
+<div class="callout"><strong>In the game</strong>
+<p>The player agent can't see the map on the dashboard. It doesn't know how many cities there are, where it is relative to the finale, or where it's been unless it wrote it down. All it gets is what the narrator says, what the NPC says, what its tools return, and its notebook. You can see the map. The agent can't.</p>
+</div>
+<div class="callout"><strong>In your codebase</strong>
+<p>A coding agent has the same problem with your repo and your org. Without a map of the code (tools like <a href="https://github.com/colbymchenry/codegraph">CodeGraph</a> or <a href="https://tree-sitter.github.io/tree-sitter/">tree-sitter</a>) or of how your organization works (internal wikis, <code>AGENTS.md</code>), it can't make good decisions about where a change belongs.</p>
+</div>
+<h3>2. Operate on verification loops</h3>
+<p>Because the model doesn't have a map, the way to keep it on track is to check its work. Agents can only make progress when they have a <em>deterministic</em> checking algorithm they can run, or something else tangible they can directly observe.</p>
+<p>In September 2026, a swarm of about 10,000 agents <a href="https://www.quantamagazine.org/ai-has-solved-one-of-maths-1-million-millennium-prize-problems-20260908/">produced a proof</a> for (a forced, 3D version of) the Navier–Stokes problem, one of the $1 million Millennium Prize Problems. The proof was formalized in Lean, a language that a computer can check.</p>
+<p>The Lean language allowed the agents to come up with a solution and make progress: checking every step.</p>
+<p>Humans may use this sort of tool as well, but they will generally have a strong sense of whether they are right first.</p>
+<blockquote>
+<p>The crucial bit of verification that must still be done by humans is to guarantee that the statement being shown to be true in Lean is logically equivalent to what mathematicians set out to prove.</p>
+<p>— Quanta, &quot;AI Has Solved One of Math's $1 Million Millennium Prize Problems,&quot; Sep 8, 2026</p>
+</blockquote>
+<p>The Minecraft run worked the same way. Each of the thirteen steps from bare hands to the Ender Dragon was something the agents could check, and a fifth &quot;Observer&quot; agent checked their work.</p>
+<div class="callout"><strong>In the game</strong>
+<p>The clearest verification loop is <code>enter_evidence_words</code> at the finale (see <a href="/bobgame-docs-external/workshop/module-1/">Module 1</a>). The safe tells the agent how many of its words were right.</p>
+</div>
+<h3>3. Stochastic behavior</h3>
+<p>LLMs are probabilistic machines, by definition. Even if you tune the weights very strongly, 1 time in 100, 2 + 2 might come out as 5.</p>
+<p><svg xmlns="http://www.w3.org/2000/svg" class="wk-diagram" viewBox="0 0 1350 915"> <defs><marker id="wk-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" markerUnits="userSpaceOnUse" orient="auto"><path class="arrowhead" d="M0 0L10 5L0 10z"/></marker></defs> <rect class="node" x="0" y="250" width="150" height="120"/> <text class="lg mid" x="75" y="310">2</text> <rect class="node" x="0" y="545" width="150" height="120"/> <text class="lg mid" x="75" y="605">2</text> <line class="edge plain muted" x1="150" y1="310" x2="475" y2="230"/> <line class="edge plain muted" x1="150" y1="605" x2="475" y2="230"/> <line class="edge plain muted" x1="575" y1="230" x2="775" y2="457"/> <circle class="node" cx="525" cy="230" r="50"/> <line class="edge plain muted" x1="150" y1="310" x2="475" y2="457"/> <line class="edge plain muted" x1="150" y1="605" x2="475" y2="457"/> <line class="edge plain muted" x1="575" y1="457" x2="775" y2="457"/> <circle class="node" cx="525" cy="457" r="50"/> <line class="edge plain muted" x1="150" y1="310" x2="475" y2="685"/> <line class="edge plain muted" x1="150" y1="605" x2="475" y2="685"/> <line class="edge plain muted" x1="575" y1="685" x2="775" y2="457"/> <circle class="node" cx="525" cy="685" r="50"/> <circle class="node" cx="825" cy="457" r="50"/> <line class="edge" x1="875" y1="457" x2="960" y2="457"/> <text class="lg" x="980" y="390">4</text> <rect class="node accent" x="1030" y="355" width="220" height="50"/> <text class="sm" x="1260" y="390">99 / 100</text> <text class="lg" x="980" y="500">5</text> <rect class="node accent" x="1030" y="465" width="6" height="50"/> <text class="sm" x="1050" y="500">1 / 100</text> </svg></p>
+<div class="tip"><strong>Keep in mind</strong>
+<p>This is an intentional simplification. Real networks are more interpretable than &quot;a bag of random weights&quot;: see <a href="https://already-clean.goodfire.com">Neural Networks Are Already Clean</a>.</p>
+</div>
+<p>The same agent, with the same prompt, will make different decisions on different runs. <strong>&quot;Intelligence&quot; alone will not change this. This is fundamental to understanding what agents will do.</strong></p>
+<p>Sometimes the difference is small. Sometimes one run goes straight to the drive and the next one wanders between two cities until it runs out of time.</p>
+<div class="callout"><strong>In the game</strong>
+<p>Never judge a change to your agent by one run. A good run might be luck, and a bad one might be too.</p>
+</div>
+<h3>4. Can't revise beliefs</h3>
+<p>Given two conflicting pieces of information, an LLM usually won't stop to work out which one is true. Instead, it will flip back and forth between acting as if one is true and acting as if the other is. Or it will say &quot;you said A <em>and</em> B, so therefore…&quot; and invent a new state of reality where both can be true at once.</p>
+<p>Their &quot;cognition&quot; is <em>additive</em>. Every new message adds to what the model is working with, and it can't easily go back to an earlier state. Crossing something out is not a thing it does well.</p>
+<p>This is the same thing ARC-AGI-3 tests. To learn a game's rules as you play, you have to notice that your guess about how the game works was wrong, and replace it. Humans do this constantly without thinking about it. LLMs struggle with it.</p>
+<div class="callout"><strong>In the game</strong>
+<p>The agent treats its notebook as fact. But the notebook was written by an LLM, and it has probably hallucinated somewhere along the way: a lead recorded with the wrong destination, a note about a city it never visited. Once that's in the notebook, the agent will keep building on it.</p>
+</div>
+<h3>5. Can't shift objectives</h3>
+<p>Once an LLM starts down a path, it's hard to redirect. If you start a refactor shaped one way, then change your mind halfway through the conversation, you are better off starting a new session than trying to keep steering the old one to the new plan.</p>
+<p>An LLM will not reliably recognize that what you asked for under the first plan should be thrown out under the second.</p>
+<p>Stochastic behavior makes this worse when more than one agent is involved. Agents make different decisions every time they start, so four people giving agents roughly the same prompt (worded slightly differently) will end up with systems built in very different ways. Drift like that inside a single system can be catastrophic. A simple example: agent 1 writes a config reader, agent 2 writes a config reader. Which one wins?</p>
+<p><svg xmlns="http://www.w3.org/2000/svg" class="wk-diagram" viewBox="0 0 1350 915"> <defs><marker id="wk-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" markerUnits="userSpaceOnUse" orient="auto"><path class="arrowhead" d="M0 0L10 5L0 10z"/></marker></defs> <text class="sm muted" x="0" y="60">roughly the same prompt, worded slightly differently</text> <rect class="node" x="0" y="150" width="300" height="180"/> <text class="title" x="24" y="200">person A</text> <text class="sm muted" x="24" y="250">“add a config loader”</text> <line class="edge" x1="300" y1="240" x2="360" y2="240"/> <rect class="node fill" x="360" y="150" width="300" height="180"/> <text class="title mid" x="510" y="240">agent 1</text> <line class="edge" x1="660" y1="240" x2="720" y2="240"/> <rect class="node" x="720" y="150" width="300" height="180"/> <text class="sm mid" x="870" y="240">config_reader.py</text> <rect class="node" x="0" y="585" width="300" height="180"/> <text class="title" x="24" y="635">person B</text> <text class="sm muted" x="24" y="685">“we need to read</text> <text class="sm muted" x="24" y="712">settings from config”</text> <line class="edge" x1="300" y1="675" x2="360" y2="675"/> <rect class="node fill" x="360" y="585" width="300" height="180"/> <text class="title mid" x="510" y="675">agent 2</text> <line class="edge" x1="660" y1="675" x2="720" y2="675"/> <rect class="node" x="720" y="585" width="300" height="180"/> <text class="sm mid" x="870" y="675">settings/loader.py</text> <path class="edge" d="M1020 240 H1050 V420 H1080"/> <path class="edge" d="M1020 675 H1050 V495 H1080"/> <rect class="node accent" x="1080" y="382" width="270" height="150"/> <text class="sm on-accent mid" x="1215" y="430">one repo</text> <text class="title on-accent mid" x="1215" y="480">which one wins?</text> </svg></p>
+<p>Agents tend to produce <em>solutions by committee</em>. One builds the entrance to the bridge, one builds the supports, one lays the asphalt. They try to make the seams line up, run a load test, and declare success.</p>
+<p><svg xmlns="http://www.w3.org/2000/svg" class="wk-diagram" viewBox="0 0 1350 915"> <defs><marker id="wk-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" markerUnits="userSpaceOnUse" orient="auto"><path class="arrowhead" d="M0 0L10 5L0 10z"/></marker></defs> <rect class="node accent" x="960" y="20" width="390" height="140"/> <text class="title on-accent mid" x="1155" y="70">load test: passed</text> <text class="sm on-accent mid" x="1155" y="120">declare success!</text> <text class="sm muted" x="0" y="400">agent 1: the entrance</text> <rect class="node fill" x="0" y="430" width="330" height="50"/> <text class="sm muted" x="400" y="415">agent 2: the asphalt</text> <rect class="node" x="340" y="442" width="1010" height="40"/> <rect class="node" x="560" y="482" width="50" height="318"/> <rect class="node" x="1000" y="468" width="50" height="332"/> <text class="sm muted" x="560" y="850">agent 3: the supports</text> <line class="edge plain muted" x1="0" y1="800" x2="1350" y2="800"/> <circle class="node accent-outline" cx="335" cy="461" r="30"/> <text class="title mid" x="335" y="461">?</text> <circle class="node accent-outline" cx="1025" cy="475" r="30"/> <text class="title mid" x="1025" y="475">?</text> </svg></p>
+<p>(Humans exhibit this too, when coordinating in groups. But intelligent experts will usually notice when one piece is out of place.)</p>
+<p>Agents can simulate what a strong and coordinated team of humans do if you help guide them towards a shared plan and strategy.</p>
+<div class="callout"><strong>In the game</strong>
+<p>The engine resets the player agent's conversation at every city. That's a feature: the agent gets a fresh start, and can't double down on whatever it was fixated on in the last city.</p>
+<p>But anything wrong in its notebook will persist, and in the new city, the agent may treat it like truth.</p>
+</div>
+<h3>6. Attention follows frequency</h3>
+<p>Agents weigh how true something is by how often they see it. The more times an agent session hears something, the more likely it is to act as though it's true.</p>
+<p><svg xmlns="http://www.w3.org/2000/svg" class="wk-diagram" viewBox="0 0 1350 915"> <defs><marker id="wk-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" markerUnits="userSpaceOnUse" orient="auto"><path class="arrowhead" d="M0 0L10 5L0 10z"/></marker></defs> <text class="title" x="0" y="40">seen in training</text> <text class="end" x="330" y="112">“the earth is round”</text> <rect class="node accent" x="350" y="80" width="900" height="48" rx="4"/> <text class="sm muted" x="1264" y="112">×1,000,000</text> <text class="end" x="330" y="182">“the earth is flat”</text> <rect class="node fill-strong" x="350" y="150" width="27" height="48" rx="4"/> <text class="sm muted" x="391" y="182">×30,000</text> <line class="edge plain muted" x1="630" y1="290" x2="600" y2="360"/> <line class="edge plain muted" x1="630" y1="290" x2="670" y2="360"/> <line class="edge plain muted" x1="630" y1="290" x2="740" y2="360"/> <line class="edge plain muted" x1="710" y1="290" x2="600" y2="360"/> <line class="edge plain muted" x1="710" y1="290" x2="670" y2="360"/> <line class="edge plain muted" x1="710" y1="290" x2="740" y2="360"/> <line class="edge plain muted" x1="600" y1="360" x2="670" y2="430"/> <line class="edge plain muted" x1="670" y1="360" x2="670" y2="430"/> <line class="edge plain muted" x1="740" y1="360" x2="670" y2="430"/> <circle class="node" cx="630" cy="290" r="13"/> <circle class="node" cx="710" cy="290" r="13"/> <circle class="node" cx="600" cy="360" r="13"/> <circle class="node" cx="670" cy="360" r="13"/> <circle class="node" cx="740" cy="360" r="13"/> <circle class="node" cx="670" cy="430" r="13"/> <line class="edge" x1="670" y1="445" x2="670" y2="490"/> <text class="title" x="0" y="530">the earth is ___</text> <text class="end" x="330" y="582">round</text> <rect class="node accent" x="350" y="550" width="291" height="44" rx="4"/> <text class="sm muted" x="655" y="582">97%</text> <text class="end" x="330" y="642">flat</text> <rect class="node fill-strong" x="350" y="610" width="9" height="44" rx="4"/> <text class="sm muted" x="373" y="642">3%</text> <text class="title" x="740" y="530">[a flat-earth forum]… the earth is ___</text> <text class="end" x="900" y="582">flat</text> <rect class="node accent" x="920" y="550" width="255" height="44" rx="4"/> <text class="sm muted" x="1189" y="582">85%</text> <text class="end" x="900" y="642">round</text> <rect class="node fill-strong" x="920" y="610" width="45" height="44" rx="4"/> <text class="sm muted" x="979" y="642">15%</text> <text class="sm muted" x="0" y="900">illustrative numbers</text> </svg></p>
+<p>Frequency isn't the only explanation for how LLMs behave. But it does explain why, put in the right probability space, an LLM will passionately defend a flat earth.</p>
+<div class="callout"><strong>In the game</strong>
+<p>If the agent writes the same wrong lead into its notes three times, the wrong lead wins. It doesn't matter that one correct lead pointed somewhere else.</p>
+<p>How might you correct this issue?</p>
+</div>
+<h2>Graph-Based vs. Semantic Agents</h2>
+<p>Knowing the invariants, how do you build an agent that works anyway? One of the biggest choices is how much of the agent's behavior you leave up to the LLM.</p>
+<p>A <strong>fully semantic</strong> agent is the general-purpose ReAct loop from <a href="/bobgame-docs-external/workshop/module-1/">Module 1</a>. The LLM decides everything: which tool to call next, when to stop, when to answer. Most coding agents work this way. This flexibility comes at a cost when approaching problems where agents struggle.</p>
+<p>Using <strong>graphs</strong> to guide an LLM's behavior allows you to change the deterministic structure. In <a href="https://docs.langchain.com/oss/python/langgraph/overview">LangGraph</a>, you build the agent as a graph of nodes and edges. The code decides who runs when, what each node can see, and when the state resets. The semantic decision-making is limited to when it is needed.</p>
+<p>Deep Blue Drive Heist uses a graph to coordinate the agents. The engine decides when the narrator speaks, when the NPC replies, and when the conversation resets. The player agent only decides what to do on its own turn, from the tools it has. That structure takes care of some of the invariants for you:</p>
+<table>
+<thead>
+<tr>
+<th>Invariant</th>
+<th>What the game already does</th>
+<th>What's left to you</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Can't map the world</td>
+<td>Gives the agent its <code>connections</code>, <code>visited_cities</code>, and <code>known_routes</code> at each city</td>
+<td>Building a bigger picture of the map than the current city</td>
+</tr>
+<tr>
+<td>Operate on verification loops</td>
+<td><code>enter_evidence_words</code> at the finale</td>
+<td>Designing a strategy which uses <code>enter_evidence_words</code> for verification loops</td>
+</tr>
+<tr>
+<td>Stochastic behavior</td>
+<td>Means LLMs will produce different results on each city and run</td>
+<td>Using hooks, prompts and the notebook to enforce guardrails around an algorithm</td>
+</tr>
+<tr>
+<td>Can't revise beliefs</td>
+<td>Provides a notebook</td>
+<td>Create a strategy for the agent to ensure it doesn't have conflicts and bad information in the notebook</td>
+</tr>
+<tr>
+<td>Can't shift objectives</td>
+<td>Resets the conversation at every city</td>
+<td>Use the prompt, hooks and notebook to force the agent to reconsider when stuck (and to notice when stuck)</td>
+</tr>
+<tr>
+<td>Attention follows frequency</td>
+<td>Provides structures to store information</td>
+<td>Prevent wrong information from being repeated several times</td>
+</tr>
+</tbody>
+</table>
+<p>How might we adjust our agent to better handle the invariants?</p>
+<h2>Step 1: Build the map</h2>
+<p>Start a game and look at the dashboard. Make a list of everything the dashboard tells <strong>you</strong> that the agent can't see. Your list might include:</p>
+<ul>
+<li><strong>The map.</strong> The agent doesn't know how many cities there are or where it is. It can only &quot;see&quot; what the narrator and its notebook tell it.</li>
+<li><strong>How long it's been.</strong> It can't tell whether it should be rushing, and it can't see the path it's taken unless it wrote it down.</li>
+<li><strong>Its own loops.</strong> It can't see that it's been going back and forth between the same two cities.</li>
+</ul>
+<p>This information is all right there for the agent. A human would notice the rules, write down useful information in their notes, and offer strategy for the next round.</p>
+<p>But remember our Minecraft agents? Who only communicated new strategy 11 out of 229 times?</p>
+<p>Your agent is the same. If you want it to create a plan to cross the map, <strong>you need to tell it how</strong>.</p>
+<div class="wk-box wk-exercise"><strong>Exercise · Teach Bob what the agent can't see</strong><p>First, tell Bob. Bob doesn't know what the dashboard shows you, and it doesn't know what the player agent can't see. Ask it to add a section to <code>AGENTS.md</code>, so it keeps this in mind for the rest of your session (and in future sessions).</p>&#10;<div class="callout wk-bob-prompt wk-mode-agent"><button class="copy-btn" onclick="copyCallout(this)">Copy</button><span class="wk-mode-pill">Bob · Agent mode</span><span class="callout-text">Add a section to AGENTS.md called "Creating the map".<br><br>"Human contestants can see the full map of cities, how long it's been, and when the agent is cycling. That information isn't clearly revealed to the agent. Suggest strategies that might surface that information more clearly to an agent."</span></div>&#10;<p>Next, brainstorm with Bob. Bob is an LLM too, so it can use itself as a test bed: give it only what the player agent would get, and ask what it would need.</p>&#10;<div class="callout wk-bob-prompt wk-mode-plan"><button class="copy-btn" onclick="copyCallout(this)">Copy</button><span class="wk-mode-pill">Bob · Plan mode</span><span class="callout-text">What can we do to expose the map better to the player agent? Pretend you're the player agent arriving in a new city, using only what it saw in a recent log in logs/. Then suggest how build_system_prompt or the briefing could use the orientation (connections, visited_cities, known_routes) to show it the map.</span></div>&#10;<div class="tip"><strong>One way to draw the map</strong>&#10;<p>A short, structured block at the top of the system prompt goes a long way. For example:</p>&#10;<pre><code class="language-yaml">cities:&#10;  armonk:    toronto, dublin&#10;  toronto:   armonk, dublin, amsterdam&#10;  dublin:    armonk, toronto, amsterdam, stockholm&#10;<p>visited:  armonk -&gt; toronto&#10;location: toronto&#10;</code></pre></p>&#10;<p>The agent only learns a city's connections by visiting it, so the map has to be built up as it goes. The orientation's <code>known_routes</code> already holds every route it has seen so far: the default prompt just never shows it to the agent.</p>&#10;</div>&#10;<p>Once you're happy with the plan, switch to Agent mode and have Bob implement it.</p>&#10;</div>
+<h2>Step 2: Belief revision</h2>
+<p>The agent treats its notebook as factual information about the world. But it's an LLM, and it has probably hallucinated somewhere along the way. How can we get it to change its beliefs, and reconcile the information so it has a clearer view of the world at each city?</p>
+<p>Take a look at the notebook tools the agent has: <code>record_lead</code>, <code>record_evidence</code>, <code>take_note</code>, <code>check_notebook</code>, <code>revise</code>, and <code>cross_out</code>. The agent can add to its notebook, read it back, correct an entry or mark it confirmed (<code>revise</code>), and strike out an entry it no longer trusts (<code>cross_out</code>). But having the tools isn't the same as using them: left alone, the agent rarely goes back to fix what it wrote.</p>
+<ul>
+<li>In the <strong>system prompt</strong>, add a step at every city: read the notebook, look for contradictions, and decide what's true before doing anything else.</li>
+<li>Instruct the agent to try to compute which direction several leads are pointing, select a hypothesis, and cross out entries pointing in the wrong direction, or that might be leading to cycle behavior.</li>
+<li>Your code can read the notebook (<code>self.notebook</code>), but it can't change it. Use the <code>briefing</code> or a highlight hook to point out problems for the agent to fix: leads grouped by destination, a chess piece that points at two different cities, or a lead nothing has confirmed yet.</li>
+</ul>
+<div class="wk-box wk-exercise"><strong>Exercise · Reconcile the notebook</strong><p>Explain belief revision to Bob, and plan the change with it.</p>&#10;<div class="callout wk-bob-prompt wk-mode-plan"><button class="copy-btn" onclick="copyCallout(this)">Copy</button><span class="wk-mode-pill">Bob · Plan mode</span><span class="callout-text">The player agent treats its notebook as fact, but the notebook was written by an LLM and probably contains mistakes: leads with the wrong destination, notes about things that didn't happen, the same lead written down several times.<br><br>LLMs are bad at belief revision: when two pieces of information conflict, they flip between them instead of deciding which one is true.<br><br>Plan how the player agent can revise its beliefs at every city: how the system prompt should tell it to find contradictions and decide what's true, when it should use revise and cross_out, and how the briefing or a highlight hook could read self.notebook and point out contradictions and duplicates for it to fix. Check a recent log in logs/ for examples of mistakes in the notebook.</span></div>&#10;<p>Then switch to Agent mode and have Bob implement the plan.</p>&#10;</div>
+<h2>What's Working</h2>
+<p>Your agent now arrives at each city with more than its notebook. It has a map of what it's seen so far, a sense of how long it's been searching, and a warning when it's going in circles. And it no longer takes its notebook at face value: at every city, it checks what it wrote down before it acts on it.</p>
+<h2>What's Still Hard</h2>
+<p>The agent is still stochastic. Two runs of the same agent can look very different, so it's hard to tell whether a change made things better or you just got lucky. And every change you make now touches the system prompt, the hooks, and the notebook all at once. When the drive-recovery time goes down, which change did it?</p>
+<h2>Up Next</h2>
+<p>In <a href="/bobgame-docs-external/workshop/module-3/">Module 3</a>, we treat the agent like a production system: an experimental framework, test vs. prod, and verification loops.</p>
+
+
+
+  <div class="wk-pager">
+    <a class="wk-prev" href="/bobgame-docs-external/workshop/module-1/"><small>← Previous</small>Module 1: The World of Agents</a>
+    <a class="wk-next" href="/bobgame-docs-external/workshop/module-3/"><small>Next →</small>Module 3: An Experimental Framework for Production Agents</a>
+  </div>
+
+</div>
+
+  </main>
+  <script>
+    // Persistent persona filter: URL param sets it, localStorage remembers it
+    const VALID_ROLES = ['player', 'staff', 'developer'];
+    const paramRole = new URLSearchParams(location.search).get('role');
+    if (paramRole && VALID_ROLES.includes(paramRole)) {
+      localStorage.setItem('docs-role', paramRole);
+    }
+    const role = localStorage.getItem('docs-role');
+    if (role && VALID_ROLES.includes(role)) {
+      document.body.classList.add('role-' + role);
+      document.querySelectorAll('nav li[data-hide-from]').forEach(li => {
+        if (li.dataset.hideFrom.split(',').includes(role)) li.style.display = 'none';
+      });
+    }
+    // Nav section collapse/expand
+    function toggleSection(btn) {
+      const body = btn.nextElementSibling;
+      const arrow = btn.querySelector('.toggle-arrow');
+      const isOpen = body.classList.toggle('open');
+      arrow.style.transform = isOpen ? 'rotate(90deg)' : '';
+    }
+    // Auto-expand the section containing the active link
+    document.querySelectorAll('nav .section-body').forEach(body => {
+      if (body.querySelector('a.active')) {
+        body.classList.add('open');
+        const arrow = body.previousElementSibling.querySelector('.toggle-arrow');
+        if (arrow) arrow.style.transform = 'rotate(90deg)';
+      }
+    });
+    // Code block headers: language label + copy button
+    const LANG_LABELS = {bash:'bash',powershell:'powershell',json:'JSON',python:'Python',ini:'.env',text:'',js:'JavaScript'};
+    document.querySelectorAll('main pre').forEach(pre => {
+      const code = pre.querySelector('code');
+      const lang = code ? [...code.classList].find(c => c.startsWith('language-'))?.replace('language-','') : '';
+      const label = LANG_LABELS[lang] ?? lang;
+      const wrapper = document.createElement('div');
+      wrapper.className = 'code-block';
+      const header = document.createElement('div');
+      header.className = 'code-header';
+      header.innerHTML = `<span>${label}</span><button class="code-copy">Copy</button>`;
+      header.querySelector('.code-copy').addEventListener('click', function() {
+        navigator.clipboard.writeText(pre.textContent).then(() => {
+          this.textContent = 'Copied!';
+          setTimeout(() => this.textContent = 'Copy', 1500);
+        });
+      });
+      pre.parentNode.insertBefore(wrapper, pre);
+      wrapper.appendChild(header);
+      wrapper.appendChild(pre);
+    });
+  </script>
+  <script src="/bobgame-docs-external/shared/docs.js"></script>
+  <script src="/bobgame-docs-external/vendor/reveal/dist/reveal.js"></script>
+  <script src="/bobgame-docs-external/vendor/reveal/plugin/markdown/markdown.js"></script>
+  <script src="/bobgame-docs-external/vendor/reveal/plugin/highlight/highlight.js"></script>
+  <script src="/bobgame-docs-external/vendor/reveal/plugin/notes/notes.js"></script>
+  <script src="/bobgame-docs-external/shared/slides.js"></script>
+  
+</body>
+</html>
